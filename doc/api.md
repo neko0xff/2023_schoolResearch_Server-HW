@@ -5,8 +5,10 @@
     * Port: 3000 
   * Fedora
   ![](https://i.imgur.com/Kxq8OFv.png)
+
 - 伝送方式
   ![](https://i.imgur.com/3GlPMjG.png)
+
 - 參數
   * `:deviceID`: 開發版編號
   * `?`: Quary String
