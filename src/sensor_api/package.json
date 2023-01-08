@@ -1,0 +1,21 @@
+{
+  "name": "sensor_api",
+  "version": "1.0.0",
+  "description": "sensor api server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "sensor",
+    "api"
+  ],
+  "author": "neko_0xff",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "configparser": "^0.3.10",
+    "express": "^4.18.2"
+  }
+}
