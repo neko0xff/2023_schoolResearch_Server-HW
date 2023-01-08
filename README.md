@@ -1,6 +1,7 @@
-# 2023_SideProject
+# 2023_SchoolSideProject
 ## 內容
-專題程式
+- 主題: IOT+空氣品質分析
+- 專題程式
 ## 組成
 - '/src/sensor-api'
   * nodejs
