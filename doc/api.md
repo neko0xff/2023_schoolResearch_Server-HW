@@ -1,16 +1,16 @@
 # API
 ## 環境&位置
-- 環境: docker
+### 環境: docker
   * nodejs
     * Port: 3000 
   * Fedora
-  ![](https://i.imgur.com/Kxq8OFv.png)
-- 伝送方式
-  ![](https://i.imgur.com/3GlPMjG.png)
-- 參數
-  * `:deviceID`: 開發版編號
-  * `?`: Quary String
-    ![](https://i.imgur.com/WNnxPKK.png)
+![](https://i.imgur.com/Kxq8OFv.png)
+### 伝送方式
+![](https://i.imgur.com/3GlPMjG.png)
+### 參數
+* `:deviceID`: 開發版編號
+* `?`: Quary String
+![](https://i.imgur.com/WNnxPKK.png)
 ---
 ## 開發版
 ### 上傳
