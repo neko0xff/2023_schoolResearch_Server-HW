@@ -1,11 +1,26 @@
 /*相関函式庫*/
 var express = require('express');
 var bodyParser = require('body-parser');
+var ConfigParser = require('configparser');
 var clock=require('./modules/clock.js');
-var port=3000;
+
+/*資料庫連線設定*/
+const configDB = new ConfigParser();
+var mysql = require('mysql');
+configDB.read('./modules/config/cnDB.cfg');
+configDB.sections();
+
+var cnDB=mysql.createConnection({
+    host: configDB.get('cn_DB','DBhost') ,
+    user: configDB.get('cn_DB','DBuser'),
+    password: configDB.get('cn_DB','DBpassword') ,
+    port: '3306',
+    database: configDB.get('cn_DB','cnDatabase')
+});
 
 /*Server 起始設定*/
 var app=express();
+var port=3000;
 var server = app.listen(port,function(){
    console.log("API Server is Start!");
    console.log("API Server URL: http://[Server_IP]:%s",port);
@@ -16,6 +31,20 @@ app.get('/',function(req,res){
     res.send("API Server is running!");
     console.log(clock.consoleTime()+" : GET /");
 });
+app.get('/testDB',function(req,res){
+    var cn_sql='SELECT 1 + 1 AS solution';
+    var output;
+    console.log(clock.consoleTime()+" : GET /testDB");
+    cnDB.connect();
+    cnDB.query(cn_sql, function (error, results, fields) {
+        if(error)throw error;
+        var dbValue = results[0].solution;
+        var str= "The solution is: " + dbValue.toString();
+        console.log(clock.consoleTime()+" :"+str);
+        res.send(str);
+    });
+    cnDB.end();
+})
 
 /*開發版上傳專用*/
 //api: /upload/:deviceID/data? 
@@ -37,27 +66,23 @@ app.get('/read/'+':deviceID'+'/hum',function(req, res) {
     var device_ID=req.params.deviceID;
     var hum=0;
     res.write(hum.toString());
-    res.end();
     console.log(clock.consoleTime()+" : GET /read/"+device_ID+"/hum");
 });
 app.get('/read/'+':deviceID'+'/temp',function(req, res){
     var device_ID=req.params.deviceID;
     var temp=0;
     res.send(temp.toString());
-    res.end();
     console.log(clock.consoleTime()+" : GET /read/"+device_ID+"/temp");
 });
 app.get('/read/'+':deviceID'+'/tvoc',function(req, res){
     var device_ID=req.params.deviceID;
     var tvoc=0;
     res.send(tvoc.toString());
-    res.end();
     console.log(clock.consoleTime()+" : GET /read/"+device_ID+"/tvoc");
 });
 app.get('/read/'+':deviceID'+'/co2',function(req, res){
     var device_ID=req.params.deviceID;
     var co2=0;
     res.send(co2.toString());
-    res.end();
     console.log(clock.consoleTime()+" : GET /read/"+device_ID+"/co2");
 });

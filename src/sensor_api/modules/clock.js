@@ -1,10 +1,12 @@
-const ConfigParser = require('configparser');
-const config = new ConfigParser();
-config.read('./modules/config/timezone.cfg');
-config.sections();
+var ConfigParser = require('configparser');
+const configZone = new ConfigParser();
 
-var locaLang=config.get('timezone','locaLang');
-var localZone=config.get('timezone','localZone');;
+/*時區設定*/
+configZone.read('./modules/config/timezone.cfg');
+configZone.sections();
+
+var locaLang=configZone.get('timezone','locaLang');
+var localZone=configZone.get('timezone','localZone');;
 
 /*outpuut console Time*/
 function consoleTime(){
