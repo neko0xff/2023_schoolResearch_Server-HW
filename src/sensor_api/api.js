@@ -13,8 +13,8 @@ var cnDB=null;
 var app=express();
 var port=3000;
 var server = app.listen(port,function(){
-   console.log(clock.consoleTime()+"API Server is Start!");
-   console.log(clock.consoleTime()+"API Server URL: http://[Server_IP]:%s",port);
+   console.log(clock.consoleTime()+" : API Server is Start!");
+   console.log(clock.consoleTime()+" : API Server URL: http://[Server_IP]:%s",port);
 });
 
 /*測試是否運行*/
