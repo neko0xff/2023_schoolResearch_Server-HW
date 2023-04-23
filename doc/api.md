@@ -1,38 +1,148 @@
-資料庫格式
+API格式
 ===
-## 名稱
-- 資料庫: `sensorDB`
-- 資料表
-  1. `[:device_ID]_Table`: 感測器回伝的資料
-  2. `[:device_ID]_Status`: 開関
-  3. `[:device_ID]_StatusRec`: 開関記錄
-- 裝置
-  * Sensor01
-  * Switch01
---- 
-## 資料表格式
-- Sensor01_Table
-  | 資料庫欄位 |  型態  | 中文名稱 |
-  |:----------:|:------:|:--------:|
-  |     id     |  int   |   筆數   |
-  |    hum     | double |   溼度   |
-  |    temp    | double |   溫度   |
-  |    tvoc    | double |   tvoc   |
-  |     co     | double |    co    |
-  |    co2     | double |   co2    |
-  |    date    |  date  |   日期   |
-  |    time    |  time  |   時間   |
-- Switch01_Status
-  | 資料庫欄位 |      型態       | 中文名稱 |
-  |:----------:|:---------------:|:--------:|
-  |     id     |       int       |   筆數   |
-  |   switch   | Varchar(String) |  関関名  |
-  |   status   |       int       |   狀態   |
-- Switch01_StatusRec
-  | 資料庫欄位 |      型態       | 中文名稱 |
-  |:----------:|:---------------:|:--------:|
-  |     id     |       int       |   筆數   |
-  |   switch   | Varchar(String) |  関関名  |
-  |   status   |       int       |   狀態   |
-  |    date    |      date       |   日期   |
-  |    time    |      time       |   時間   |
+## 01 部署
+### 取得專案
+- push local 
+  ```
+    $ git clone https://github.com/zangmen/2023_schoolSideProject.git
+  ```
+- 到專案資料夾
+  ```
+    $ cd 2023_schoolSideProject/src/sensor_api
+  ```
+### 更新專案
+- fetch
+  ```
+    $ git fetch
+  ```
+- pull
+  ```
+    $ git pull
+  ```
+### 映像檔
+- 建立映像檔
+  ```
+    $ sudo sh build.sh
+  ```
+- 建立且運行容器
+  ```
+    $ sudo sh run.sh
+  ```
+- 防火牆
+  ```
+    $ sudo firewall-cmd --add-port=3095/tcp --permanent
+    $ sudo firewall-cmd --reload
+  ```
+---
+## 02 環境&位置
+### 環境: docker
+- 把環境容器化
+  * API串接的伺服端: nodejs
+    * Port: 3095 
+  * OS: Fedora
+### 架構演示
+![](https://i.imgur.com/Kxq8OFv.png)
+### 伝送方式
+![](https://i.imgur.com/3GlPMjG.png)
+- 參數
+  * `:deviceID`: 開發版編號
+  * `?`: Quary String
+  * `&`: Separator
+  * 定義: 變數名=要傳伝的值
+![](https://i.imgur.com/WNnxPKK.png)
+---
+## 03 開發版上傳
+### 方式 
+- HTTP Request: Post
+- URL
+  ```url
+     /upload/:deviceID/data?[Quary String] 
+  ```
+### 輸入
+- 格式: 字串 
+- 動作: 送出請求+欲想傳送的㯗位
+  * Quary String Value
+    * hum
+    * temp
+    * tvoc
+    * co2
+    * co
+### 輸出
+- 格式: 字串 
+- 動作: 成功回傳時,則回應`[device_id] is Update!`
+---
+## 04 從資料庫讀值
+### 方式 
+- HTTP Request: GET
+- URL
+  ```
+     /read/:deviceID/[api request]
+  ```
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想查詢的部分  
+  * 可查詢的部分
+    * hum
+    * temp
+    * tvoc
+    * co
+    * co2
+### 輸出
+- 回傳格式: JSON
+- 動作: 成功回傳時，則回應對應的請求
+  * API Request
+    | Request | return Value |
+    |:-------:|:------------:|
+    | '/hum'  |     hum      |
+    | '/temp' |     temp     |
+    | '/tvoc' |     tvoc     |
+    |  '/co'  |      co      |
+    | '/co2'  |     co2      |
+
+---
+## 05 開関控制
+### 方式 
+- HTTP Request: GET
+- URL
+  ```
+     /switchCtr/:deviceID/[api request]
+  ```
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想控制的部分  
+  * 可查詢的部分
+    * Status
+### 輸出
+- 回傳格式: String
+- 動作: 成功回傳時，則回應對應的請求
+  * API Request
+    | Request |      return Value      |
+    |:-------:|:----------------------:|
+    |    1    | `[deviceID] is On `  |
+    |    0    | `[deviceID] is Off ` |
+---
+## 06 檢視開関控制的記錄
+### 方式 
+- HTTP Request: GET
+- URL
+  ```
+     /StatusRec/:deviceID/view
+  ```
+### 輸入
+- 僅送出請求
+### 輸出
+- 回傳格式: JSON
+- 動作: 成功回傳時，則回應對應的請求
+---
+## 07 資料庫連線測試
+### 方式 
+- HTTP Request: GET
+- URL
+  ```
+     /testDB
+  ```
+### 輸入
+- 僅送出請求
+### 輸出
+- 格式: 字串 
+- 動作: 成功回傳時,則回應`The solution is: 2`
