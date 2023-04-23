@@ -16,6 +16,20 @@ function consoleTime(){
     return nowTime;
 }
 
+/*SQL date&time*/
+function SQLDate(){
+    var clock = new moment();
+    var Date=clock.format('YYYY-MM-DD');
+    return Date;
+};
+function SQLTime(){
+    var clock = new moment();
+    var Time=clock.format('HH:mm:ss');
+    return Time;
+}
+
 module.exports={
-    consoleTime:consoleTime
+    consoleTime:consoleTime,
+    SQLDate:SQLDate,
+    SQLTime:SQLTime
 };
