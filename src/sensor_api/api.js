@@ -277,7 +277,7 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     }
 });
 
-
+/*檢視開関控制的記錄*/
 app.get('/statusRec/:deviceID/view',async function(req,res){
     var device_ID=req.params.deviceID;
     var viewSQL='SELECT * FROM '+ device_ID+'_StatusRec ORDER BY `date` AND `time` DESC LIMIT 1;';
