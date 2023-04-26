@@ -38,11 +38,11 @@ app.get('/testDB', async function(req, res) {
         const dbValue = results[0].solution;
         const str = "The solution is: " + dbValue.toString();
         console.log(clock.consoleTime() + " : " + str);
-        res.send(str);
+        res.end(str);
         connection.release(); // 釋放連接
     } catch (error) {
         console.error('Failed to execute query: ' + error.message);
-        res.send('無法連線');
+        res.end('無法連線');
         throw error;
     }
 });
@@ -76,7 +76,27 @@ app.post('/upload/:deviceID/data', async function(req, res){
         throw error;
     }
 });
+//api: /StatusGet/:deviceID/:switchID/powerStatus
+app.get('/StatusGet/:deviceID/:switchID/powerStatus',async function(req,res){
+  var device_ID = req.params.deviceID;
+  var switch_ID = req.params.switchID;
+  var statusSQL = "SELECT `status` FROM `"+device_ID+"_Status` WHERE `name`= '"+switch_ID+"';";
+  console.log(clock.consoleTime()+" : GET /StatusGet/"+device_ID+"/"+switch_ID+"/powerStatus");
+   
+  try {
+    var cnDB=database.cnDB();
+    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const [results, fields] = await connection.execute(statusSQL); // 執行 SQL 查詢
+    console.log(clock.consoleTime() + " : " + results);
+    res.send(results);
+    connection.release(); // 釋放連接
+  } catch (error) {
+    console.error('Failed to execute query: ' + error.message);
+    res.send("無法連線");
+    throw error;
+  }
 
+});
 
 /*讀值*/
 // api: /read/:deviceID
@@ -204,7 +224,7 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   try{
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
-    const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢v
+    const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
     connection.release(); // 釋放連接
   }catch (error){
     console.error('Failed to execute query: ' + error.message);
@@ -253,7 +273,7 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     try{
       var cnDB=database.cnDB();
       const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
-      const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢v
+      const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
       connection.release(); // 釋放連接
     }catch (error){
      console.error('Failed to execute query: ' + error.message);
