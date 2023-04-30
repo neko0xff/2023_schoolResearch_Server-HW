@@ -16,11 +16,11 @@ var cnDB=null;
 var app=express();
 var port=3095;
 var server = app.listen(port,function(){
-   console.log(clock.consoleTime()+" : API Server is Start!");
+   console.log(clock.consoleTime()+" : API Server Started!");
    console.log(clock.consoleTime()+" : API Server URL: http://[Server_IP]:%s",port);
 });
 
-app.use(compression());
+app.use(compression()); //啟用gzip壓縮
 
 /*測試是否運行*/
 app.get('/',function(req,res){
@@ -76,12 +76,11 @@ app.post('/upload/:deviceID/data', async function(req, res){
         throw error;
     }
 });
-//api: /StatusGet/:deviceID/:switchID/powerStatus
-app.get('/StatusGet/:deviceID/:switchID/powerStatus',async function(req,res){
+//api: /StatusGet/:deviceID/powerStatus
+app.get('/StatusGet/:deviceID/powerStatus',async function(req,res){
   var device_ID = req.params.deviceID;
-  var switch_ID = req.params.switchID;
-  var statusSQL = "SELECT `status` FROM `"+device_ID+"_Status` WHERE `name`= '"+switch_ID+"';";
-  console.log(clock.consoleTime()+" : GET /StatusGet/"+device_ID+"/"+switch_ID+"/powerStatus");
+  var statusSQL = "SELECT `name`,`status` FROM `"+device_ID+"_Status` WHERE 1;";
+  console.log(clock.consoleTime()+" : GET /StatusGet/"+device_ID+"/powerStatus");
    
   try {
     var cnDB=database.cnDB();

@@ -8,13 +8,16 @@ RUN dnf update -y
 RUN dnf install nodejs npm -y 
 
 # Install app dependencies
+# 把目錄下的程式碼直接復制到容器中
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
 RUN npm install 
-
-# Bundle app source
 COPY . .
 
+# 指定使用的端口
 EXPOSE 3095
+EXPOSE 3094 
+
+# 容器啟動時
 CMD [ "npm", "start" ]
