@@ -5,7 +5,6 @@ const configZone = new ConfigParser();
 /*時區設定*/
 configZone.read('./modules/config/timezone.cfg');
 configZone.sections();
-
 var locaLang=configZone.get('timezone','locaLang');
 var localZone=configZone.get('timezone','localZone');;
 

@@ -2,14 +2,14 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const compression = require('compression');
+var clock=require('../modules/clock.js');
+var database=require('../modules/database.js');
 
 /*時間*/
-var clock=require('./modules/clock.js');
 var date= clock.SQLDate();
 var time= clock.SQLTime();
 
 /*資料庫*/
-var database=require('./modules/database.js');
 var cnDB=null;
 
 /*Server 起始設定*/
@@ -23,7 +23,7 @@ var server = app.listen(port,function(){
 app.use(compression()); //啟用gzip壓縮
 
 /*測試是否運行*/
-app.get('/',function(req,res){
+app.get('/',async function(req,res){
     res.send("API Server is running!");
     console.log(clock.consoleTime()+" : GET /");
 });
