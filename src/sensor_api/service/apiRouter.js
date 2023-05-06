@@ -4,6 +4,10 @@ var bodyParser = require('body-parser');
 const compression = require('compression');
 var clock=require('../modules/clock.js');
 var database=require('../modules/database.js');
+var ConfigParser = require('configparser');
+const configSet = new ConfigParser();
+configSet.read('./modules/config/serviceSet.cfg');
+configSet.sections();
 
 /*時間*/
 var date= clock.SQLDate();
@@ -14,7 +18,7 @@ var cnDB=null;
 
 /*Server 起始設定*/
 var app=express();
-var port=3095;
+var port=configSet.get('APIRouter','port'); 
 var server = app.listen(port,function(){
    console.log(clock.consoleTime()+" : API Server Started!");
    console.log(clock.consoleTime()+" : API Server URL: http://[Server_IP]:%s",port);
@@ -275,9 +279,9 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
       const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
       connection.release(); // 釋放連接
     }catch (error){
-     console.error('Failed to execute query: ' + error.message);
-     res.send('無法連線');
-     throw error;
+      console.error('Failed to execute query: ' + error.message);
+      res.send('無法連線');
+      throw error;
     }
 
     /*status*/

@@ -1,8 +1,12 @@
 /*MQTT Broker lib*/
 const aedes = require('aedes')();
 const server = require('net').createServer(aedes.handle);
-const port=3094;
+var ConfigParser = require('configparser');
+const configSet = new ConfigParser();
+configSet.read('./modules/config/serviceSet.cfg');
+configSet.sections();
 var mqttClient = require('../modules/mqttClient.js');
+var port = configSet.get('MQTT','port');
 
 /*時間*/
 var clock=require('../modules/clock.js');

@@ -5,32 +5,30 @@ const mqtt = require("mqtt");
 /*MQTT Client*/
 var ConfigParser = require('configparser');
 const configSet = new ConfigParser();
-configSet.read('./modules/config/mqttServer.cfg');
+configSet.read('./modules/config/cnSet.cfg');
 configSet.sections();
-var ServerSource = configSet.get('server','source');
-var port = configSet.get('server','port');
+var ServerSource = configSet.get('MQTT','source');
+var port = configSet.get('MQTT','port');
 var client = mqtt.connect(`mqtt://${ServerSource}:${port}`);
-
-/*時間*/
-var date= clock.SQLDate();
-var time= clock.SQLTime();
 
 /*主程式*/
 function Sub(topic){
+    //訂閱
     client.on("connect", function() {
         console.log(clock.consoleTime()+" : Server is Started");
-        client.subscribe(topic, { qos: 1 }); //订阅主题为test的消息
+        client.subscribe(topic, { qos: 1 }); 
     });
     client.on("message", function(top, message) {
-        console.log(clock.consoleTime()+" : 当前topic:", top);
-        console.log(clock.consoleTime()+" : 当前温度：", message.toString());
+        console.log(clock.consoleTime()+" : Now topic= ", top);
+        console.log(clock.consoleTime()+" : Now Sub Data= ", message.toString());
     });
 }
 
-function Pub(topic,value){
+function Pub(topic,value,timer){
+    //發布
     setInterval(function() {    
         client.publish(topic, value, { qos: 0, retain: true });
-    }, 1000);
+    }, timer);
 }
 
 module.exports={

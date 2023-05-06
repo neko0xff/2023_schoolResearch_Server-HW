@@ -1,5 +1,5 @@
-var mqttClient= require('./modules/mqttClient.js');
-const value_x = Math.ceil(Math.random() * 40);
+var mqttClient=require('./modules/mqttClient.js');
+const strVaule = Math.ceil(Math.random() * 40).toString();
 
-mqttClient.Pub("/Sensor01/temp",value_x.toString());
+mqttClient.Pub("/Sensor01/temp",strVaule,1000);
 mqttClient.Sub("/Sensor01/temp");

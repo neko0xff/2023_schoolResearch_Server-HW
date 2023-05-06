@@ -2,16 +2,16 @@
 var ConfigParser = require('configparser');
 const configDB = new ConfigParser();
 var mysql = require('mysql2/promise');
-configDB.read('./modules/config/cnDB.cfg');
+configDB.read('./modules/config/cnSet.cfg');
 configDB.sections();
 
 var setDB=mysql.createPool({
-    connectionLimit: 1000, // 設置最大連接數量
-    host: configDB.get('cn_DB','DBhost') ,
-    user: configDB.get('cn_DB','DBuser'),
-    password: configDB.get('cn_DB','DBpassword') ,
-    port: '3306',
-    database: configDB.get('cn_DB','cnDatabase')
+    connectionLimit: configDB.get('MYSQL','connectionLimit'), // 設置最大連接數量
+    host: configDB.get('MYSQL','DBsource') ,
+    user: configDB.get('MYSQL','DBuser'),
+    password: configDB.get('MYSQL','DBpassword') ,
+    port: configDB.get('MYSQL','DBport'),
+    database: configDB.get('MYSQL','cnDatabase')
 });
 
 function cnDB(){
