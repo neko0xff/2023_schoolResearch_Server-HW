@@ -1,9 +1,9 @@
 /*相関函式庫*/
-var mqttClient=require('./modules/mqttClient.js');
-var database=require('./modules/database.js');
+var mqttClient=require('./mqttClient.js');
+var database=require('./database.js');
 
 /*Pub Client*/
-async function pubSend(Pubtopic,SQL){
+async function pubRouter(Pubtopic,SQL){
     try{
         var cnDB=database.cnDB();
         const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -18,9 +18,15 @@ async function pubSend(Pubtopic,SQL){
     }
 }
 
-var device_ID = "Sensor01";
-var sensor = "hum";
-var readSQL = 'SELECT '+sensor+',date,time FROM ' + device_ID + '_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
-var topicPub = "/"+device_ID+"/"+sensor;
-pubSend(topicPub,readSQL);
-mqttClient.Sub(topicPub);
+async function pubSensor(device_ID,sensor){
+    var readSQL = 'SELECT '+sensor+',date,time FROM ' + device_ID + '_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
+    var topicPub = "/"+device_ID+"/"+sensor;
+    this.pubRouter(topicPub,readSQL);
+}
+
+
+module.exports={
+    pubRouter:pubRouter,
+    pubSensor:pubSensor,
+}
+
