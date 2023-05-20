@@ -63,8 +63,9 @@ app.post('/upload/:deviceID/data', async function(req, res){
     var tvoc=req.query.tvoc;
     var co=req.query.co;
     var co2=req.query.co2;
-    var data="('"+hum+"','"+temp+"','"+tvoc+"','"+co+"','"+ co2+"','"+date+"','"+time+"');";
-    var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,date,time) VALUES"+data;
+    var pm25=req.query.pm25;
+    var data="('"+hum+"','"+temp+"','"+tvoc+"','"+co+"','"+ co2 +"','" + pm25 +"','"+date+"','"+time+"');";
+    var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,pm25,date,time) VALUES"+data;
     
     /*run*/
     try {

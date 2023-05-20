@@ -7,3 +7,4 @@ mqttClient.Sub("/Sensor01/temp");
 mqttClient.Sub("/Sensor01/tvoc");
 mqttClient.Sub("/Sensor01/co2");
 mqttClient.Sub("/Sensor01/co");
+mqttClient.Sub("/Sensor01/pm25");

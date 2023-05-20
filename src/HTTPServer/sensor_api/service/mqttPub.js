@@ -8,6 +8,7 @@ mqttRouter.pubSensor("Sensor01","temp");
 mqttRouter.pubSensor("Sensor01","tvoc");
 mqttRouter.pubSensor("Sensor01","co2");
 mqttRouter.pubSensor("Sensor01","co");
+mqttRouter.pubSensor("Sensor01","pm25");
 
 
 

@@ -1,0 +1,15 @@
+# chmod: 655
+[Unit]
+Description="MySQL Backup Database Service"
+
+[Service]
+Type=simple
+ExecStart=/opt/mysql_dump_script.sh
+Restart=always
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
