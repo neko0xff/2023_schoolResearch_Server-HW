@@ -1,11 +1,14 @@
-FROM fedora:latest
+FROM alpine:latest
 
 # 建立工作目錄
 WORKDIR /usr/src/app
 
 # 安裝&更新所需的套件
-RUN dnf update -y
-RUN dnf install nodejs npm -y 
+RUN apk update
+RUN apk upgrade --no-cache
+RUN apk add --no-cache nodejs npm icu-data-full 
+RUN apk cache clean
+RUN apk cache download
 
 # Install app dependencies
 # 把目錄下的程式碼直接復制到容器中

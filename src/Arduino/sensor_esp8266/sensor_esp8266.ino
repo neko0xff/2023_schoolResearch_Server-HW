@@ -28,15 +28,15 @@ byte tempVar = 0;
 byte humVar = 0;
 
 /*WIFI AP Set*/
-const char* ssid = "REPLACE_WITH_YOUR_SSID";
-const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+const char* ssid = "388";
+const char* password = "0937037590";
 
 /*伺服器路徑*/
-String serverName = "http://192.168.1.0:3095/upload/Sensor01";
+String serverName = "http://192.168.1.109:3095/upload/Sensor01";
 
 /*timer*/
 unsigned long lastTime = 0;
-unsigned long timerDelay = 5000;
+unsigned long timerDelay = 10000;
 
 /*WiFi連結*/
 void cnWiFi(){
@@ -50,7 +50,6 @@ void cnWiFi(){
    Serial.print("Connected to WiFi network with IP Address: ");
    Serial.println(WiFi.localIP());
    
-   Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
 }
 
 /*SGP30連結*/
@@ -76,7 +75,9 @@ void MQ7err(){
 
 void cnMQ7(){
   MQ7.setRegressionMethod(1); //_PPM =  a*ratio^b
-  MQ7.setA(99.042); MQ7.setB(-1.518); // Configurate the ecuation values to get CO concentration
+  // Configurate the ecuation values to get CO concentration
+  MQ7.setA(99.042); 
+  MQ7.setB(-1.518); 
   MQ7.init(); 
   Serial.print("Calibrating please wait.");
   
@@ -98,15 +99,6 @@ float MQ7Var(){
   return COppm;
 }
 
-/*DHT前置偵測*/
-void DHTerr(){
-  int err = SimpleDHTErrSuccess;
-  if ((err = dht11.read(pinDHT11, &tempVar, &humVar, NULL)) != SimpleDHTErrSuccess) {
-       Serial.print("Read DHT11 failed, err="); Serial.println(err);delay(1000);
-       return;
-  }
-}
-
 /*主程式*/
 void setup() {
   Serial.begin(9600);
@@ -117,7 +109,6 @@ void setup() {
 
 void loop() {  
   
-  DHTerr();
   // Send an HTTP POST request depending on timerDelay
   if ((millis() - lastTime) > timerDelay) {
     //Check WiFi connection status
@@ -131,7 +122,7 @@ void loop() {
       String coUD = "co="+String(MQ7Var());
       String co2UD = "co2="+String(SenSGP30.CO2);
       String tvocUD = "tvoc="+String(SenSGP30.TVOC);
-      String pm25 = "pm25="+String("0");
+      String pm25 = "pm25="+String("10");
       String httpRequestData = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25;           
       
       // Send HTTP POST request
@@ -143,8 +134,15 @@ void loop() {
       // Specify content-type header
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
        
-      Serial.print("HTTP Response code: ");
-      Serial.println(httpResponseCode);
+      if (httpResponseCode>0) {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+        String payload = http.getString();
+        Serial.println(payload);
+      }else {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
         
       // Free resources
       http.end();
