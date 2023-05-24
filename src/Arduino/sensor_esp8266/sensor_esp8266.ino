@@ -99,20 +99,10 @@ float MQ7Var(){
   return COppm;
 }
 
-/*主程式*/
-void setup() {
-  Serial.begin(9600);
-  Wire.begin(); 
-  cnWiFi();
-  cnSGP30();
-}
-
-void loop() {  
-  
-  // Send an HTTP POST request depending on timerDelay
-  if ((millis() - lastTime) > timerDelay) {
-    //Check WiFi connection status
-    if(WiFi.status()== WL_CONNECTED){
+/*HTTP Post update*/
+void httpPost(){
+   //Check WiFi connection status
+   if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
       
@@ -143,13 +133,28 @@ void loop() {
         Serial.print("Error code: ");
         Serial.println(httpResponseCode);
       }
-        
+
       // Free resources
       http.end();
+  }
+}
+
+/*主程式*/
+void setup() {
+  Serial.begin(9600);
+  Wire.begin(); 
+  cnWiFi();
+  cnSGP30();
+}
+
+void loop() {  
+  
+  // Send an HTTP POST request depending on timerDelay
+  if ((millis() - lastTime) > timerDelay) {
+      httpPost();
     }
     else {
       Serial.println("WiFi Disconnected");
     }
     lastTime = millis();
   }
-}
