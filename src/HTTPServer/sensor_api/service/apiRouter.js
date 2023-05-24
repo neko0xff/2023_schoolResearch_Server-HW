@@ -64,7 +64,7 @@ app.post('/upload/:deviceID/data', async function(req, res){
     var co=req.query.co;
     var co2=req.query.co2;
     var pm25=req.query.pm25;
-    var data="('"+hum+"','"+temp+"','"+tvoc+"','"+co+"','"+ co2 +"','" + pm25 +"','"+date+"','"+time+"');";
+    var data="("+hum+","+temp+","+tvoc+","+co+","+ co2 +"," + pm25 +",'"+date+"','"+time+"');";
     var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,pm25,date,time) VALUES"+data;
     
     /*run*/
@@ -209,7 +209,7 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   const status = req.query.status;
   const updateSQL ="UPDATE `" + device_ID + "_Status` SET `status`= '" +status +"'  WHERE `"+ device_ID +"_Status`.`name`= 'fan1'";
   // UPDATE `Switch01_Status` SET `status`='0' WHERE `Switch01_Status`.`name`= 'fan1'
-  var Recdata= "('fan1','"+ status +"','"+ date +"','"+ time +"')";
+  var Recdata= "('fan1',"+ status +",'"+ date +"','"+ time +"')";
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
 
   /*Update*/
@@ -258,7 +258,7 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
   // Query: ?
   const status = req.query.status;
   const updateSQL ="UPDATE `" + device_ID + "_Status` SET `status`= '" +status +"'  WHERE `"+ device_ID +"_Status`.`name`= 'fan2'";
-  var Recdata= "('fan2','"+ status +"','"+ date +"','"+ time +"')";
+  var Recdata= "('fan2',"+ status +",'"+ date +"','"+ time +"')";
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
   
   /*Update*/
