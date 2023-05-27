@@ -3,11 +3,12 @@
 #include <WiFiClient.h>
 
 /*WIFI AP Set*/
-const char* ssid = "388";
-const char* password = "0937037590";
+const char* ssid = "";
+const char* password = "";
 
 /*伺服器路徑*/
-String serverName = "http://192.168.1.114:3095/upload/Sensor01/data";
+String serverSource = "http://[Server_IP]:3095";
+String serverName = serverSource + "/upload/Sensor01/data?";
 
 /*timer*/
 unsigned long lastTime = 0;
@@ -29,31 +30,28 @@ void cnWiFi(){
 void httpPost(){
    WiFiClient client;
    HTTPClient http;
-
-   // Data to send with HTTP POST
+  
+   /*數值上傳*/
    String humUD = "hum="+String(30);
    String tempUD = "temp="+String(44.5);
    String coUD = "co="+String(77.2);
    String co2UD = "co2="+String(55);
    String tvocUD = "tvoc="+String(40.11);
-   String pm25 = "pm25="+String(10);
-   String httpRequestData = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25;              
+   String pm25UD = "pm25="+String(10);
+   String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
+   String cnServer = serverName + query;
 
    // Your Domain name with URL path or IP address with path
-   http.begin(client, serverName);
+   http.begin(client, cnServer);
 
    // Specify content-type header
-   http.addHeader("Content-Type", "application/x-www-form-urlencoded");   
- 
-   // Send HTTP POST request
-   int httpResponseCode = http.POST(httpRequestData);
+   http.addHeader("Content-Type", "application/x-www-form-urlencoded"); 
+  
    Serial.print("Server= ");
-   Serial.println(serverName);
-   Serial.print("Data= ");
-   Serial.println(httpRequestData);
-   
-   
+   Serial.println(cnServer);
+
   /*HTTP Status*/   
+  int httpResponseCode = http.POST("");
   if (httpResponseCode>0) {
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);

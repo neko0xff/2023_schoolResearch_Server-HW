@@ -28,11 +28,12 @@ byte tempVar = 0;
 byte humVar = 0;
 
 /*WIFI AP Set*/
-const char* ssid = "388";
-const char* password = "0937037590";
+const char* ssid = "";
+const char* password = "";
 
 /*伺服器路徑*/
-String serverName = "http://192.168.1.109:3095/upload/Sensor01";
+String serverIP = "http://[server_ip]:3095";
+String serverName = serverIP+"/upload/Sensor01/data";
 
 /*timer*/
 unsigned long lastTime = 0;
@@ -112,18 +113,17 @@ void httpPost(){
       String coUD = "co="+String(MQ7Var());
       String co2UD = "co2="+String(SenSGP30.CO2);
       String tvocUD = "tvoc="+String(SenSGP30.TVOC);
-      String pm25 = "pm25="+String("10");
-      String httpRequestData = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25;           
+      String pm25UD = "pm25="+String("10");
+      String updateData = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
+      String cnServer = serverName+updateData;         
       
-      // Send HTTP POST request
-      int httpResponseCode = http.POST(httpRequestData);
-
       // Your Domain name with URL path or IP address with path
-      http.begin(client, serverName);
+      http.begin(client, cnServer);
   
       // Specify content-type header
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
        
+      int httpResponseCode = http.POST("");
       if (httpResponseCode>0) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
