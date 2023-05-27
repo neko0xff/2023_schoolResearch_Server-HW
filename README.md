@@ -8,12 +8,13 @@
   * '/doc': 功能文件
 ---
 ## 程式
-- '/src/sensor-api'
+- API Server: '/src/sensor-api'
   * 使用語言： nodejs(JavaScrpit)
-  * docker image: Fedora
-- '/src/sensor-esp32'
-  * Arduino 
-  * 開發版: ESP32
+  * docker image: Alpine
+- 硬體: '/src/Arduino' 
+  * 開發版
+    1. ESP32
+    2. ESP8266
 ---
 ## 處理資料
 - hum(溫度)
@@ -21,4 +22,5 @@
 - CO
 - CO2
 - TVOC(工業廢氣)
+- pm25(PM2.5)
 ---

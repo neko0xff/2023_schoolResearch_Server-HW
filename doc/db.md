@@ -20,6 +20,7 @@
   |    tvoc    | double |   tvoc   |
   |     co     | double |    co    |
   |    co2     | double |   co2    |
+  |    pm25    | double |   pm2.5  |
   |    date    |  date  |   日期   |
   |    time    |  time  |   時間   |
 - Switch01_Status

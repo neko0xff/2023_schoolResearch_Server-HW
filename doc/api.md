@@ -39,7 +39,7 @@ API格式
 - 把環境容器化
   * API串接的伺服端: nodejs
     * Port: 3095 
-  * OS: Fedora
+  * OS: Alpine
 ### 架構演示
 ![](https://i.imgur.com/Kxq8OFv.png)
 ### 伝送方式
@@ -67,9 +67,10 @@ API格式
     * tvoc
     * co2
     * co
+    * pm25
 ### 輸出
-- 格式: 字串 
-- 動作: 成功回傳時,則回應`[device_id] is Update!`
+- 格式: JSON
+- 動作: 成功回傳時,則回應上傳的中繼資料
 ---
 ## 04 從資料庫讀值
 ### 方式 
@@ -87,6 +88,7 @@ API格式
     * tvoc
     * co
     * co2
+    * pm25
 ### 輸出
 - 回傳格式: JSON
 - 動作: 成功回傳時，則回應對應的請求
@@ -98,6 +100,7 @@ API格式
     | '/tvoc' |     tvoc     |
     |  '/co'  |      co      |
     | '/co2'  |     co2      |
+    | '/pm25' |     pm2.5    |
 
 ---
 ## 05 開関控制
