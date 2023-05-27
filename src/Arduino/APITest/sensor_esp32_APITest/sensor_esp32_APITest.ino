@@ -5,7 +5,6 @@
 unsigned long lastTime=0;
 unsigned long timeDelay=5000; //5sec=5000ms
 
-/*伺服器連線部分*/
 /*伺服器路徑*/
 String serverSource = "http://[Server_IP]:3095";
 String serverName = serverSource + "/upload/Sensor01/data?";
@@ -33,14 +32,14 @@ void DataSend(){
   HTTPClient http;
 
   /*數值上傳*/
-   String humUD = "hum="+String(30);
-   String tempUD = "temp="+String(44.5);
-   String coUD = "co="+String(77.2);
-   String co2UD = "co2="+String(55);
-   String tvocUD = "tvoc="+String(40.11);
-   String pm25UD = "pm25="+String(10);
-   String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
-   String cnServer = serverName + query;
+  String humUD = "hum="+String(30);
+  String tempUD = "temp="+String(44.5);
+  String coUD = "co="+String(77.2);
+  String co2UD = "co2="+String(55);
+  String tvocUD = "tvoc="+String(40.11);
+  String pm25UD = "pm25="+String(10);
+  String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
+  String cnServer = serverName + query;
   
   http.begin(client, cnServer);
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
