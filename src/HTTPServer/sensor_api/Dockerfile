@@ -3,12 +3,16 @@ FROM alpine:latest
 # 建立工作目錄
 WORKDIR /usr/src/app
 
+# 時區
+ENV TZ=Asia/Taipei
+
 # 安裝&更新所需的套件
 RUN apk update
 RUN apk upgrade --no-cache
-RUN apk add --no-cache nodejs npm icu-data-full 
-RUN apk cache clean
-RUN apk cache download
+RUN apk add --no-cache nodejs npm icu-data-full tzdata
+RUN echo "${TZ}" > /etc/timezone 
+RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime 
+RUN rm /var/cache/apk/*
 
 # Install app dependencies
 # 把目錄下的程式碼直接復制到容器中

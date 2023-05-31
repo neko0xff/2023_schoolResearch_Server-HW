@@ -1,20 +1,25 @@
 /*相関函式庫*/
 var mqttClient=require('./mqttClient.js');
 var database=require('./database.js');
+var clock=require('./clock.js');
 
 /*Pub Client*/
 async function pubRouter(Pubtopic,SQL){
+    console.log("["+clock.consoleTime() + "] MQTT Pub= " + Pubtopic );
+    var cnDB=database.cnDB();
+    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
     try{
-        var cnDB=database.cnDB();
-        const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
         const [results, fields] = await connection.execute(SQL); // 執行 SQL 查詢
         var data=JSON.stringify(results);
         mqttClient.Pub(Pubtopic,data,1000);
-        connection.release(); // 釋放連接
+        console.log(`[${clock.consoleTime()}] Pub Data= ${data}` );
     }catch(error){
-        console.error('Failed to execute query: ' + error.message);
+        console.error("["+clock.consoleTime()`] Failed to execute query: ${error.message}`);
         mqttClient.Pub(Pubtopic,'Not Connect',1000);
         throw error;
+    }finally{
+        connection.release(); // 釋放連接
     }
 }
 

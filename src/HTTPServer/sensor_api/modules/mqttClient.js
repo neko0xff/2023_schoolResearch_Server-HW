@@ -15,12 +15,12 @@ var client = mqtt.connect(`mqtt://${ServerSource}:${port}`);
 function Sub(topic){
     //訂閱
     client.on("connect", function() {
-        console.log(clock.consoleTime()+" : Server is Started");
+        console.log(`[${clock.consoleTime()}] Server is Started`);
         client.subscribe(topic, { qos: 1 }); 
     });
     client.on("message", function(top, message) {
-        console.log(clock.consoleTime()+" : Now topic= ", top);
-        console.log(clock.consoleTime()+" : Now Sub Data= ", message.toString());
+        console.log(`[${clock.consoleTime()}] Now topic= `, top);
+        console.log(`[${clock.consoleTime()}] Now Sub Data= `, message.toString());
     });
 }
 
