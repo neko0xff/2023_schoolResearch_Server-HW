@@ -1,13 +1,8 @@
 /*相関函式庫*/
-var express = require('express');
-var bodyParser = require('body-parser');
-const compression = require('compression');
 var clock=require('../modules/clock.js');
+var httpServer=require('../modules/httpServer.js');
 var database=require('../modules/database.js');
-var ConfigParser = require('configparser');
-const configSet = new ConfigParser();
-configSet.read('./modules/config/serviceSet.cfg');
-configSet.sections();
+const bcrypt = require("bcrypt")
 
 /*時間*/
 var date= clock.SQLDate();
@@ -15,16 +10,7 @@ var time= clock.SQLTime();
 
 /*資料庫*/
 var cnDB=null;
-
-/*Server 起始設定*/
-var app=express();
-var port=configSet.get('APIRouter','port'); 
-var server = app.listen(port,function(){
-   console.log(`[${clock.consoleTime()}] API Server Started!`);
-   console.log(`[${clock.consoleTime()}] API Server URL: http://[Server_IP]:%s`,port);
-});
-
-app.use(compression()); //啟用gzip壓縮
+var app=httpServer.app();
 
 /*測試是否運行*/
 app.get('/',async function(req,res){
@@ -65,8 +51,9 @@ app.post('/upload/:deviceID/data', async function(req, res){
     var co=req.query.co;
     var co2=req.query.co2;
     var pm25=req.query.pm25;
-    var data="("+hum+","+temp+","+tvoc+","+co+","+ co2+"," + pm25+",'"+date+"','"+time+"');";
-    var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,pm25,date,time) VALUES"+data;
+    var o3=req.query.o3;
+    var data="("+hum+","+temp+","+tvoc+","+co+","+ co2+"," + pm25+","+ o3 +",'"+date+"','"+time+"');";
+    var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,pm25,o3,date,time) VALUES"+data;
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
@@ -221,6 +208,28 @@ app.get('/read/:deviceID/co',async function(req, res){
       connection.release(); // 釋放連接
     }
 });
+app.get('/read/:deviceID/o3',async function(req, res){
+  var device_ID=req.params.deviceID;
+  var readSQL='SELECT co,date,time FROM '+ device_ID+'_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
+  console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
+  
+  var cnDB=database.cnDB();
+  const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+  
+  /*run*/
+  try {
+    const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+    var data=JSON.stringify(results);
+    res.send(results);
+    console.log(`[${clock.consoleTime()}] ${data}`);
+  }catch (error){
+    console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+    res.send('無法連線');
+    throw error;
+  }finally{
+    connection.release(); // 釋放連接
+  }
+});
 
 /*開関控制*/
 app.get('/switchCtr/:deviceID/fan1', async function(req, res){
@@ -287,8 +296,6 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
   var Recdata= "('fan2',"+ status +",'"+ date +"','"+ time +"')";
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
   
-  
-
   /*Update*/
    try{  
     var cnDB=database.cnDB();
@@ -360,4 +367,36 @@ app.get('/statusRec/:deviceID/view',async function(req,res){
       connection.release(); // 釋放連接
     }
 
+});
+
+/*使用者認証*/
+app.post("/createUser", async function(req, res) {
+  const { username, password } = req.body;
+
+  try {
+    const cnDB = database.cnDB();
+    const connection = await cnDB.getConnection(); 
+
+    const sqlSearch = "SELECT * FROM Users WHERE username = ?";
+    const [searchResults] = await connection.query(sqlSearch, [username]);
+    console.log("------> Search Results");
+    console.log(searchResults.length);
+
+    if (searchResults.length !== 0) {
+      console.log("------> User already exists");
+      res.sendStatus(409); 
+    } else {
+      const sqlInsert = "INSERT INTO Users VALUES (0, ?, ?)";
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const result = await connection.query(sqlInsert, [username, hashedPassword]);  
+      console.log("--------> Created new User");
+      console.log(result.insertId);
+      res.sendStatus(201); 
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('無法連線'); 
+  }finally{
+    connection.release(); 
+  }
 });

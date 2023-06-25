@@ -1,5 +1,5 @@
 /*相關函式庫*/
-const clock = require('./clock.js');
+const clock = require('../clock.js');
 const mqtt = require("mqtt");
 
 /*MQTT Client*/

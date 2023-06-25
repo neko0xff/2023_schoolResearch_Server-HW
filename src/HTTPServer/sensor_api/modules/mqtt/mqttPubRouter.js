@@ -1,7 +1,7 @@
 /*相関函式庫*/
 var mqttClient=require('./mqttClient.js');
-var database=require('./database.js');
-var clock=require('./clock.js');
+var database=require('../database.js');
+var clock=require('../clock.js');
 
 /*Pub Client*/
 async function pubRouter(Pubtopic,SQL){
@@ -12,11 +12,11 @@ async function pubRouter(Pubtopic,SQL){
     try{
         const [results, fields] = await connection.execute(SQL); // 執行 SQL 查詢
         var data=JSON.stringify(results);
-        mqttClient.Pub(Pubtopic,data,1000);
+        mqttClient.Pub(Pubtopic,data,5000);
         console.log(`[${clock.consoleTime()}] Pub Data= ${data}` );
     }catch(error){
         console.error("["+clock.consoleTime()`] Failed to execute query: ${error.message}`);
-        mqttClient.Pub(Pubtopic,'Not Connect',1000);
+        mqttClient.Pub(Pubtopic,'Not Connect',5000);
         throw error;
     }finally{
         connection.release(); // 釋放連接
