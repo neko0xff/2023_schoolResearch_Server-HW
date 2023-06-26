@@ -1,6 +1,5 @@
 var express = require('express');
 const compression = require('compression');
-const bodyparser = require("body-parser");
 var clock=require('./clock.js');
 var ConfigParser = require('configparser');
 const configSet = new ConfigParser();
@@ -9,16 +8,18 @@ configSet.sections();
 
 /*Server 起始設定*/
 var httpService=express();
-var port=configSet.get('APIRouter','port'); 
+var port=configSet.get('Service','HTTP'); 
 
-httpService.listen(port,function(){
-  console.log(`[${clock.consoleTime()}] API Server Started!`);
-  console.log(`[${clock.consoleTime()}] API Server URL: http://[Server_IP]:%s`,port);
-});
-
+/*啟用時使用的設定*/
 httpService.use(compression()); //啟用gzip壓縮
-httpService.use(bodyparser.urlencoded({ extended: false }));
-httpService.use(bodyparser.json());
+httpService.use(express.urlencoded({ extended: false })); //傳送方式：x-www-form-urlencoded
+httpService.use(express.json()); //傳送方式：json
+
+/*通訊埠*/
+httpService.listen(port,function(){
+  console.log(`[${clock.consoleTime()}] HTTP API Server Started!`);
+  console.log(`[${clock.consoleTime()}] HTTP API Server URL: http://[Server_IP]:%s`,port);
+});
 
 function app(){
     return httpService;

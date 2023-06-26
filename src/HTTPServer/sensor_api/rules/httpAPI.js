@@ -2,7 +2,7 @@
 var clock=require('../modules/clock.js');
 var httpServer=require('../modules/httpServer.js');
 var database=require('../modules/database.js');
-const bcrypt = require("bcrypt")
+var bcrypt = require("bcrypt");
 
 /*時間*/
 var date= clock.SQLDate();
@@ -28,10 +28,10 @@ app.get('/testDB', async function(req, res) {
       const dbValue = results[0].solution;
       const str = "The solution is: " + dbValue.toString();
       console.log(`[${clock.consoleTime()}] ${str}`);
-      res.end(str);
+      res.end('1');
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.end('無法連線');
+      res.end('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -41,18 +41,12 @@ app.get('/testDB', async function(req, res) {
 /*開發版上傳專用*/
 //api: /upload/:deviceID/data? 
 app.post('/upload/:deviceID/data', async function(req, res){
+    //Query: ?hum=(num)&temp=(num)
     var device_ID=req.params.deviceID;
+    const { hum,temp,tvoc,co,co2,pm25,o3 } = req.query;
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
-    //Query: ?hum=(num)&temp=(num)
-    var hum=req.query.hum; 
-    var temp=req.query.temp; 
-    var tvoc=req.query.tvoc;
-    var co=req.query.co;
-    var co2=req.query.co2;
-    var pm25=req.query.pm25;
-    var o3=req.query.o3;
-    var data="("+hum+","+temp+","+tvoc+","+co+","+ co2+"," + pm25+","+ o3 +",'"+date+"','"+time+"');";
+    var data=`(${hum},${temp},${tvoc},${co},${co2},${pm25},${o3},'${date}','${time}');`;
     var uploadSQL="INSERT INTO "+device_ID+"_Table(hum,temp,tvoc,co,co2,pm25,o3,date,time) VALUES"+data;
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -65,7 +59,7 @@ app.post('/upload/:deviceID/data', async function(req, res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     } finally{
       connection.release(); // 釋放連接
@@ -87,7 +81,7 @@ app.get('/StatusGet/:deviceID/powerStatus',async function(req,res){
     console.log("["`${clock.consoleTime()}] ${data}`);
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send("無法連線");
+    res.send('-1');
     throw error;
   }finally{
     connection.release(); // 釋放連接
@@ -107,14 +101,13 @@ app.get('/read/:deviceID/hum', async function(req, res) {
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
     try {
-      
       const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
       var data=JSON.stringify(results);
       res.send(results);
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -135,7 +128,7 @@ app.get('/read/:deviceID/temp', async function(req, res) {
       console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -158,7 +151,7 @@ app.get('/read/:deviceID/tvoc',async function(req, res){
       console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -180,7 +173,7 @@ app.get('/read/:deviceID/co2',async function(req, res){
       res.send(results);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -202,7 +195,7 @@ app.get('/read/:deviceID/co',async function(req, res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -224,7 +217,7 @@ app.get('/read/:deviceID/o3',async function(req, res){
     console.log(`[${clock.consoleTime()}] ${data}`);
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('無法連線');
+    res.send('-1');
     throw error;
   }finally{
     connection.release(); // 釋放連接
@@ -240,7 +233,7 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   const status = req.query.status;
   const updateSQL ="UPDATE `" + device_ID + "_Status` SET `status`= '" +status +"'  WHERE `"+ device_ID +"_Status`.`name`= 'fan1'";
   // UPDATE `Switch01_Status` SET `status`='0' WHERE `Switch01_Status`.`name`= 'fan1'
-  var Recdata= "('fan1',"+ status +",'"+ date +"','"+ time +"')";
+  var Recdata= `('fan1',${status},'${date}','${time}')`;
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
   
   /*Update*/
@@ -251,7 +244,7 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
     connection.release(); // 釋放連接
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('無法連線');
+    res.send('-1');
     throw error;
   }finally{
     
@@ -262,12 +255,12 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
-    connection.release(); // 釋放連接
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('無法連線');
+    res.send('-1');
     throw error;
   }finally{
+    
   }
 
   /*status*/
@@ -285,6 +278,7 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
     console.log(error);
   }
 
+  connection.release(); // 釋放連接
 });
 app.get('/switchCtr/:deviceID/fan2', async function(req, res){
   const device_ID = req.params.deviceID;
@@ -302,14 +296,13 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接  
     const [results, fields] = await connection.execute(updateSQL); // 執行 SQL 查詢
     var data=JSON.stringify(results);
-    console.log(`[${clock.consoleTime()}] ${data}`);
-    connection.release(); // 釋放連接
+    console.log(`[${clock.consoleTime()}] ${data}`);  
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('無法連線');
+    res.send('-1');
     throw error;
   }finally{
-      
+    connection.release(); // 釋放連接  
   }
 
   /*Rec*/
@@ -318,13 +311,12 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
     res.send(results);
-    connection.release(); // 釋放連接
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('無法連線');
+    res.send('-1');
     throw error;
   }finally{
-      
+    connection.release(); // 釋放連接  
   }
 
   /*status*/
@@ -361,7 +353,7 @@ app.get('/statusRec/:deviceID/view',async function(req,res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('無法連線');
+      res.send('-1');
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -369,34 +361,70 @@ app.get('/statusRec/:deviceID/view',async function(req,res){
 
 });
 
-/*使用者認証*/
-app.post("/createUser", async function(req, res) {
-  const { username, password } = req.body;
+//使用者認証
+/*建立使用者*/
+//接收格式：x-www-form-urlencoded
+app.post("/CreateUser", async function(req, res) {
+  const { username, password, LoginName } = req.body;
+  var salt = 10;
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+  var userData = `('${username}','${hashedPassword}','${LoginName}')`;
+  var addUserSQL = `INSERT INTO Users (username, password, LoginName) VALUES ${userData}`;
 
-  try {
-    const cnDB = database.cnDB();
-    const connection = await cnDB.getConnection(); 
-
-    const sqlSearch = "SELECT * FROM Users WHERE username = ?";
-    const [searchResults] = await connection.query(sqlSearch, [username]);
-    console.log("------> Search Results");
-    console.log(searchResults.length);
-
-    if (searchResults.length !== 0) {
-      console.log("------> User already exists");
-      res.sendStatus(409); 
+  const cnDB = database.cnDB(); 
+  const connection = await cnDB.getConnection();
+  
+  /*檢查使用者是否存在資料庫，若無則直接建立*/
+  try {  
+    const [results] = await connection.execute(searchSQL);
+    if (results.length !== 0) {
+      connection.release();
+      console.log(`[${clock.consoleTime()}] ${username} already created!`);
+      res.send('0'); 
     } else {
-      const sqlInsert = "INSERT INTO Users VALUES (0, ?, ?)";
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const result = await connection.query(sqlInsert, [username, hashedPassword]);  
-      console.log("--------> Created new User");
-      console.log(result.insertId);
-      res.sendStatus(201); 
+      await connection.execute(addUserSQL);
+      console.log(`[${clock.consoleTime()}] ${username} created successfully`);
+      res.send('1');
+    }
+  } catch (error) {  
+    console.log(`[${clock.consoleTime()}] Error creating ${username}`);
+    res.send('-1');
+  } finally {
+    connection.release();
+  }
+});
+
+/*使用者*/
+//接收格式：x-www-form-urlencoded
+app.post("/Login", async function(req, res) {
+  const { username, password } = req.body;
+  const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+
+  const cnDB = database.cnDB(); 
+  const connection = await cnDB.getConnection();
+  
+  /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
+  try {  
+    const [results] = await connection.execute(searchSQL);
+    if (results.length == 0) {
+      connection.release();
+      console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
+      res.send('0'); 
+    } else {
+      const hashedPassword = results[0].password;
+      if (await bcrypt.compare(password, hashedPassword)) {
+        console.log(`[${clock.consoleTime()}] ${username} is Login Successful!`);
+        res.send('1');
+      }else{
+        console.log(`[${clock.consoleTime()}] ${username} is Password incorrect!!`)
+        res.send('0');
+      } 
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).send('無法連線'); 
-  }finally{
-    connection.release(); 
+    console.log(`[${clock.consoleTime()}] Error Login`);
+    res.send('-1');
+  } finally {
+    connection.release();
   }
 });

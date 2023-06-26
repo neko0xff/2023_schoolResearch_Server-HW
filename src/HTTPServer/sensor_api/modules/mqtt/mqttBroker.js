@@ -5,7 +5,7 @@ var ConfigParser = require('configparser');
 const configSet = new ConfigParser();
 configSet.read('./modules/config/serviceSet.cfg');
 configSet.sections();
-var port = configSet.get('MQTT','port');
+var port = configSet.get('Service','MQTT');
 
 /*時間*/
 var clock=require('../clock.js');
