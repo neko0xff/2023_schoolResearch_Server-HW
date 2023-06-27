@@ -29,7 +29,6 @@ async function pubSensor(device_ID,sensor){
     this.pubRouter(topicPub,readSQL);
 }
 
-
 module.exports={
     pubRouter:pubRouter,
     pubSensor:pubSensor,

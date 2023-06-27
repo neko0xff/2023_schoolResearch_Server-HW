@@ -12,7 +12,7 @@ var clock=require('../clock.js');
 
 /*主程式*/
 broker.listen(port, function () {
-    console.log(clock.consoleTime()+' : MQTT Server Started!');
-    console.log(clock.consoleTime()+' : MQTT Server URL: http://[Server_IP]:'+port);
+    console.log(`[${clock.consoleTime()}] MQTT Server Started!`);
+    console.log(`[${clock.consoleTime()}] MQTT Server URL: http://[Server_IP]:${port}`);
 });
 
