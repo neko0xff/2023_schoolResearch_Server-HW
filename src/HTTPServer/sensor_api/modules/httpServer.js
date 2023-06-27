@@ -1,4 +1,6 @@
 var express = require('express');
+var swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./config/swagger.json');
 const compression = require('compression');
 var clock=require('./clock.js');
 var ConfigParser = require('configparser');
@@ -14,6 +16,8 @@ var port=configSet.get('Service','HTTP');
 httpService.use(compression()); //啟用gzip壓縮
 httpService.use(express.urlencoded({ extended: false })); //傳送方式：x-www-form-urlencoded
 httpService.use(express.json()); //傳送方式：json
+httpService.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); //API Docs
+
 
 /*通訊埠*/
 httpService.listen(port,function(){

@@ -15,11 +15,11 @@ var app=httpServer.app();
 /*測試是否運行*/
 app.get('/',async function(req,res){
     res.send(`[${clock.consoleTime()}] API Server is running!`);
-    console.log(`[${clock.consoleTime()}]  HTTP GET /`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /`);
 });
 app.get('/testDB', async function(req, res) {
     var cnSql = 'SELECT 1 + 1 AS solution';
-    console.log(`[${clock.consoleTime()}]  HTTP GET /testDB`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /testDB`);
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
@@ -395,7 +395,7 @@ app.post("/CreateUser", async function(req, res) {
   }
 });
 
-/*使用者*/
+/*使用者登入*/
 //接收格式：x-www-form-urlencoded
 app.post("/Login", async function(req, res) {
   const { username, password } = req.body;
@@ -410,7 +410,7 @@ app.post("/Login", async function(req, res) {
     if (results.length == 0) {
       connection.release();
       console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
-      res.send('0'); 
+      res.send('-1'); 
     } else {
       const hashedPassword = results[0].password;
       if (await bcrypt.compare(password, hashedPassword)) {
