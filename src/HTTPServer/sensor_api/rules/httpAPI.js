@@ -371,11 +371,12 @@ app.post("/CreateUser", async function(req, res) {
   const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
   var userData = `('${username}','${hashedPassword}','${LoginName}')`;
   var addUserSQL = `INSERT INTO Users (username, password, LoginName) VALUES ${userData}`;
-
+  
   const cnDB = database.cnDB(); 
   const connection = await cnDB.getConnection();
   
   /*檢查使用者是否存在資料庫，若無則直接建立*/
+  console.log(`[${clock.consoleTime()}] HTTP POST /CreateUser`);
   try {  
     const [results] = await connection.execute(searchSQL);
     if (results.length !== 0) {
@@ -405,25 +406,35 @@ app.post("/Login", async function(req, res) {
   const connection = await cnDB.getConnection();
   
   /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
+  console.log(`[${clock.consoleTime()}] HTTP POST /Login`);
   try {  
     const [results] = await connection.execute(searchSQL);
     if (results.length == 0) {
       connection.release();
       console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
-      res.send('-1'); 
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta); 
     } else {
       const hashedPassword = results[0].password;
+      const LoginName = results[0].LoginName;
       if (await bcrypt.compare(password, hashedPassword)) {
         console.log(`[${clock.consoleTime()}] ${username} is Login Successful!`);
-        res.send('1');
+        const responseMeta = {
+          code: '1',
+          username: username,
+          LoginName: LoginName
+        };
+        res.json(responseMeta);
       }else{
         console.log(`[${clock.consoleTime()}] ${username} is Password incorrect!!`)
-        res.send('0');
+        const responseMeta = {code: '0'};
+        res.send(responseMeta);
       } 
     }
   } catch (error) {
     console.log(`[${clock.consoleTime()}] Error Login`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
   } finally {
     connection.release();
   }
