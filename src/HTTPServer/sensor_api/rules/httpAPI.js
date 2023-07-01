@@ -13,10 +13,12 @@ var cnDB=null;
 var app=httpServer.app();
 
 /*測試是否運行*/
+// GET / => test HTTP API
 app.get('/',async function(req,res){
-    res.send(`[${clock.consoleTime()}] API Server is running!`);
+    res.send(`HTTP API Server is running!`);
     console.log(`[${clock.consoleTime()}] HTTP GET /`);
 });
+// GET /testDB => test DataBase Connect
 app.get('/testDB', async function(req, res) {
     var cnSql = 'SELECT 1 + 1 AS solution';
     console.log(`[${clock.consoleTime()}] HTTP GET /testDB`);
@@ -28,10 +30,12 @@ app.get('/testDB', async function(req, res) {
       const dbValue = results[0].solution;
       const str = "The solution is: " + dbValue.toString();
       console.log(`[${clock.consoleTime()}] ${str}`);
-      res.end('1');
+      const responseMeta = {code: '1'};
+      res.send(responseMeta);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.end('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -39,7 +43,7 @@ app.get('/testDB', async function(req, res) {
 });
 
 /*開發版上傳專用*/
-//api: /upload/:deviceID/data? 
+//POST /upload/:deviceID/data =>  開發版上傳
 app.post('/upload/:deviceID/data', async function(req, res){
     //Query: ?hum=(num)&temp=(num)
     var device_ID=req.params.deviceID;
@@ -59,13 +63,14 @@ app.post('/upload/:deviceID/data', async function(req, res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     } finally{
       connection.release(); // 釋放連接
     }
 });
-//api: /StatusGet/:deviceID/powerStatus
+// GET /StatusGet/:deviceID/powerStatus => 獲得電源狀態
 app.get('/StatusGet/:deviceID/powerStatus',async function(req,res){
   var device_ID = req.params.deviceID;
   var statusSQL = "SELECT `name`,`status` FROM `"+device_ID+"_Status` WHERE 1;";
@@ -81,17 +86,17 @@ app.get('/StatusGet/:deviceID/powerStatus',async function(req,res){
     console.log("["`${clock.consoleTime()}] ${data}`);
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
     connection.release(); // 釋放連接
   }
-
 });
 
 /*讀值*/
-// api: /read/:deviceID
 // 回傳格式: JSON
+//GET /read/:deviceID/hum => 獲得'hum'資料
 app.get('/read/:deviceID/hum', async function(req, res) {
     var device_ID = req.params.deviceID;
     var readSQL = 'SELECT hum,date,time FROM ' + device_ID + '_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -107,12 +112,14 @@ app.get('/read/:deviceID/hum', async function(req, res) {
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
     }
 });
+//GET /read/:deviceID/temp => 獲得'temp'資料
 app.get('/read/:deviceID/temp', async function(req, res) {
     var device_ID = req.params.deviceID;
     var readSQL = 'SELECT temp,date,time FROM ' + device_ID + '_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -128,13 +135,14 @@ app.get('/read/:deviceID/temp', async function(req, res) {
       console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
     }
 });
-
+//GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 app.get('/read/:deviceID/tvoc',async function(req, res){
     var device_ID=req.params.deviceID;
     var readSQL='SELECT tvoc,date,time FROM '+ device_ID+'_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -151,13 +159,15 @@ app.get('/read/:deviceID/tvoc',async function(req, res){
       console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
     }
 
 });
+//GET /read/:deviceID/co2 => 獲得'co2'資料
 app.get('/read/:deviceID/co2',async function(req, res){
     var device_ID=req.params.deviceID;
     var readSQL='SELECT co2,date,time FROM '+ device_ID+'_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -173,12 +183,15 @@ app.get('/read/:deviceID/co2',async function(req, res){
       res.send(results);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
     }
 });
+
+//GET /read/:deviceID/co => 獲得'co'資料
 app.get('/read/:deviceID/co',async function(req, res){
     var device_ID=req.params.deviceID;
     var readSQL='SELECT co,date,time FROM '+ device_ID+'_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -195,12 +208,15 @@ app.get('/read/:deviceID/co',async function(req, res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
     }
 });
+
+//GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get('/read/:deviceID/o3',async function(req, res){
   var device_ID=req.params.deviceID;
   var readSQL='SELECT co,date,time FROM '+ device_ID+'_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -217,7 +233,8 @@ app.get('/read/:deviceID/o3',async function(req, res){
     console.log(`[${clock.consoleTime()}] ${data}`);
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
     connection.release(); // 釋放連接
@@ -244,10 +261,11 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
     connection.release(); // 釋放連接
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
-    
+    connection.release(); // 釋放連接
   }
 
   /*Rec*/
@@ -257,10 +275,11 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
     const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
-    
+    connection.release(); // 釋放連接
   }
 
   /*status*/
@@ -277,9 +296,9 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   } catch (error) {
     console.log(error);
   }
-
-  connection.release(); // 釋放連接
 });
+
+// GET /switchCtr/:deviceID/fan2 => 控制fan2
 app.get('/switchCtr/:deviceID/fan2', async function(req, res){
   const device_ID = req.params.deviceID;
   console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan2`);
@@ -299,7 +318,8 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     console.log(`[${clock.consoleTime()}] ${data}`);  
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
     connection.release(); // 釋放連接  
@@ -313,7 +333,8 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     res.send(results);
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
     throw error;
   }finally{
     connection.release(); // 釋放連接  
@@ -336,7 +357,7 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
 
 });
 
-/*檢視開関控制的記錄*/
+//GET /statusRec/:deviceID/view => 檢視開関控制的記錄
 app.get('/statusRec/:deviceID/view',async function(req,res){
     var device_ID=req.params.deviceID;
     var viewSQL='SELECT * FROM '+ device_ID+'_StatusRec ORDER BY `date` AND `time` DESC LIMIT 1;';
@@ -353,7 +374,8 @@ app.get('/statusRec/:deviceID/view',async function(req,res){
       console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      res.send('-1');
+      const responseMeta = {code: '-1'};
+      res.send(responseMeta);
       throw error;
     }finally{
       connection.release(); // 釋放連接
@@ -361,8 +383,9 @@ app.get('/statusRec/:deviceID/view',async function(req,res){
 
 });
 
-//使用者認証
-/*建立使用者*/
+/*使用者認証*/
+
+//POST /CreateUser => 建立使用者
 //接收格式：x-www-form-urlencoded
 app.post("/CreateUser", async function(req, res) {
   const { username, password, LoginName } = req.body;
@@ -382,21 +405,24 @@ app.post("/CreateUser", async function(req, res) {
     if (results.length !== 0) {
       connection.release();
       console.log(`[${clock.consoleTime()}] ${username} already created!`);
-      res.send('0'); 
+      const responseMeta = {code: '0'};
+      res.send(responseMeta);
     } else {
       await connection.execute(addUserSQL);
       console.log(`[${clock.consoleTime()}] ${username} created successfully`);
-      res.send('1');
+      const responseMeta = {code: '1'};
+      res.send(responseMeta);
     }
   } catch (error) {  
     console.log(`[${clock.consoleTime()}] Error creating ${username}`);
-    res.send('-1');
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
   } finally {
     connection.release();
   }
 });
 
-/*使用者登入*/
+//POST /Login: 使用者登入
 //接收格式：x-www-form-urlencoded
 app.post("/Login", async function(req, res) {
   const { username, password } = req.body;
@@ -439,3 +465,4 @@ app.post("/Login", async function(req, res) {
     connection.release();
   }
 });
+

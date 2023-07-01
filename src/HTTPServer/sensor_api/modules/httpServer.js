@@ -18,7 +18,6 @@ httpService.use(express.urlencoded({ extended: false })); //傳送方式：x-www
 httpService.use(express.json()); //傳送方式：json
 httpService.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); //API Docs
 
-
 /*通訊埠*/
 httpService.listen(port,function(){
   console.log(`[${clock.consoleTime()}] HTTP API Server Started!`);
