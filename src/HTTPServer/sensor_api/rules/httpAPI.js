@@ -96,6 +96,29 @@ app.get('/StatusGet/:deviceID/powerStatus',async function(req,res){
 
 /*讀值*/
 // 回傳格式: JSON
+//GET /read/:deviceID/ALL
+app.get('/read/:deviceID/ALL', async function(req, res) {
+  var device_ID = req.params.deviceID;
+  var readSQL = 'SELECT * FROM ' + device_ID + '_Table ORDER BY `date` AND `time` DESC LIMIT 1;';
+  console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/ALL`);
+  
+  var cnDB=database.cnDB();
+  const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
+  try {
+    const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+    var data=JSON.stringify(results);
+    res.send(results);
+    console.log(`[${clock.consoleTime()}] ${data}`);
+  }catch (error){
+    console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
+    throw error;
+  }finally{
+    connection.release(); // 釋放連接
+  }
+});
 //GET /read/:deviceID/hum => 獲得'hum'資料
 app.get('/read/:deviceID/hum', async function(req, res) {
     var device_ID = req.params.deviceID;
@@ -415,6 +438,42 @@ app.post("/CreateUser", async function(req, res) {
     }
   } catch (error) {  
     console.log(`[${clock.consoleTime()}] Error creating ${username}`);
+    const responseMeta = {code: '-1'};
+    res.send(responseMeta);
+  } finally {
+    connection.release();
+  }
+});
+
+//POST /UpdateUserData => 改變使用者相關資料
+//接收格式：x-www-form-urlencoded
+app.post("/UpdateUserData", async function(req, res) {
+  const { username, password, LoginName } = req.body;
+  var salt = 10;
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+  var UPDATEUserSQL = `UPDATE Users SET password='${hashedPassword}',LoginName='${LoginName}' WHERE username='${username}';`;
+  
+  const cnDB = database.cnDB(); 
+  const connection = await cnDB.getConnection();
+  
+  /*檢查使用者是否存在資料庫，若無則直接改變*/
+  console.log(`[${clock.consoleTime()}] HTTP POST /UpdateUserData`);
+  try {  
+    const [results] = await connection.execute(searchSQL);
+    if (results.length !== 0) {
+      await connection.execute(UPDATEUserSQL);
+      console.log(`[${clock.consoleTime()}] ${username} update successfully`);
+      const responseMeta = {code: '1'};
+      res.send(responseMeta);
+    } else{
+      connection.release();
+      console.log(`[${clock.consoleTime()}] ${username} is Not Found in Database!`);
+      const responseMeta = {code: '0'};
+      res.send(responseMeta);
+    }
+  } catch (error) {  
+    console.log(`[${clock.consoleTime()}] Error update ${username}`);
     const responseMeta = {code: '-1'};
     res.send(responseMeta);
   } finally {
