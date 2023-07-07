@@ -1,0 +1,35 @@
+version: '1.0'
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+    restart: always
+    ports:
+       - 8000:8000
+       - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+    ports: 
+       - 8083:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports: 
+       - 8084:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  portainer_data:
+    external: true
