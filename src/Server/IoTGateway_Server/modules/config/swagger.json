@@ -102,6 +102,24 @@
         }
       }
     },
+    "/read/{deviceID}/ALL": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/read/{deviceID}/hum": {
       "get": {
         "description": "",
@@ -256,7 +274,61 @@
         }
       }
     },
-    "/statusRec/{deviceID}/view": {
+    "/statusRec/{deviceID}/viewALL": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statusNow/{deviceID}/viewfan1": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statusNow/{deviceID}/viewfan2": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statusNow/{deviceID}/viewALL": {
       "get": {
         "description": "",
         "parameters": [
@@ -275,6 +347,36 @@
       }
     },
     "/CreateUser": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "LoginName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/UpdateUserData": {
       "post": {
         "description": "",
         "parameters": [
