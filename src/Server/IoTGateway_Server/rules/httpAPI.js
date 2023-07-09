@@ -267,7 +267,7 @@ app.get('/read/:deviceID/o3',async function(req, res){
 /*開関控制*/
 app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   const device_ID = req.params.deviceID;
-  console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/' + device_ID + '/fan1'`);
+  console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan1'`);
   
   // Query: ?
   const status = req.query.status;
@@ -276,12 +276,13 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   var Recdata= `('fan1',${status},'${date}','${time}')`;
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
   
+  
+  var cnDB=database.cnDB();
+  const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
   /*Update*/
   try{
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     const [results, fields] = await connection.execute(updateSQL); // 執行 SQL 查詢
-    connection.release(); // 釋放連接
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
     const responseMeta = {code: '-1'};
@@ -292,8 +293,6 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
 
   /*Rec*/
   try{
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
   }catch (error){
     console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
@@ -309,11 +308,11 @@ app.get('/switchCtr/:deviceID/fan1', async function(req, res){
   /*status*/
   try {
     if (status == 1) {
-      const statusStr = `${device_ID} is On!`;
+      const statusStr = `Fan1 is On!`;
       console.log(`[${clock.consoleTime()}] ${statusStr}`);
       res.send(status);
     } else if (status == 0) {
-      const statusStr = `${device_ID} is Off!`;
+      const statusStr = `Fan1 is Off!`;
       console.log(`[${clock.consoleTime()}] ${statusStr}`);
       res.send(status);
     }
@@ -333,10 +332,10 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
   var Recdata= "('fan2',"+ status +",'"+ date +"','"+ time +"')";
   const RecSQL = "INSERT INTO `"+ device_ID +"_StatusRec`(`switch`, `status`, `date`, `time`) VALUES " + Recdata;
   
+  var cnDB=database.cnDB();
+  const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接  
   /*Update*/
    try{  
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接  
     const [results, fields] = await connection.execute(updateSQL); // 執行 SQL 查詢
     var data=JSON.stringify(results);
     console.log(`[${clock.consoleTime()}] ${data}`);  
@@ -351,8 +350,6 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
 
   /*Rec*/
   try{
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
     res.send(results);
   }catch (error){
@@ -361,17 +358,19 @@ app.get('/switchCtr/:deviceID/fan2', async function(req, res){
     res.send(responseMeta);
     throw error;
   }finally{
-    connection.release(); // 釋放連接  
+     
   }
+
+  connection.release(); // 釋放連接 
 
   /*status*/
   try {
       if (status == 1) {
-        const statusStr = device_ID + ' is On!';
+        const statusStr = 'Fan2 is On!';
         console.log(`[${clock.consoleTime()}] ${statusStr}`);
         res.send(status);
       } else if (status == 0) {
-        const statusStr = device_ID + ' is Off!';
+        const statusStr = 'Fan2 is Off!';
         console.log(`[${clock.consoleTime()}] ${statusStr}`);
         res.send(status);
       }
