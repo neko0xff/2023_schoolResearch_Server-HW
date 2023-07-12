@@ -1,14 +1,14 @@
 /*相關函式庫*/
-const clock = require('../clock.js');
+const clock = require("../clock.js");
 const mqtt = require("mqtt");
 
 /*MQTT Client*/
-var ConfigParser = require('configparser');
+var ConfigParser = require("configparser");
 const configSet = new ConfigParser();
-configSet.read('./modules/config/cnSet.cfg');
+configSet.read("./modules/config/cnSet.cfg");
 configSet.sections();
-var ServerSource = configSet.get('MQTT','source');
-var port = configSet.get('MQTT','port');
+var ServerSource = configSet.get("MQTT","source");
+var port = configSet.get("MQTT","port");
 var client = mqtt.connect(`mqtt://${ServerSource}:${port}`);
 
 /*主程式*/
@@ -34,4 +34,4 @@ function Pub(topic,value,timer){
 module.exports={
     Pub:Pub,
     Sub:Sub,
-}
+};

@@ -1,6 +1,6 @@
+/* eslint-disable linebreak-style */
 /*MQTT Lib*/
 var mqttRouter= require("../modules/mqtt/mqttPubRouter.js");
-
 /*定義的MQTT 路由*/
 mqttRouter.pubSensor("Sensor01","hum");
 mqttRouter.pubSensor("Sensor01","temp");

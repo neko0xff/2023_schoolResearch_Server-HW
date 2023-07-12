@@ -1,4 +1,4 @@
-var mqttClient=require('../modules/mqtt/mqttClient.js');
+var mqttClient=require("../modules/mqtt/mqttClient.js");
 
 /*訂閱測試*/
 mqttClient.Sub("/Sensor01/hum");
