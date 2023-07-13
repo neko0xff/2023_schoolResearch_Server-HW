@@ -6,7 +6,7 @@ var clock=require("../clock.js");
 
 /*Pub Client*/
 async function pubRouter(Pubtopic,SQL){
-    console.log("["+clock.consoleTime() + "] MQTT Pub= " + Pubtopic );
+    console.log(`[${clock.consoleTime()}] MQTT Pub= ${Pubtopic}`);
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
@@ -16,7 +16,7 @@ async function pubRouter(Pubtopic,SQL){
         mqttClient.Pub(Pubtopic,data,5000);
         console.log(`[${clock.consoleTime()}] Pub Data= ${data}` );
     }catch(error){
-        console.error("["+clock.consoleTime()`] Failed to execute query: ${error.message}`);
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         mqttClient.Pub(Pubtopic,"Not Connect",5000);
         throw error;
     }finally{
@@ -25,7 +25,7 @@ async function pubRouter(Pubtopic,SQL){
 }
 
 async function pubSensor(device_ID,sensor){
-    var readSQL = `SELECT ${sensor},date,time FROM ${device_ID}_Table ORDER BY date AND time DESC LIMIT 1;`;
+    var readSQL = `SELECT ${sensor},date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     var topicPub = `/${device_ID}/${sensor}`;
     this.pubRouter(topicPub,readSQL);
 }

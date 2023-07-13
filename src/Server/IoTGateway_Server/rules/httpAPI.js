@@ -105,7 +105,7 @@ app.get("/StatusGet/:deviceID/powerStatus",async function(req,res){
 //GET /read/:deviceID/ALL
 app.get("/read/:deviceID/ALL", async function(req, res) {
     var device_ID = req.params.deviceID;
-    var readSQL = `SELECT * FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL = `SELECT * FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/ALL`);
   
     var cnDB=database.cnDB();
@@ -128,7 +128,7 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
 //GET /read/:deviceID/hum => 獲得'hum'資料
 app.get("/read/:deviceID/hum", async function(req, res) {
     var device_ID = req.params.deviceID;
-    var readSQL = `SELECT hum,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL = `SELECT hum,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
@@ -151,7 +151,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
 //GET /read/:deviceID/temp => 獲得'temp'資料
 app.get("/read/:deviceID/temp", async function(req, res) {
     var device_ID = req.params.deviceID;
-    var readSQL = `SELECT temp,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL = `SELECT temp,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
@@ -174,7 +174,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 //GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 app.get("/read/:deviceID/tvoc",async function(req, res){
     var device_ID=req.params.deviceID;
-    var readSQL=`SELECT tvoc,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL=`SELECT tvoc,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/tvoc`);
     
     var cnDB=database.cnDB();
@@ -199,7 +199,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
 //GET /read/:deviceID/co2 => 獲得'co2'資料
 app.get("/read/:deviceID/co2",async function(req, res){
     var device_ID=req.params.deviceID;
-    var readSQL=`SELECT co2,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL=`SELECT co2,date,time FROM ${device_ID}_Table ORDER BY ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
@@ -223,7 +223,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
 //GET /read/:deviceID/co => 獲得'co'資料
 app.get("/read/:deviceID/co",async function(req, res){
     var device_ID=req.params.deviceID;
-    var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
+    var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
@@ -248,8 +248,8 @@ app.get("/read/:deviceID/co",async function(req, res){
 //GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get("/read/:deviceID/o3",async function(req, res){
     var device_ID=req.params.deviceID;
-    var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY ${date} AND ${time} DESC LIMIT 1;`;
-    console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
+    var readSQL=`SELECT o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/o3`);
   
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -380,7 +380,7 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
 //GET /statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/statusRec/:deviceID/viewALL",async function(req,res){
     var device_ID=req.params.deviceID;
-    var viewSQL=`SELECT * FROM ${device_ID}_StatusRec ORDER BY ${date} AND ${time};`;
+    var viewSQL=`SELECT * FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/view`);
     
     var cnDB=database.cnDB();
