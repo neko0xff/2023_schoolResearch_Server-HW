@@ -8,7 +8,7 @@
   * '/doc': 功能文件
 ---
 ## 程式
-- IoT Gateway: '/src/sensor-api'
+- IoT Gateway: '/src/Server'
   * 使用語言： nodejs(JavaScrpit)
   * docker image: Alpine
   * 通信協定
@@ -20,5 +20,12 @@
     2. ESP8266
 ---
 ## 處理資料
-- 使用者登入/建立
-- 感測器接收到的數值
+- 使用者
+  * 登入
+  * 建立
+  * 修改
+- IoT 
+  * 接收感測器數值
+  * 查詢己入資料庫的各項數值
+  * 控制開關
+
