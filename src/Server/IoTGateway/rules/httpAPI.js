@@ -107,23 +107,23 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
     var device_ID = req.params.deviceID;
     var readSQL = `SELECT * FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/ALL`);
-  
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
-
+    
+    var cnDB = database.cnDB();
+    const connection = await cnDB.getConnection(); 
+    
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
-        var data=JSON.stringify(results);
-        res.send(results);
-        console.log(`[${clock.consoleTime()}] ${data}`);
-    }catch (error){
-        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
-        throw error;
-    }finally{
-        connection.release(); // 釋放連接
-    }
+      const [results, fields] = await connection.execute(readSQL); 
+      var data = JSON.stringify(results);
+      res.send(results);
+      console.log(`[${clock.consoleTime()}] ${data}`);
+    } catch (error) {
+      console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+      const responseMeta = { code: "-1", error: error.message };
+      res.status(500).send(responseMeta);
+      throw error;
+    } finally {
+      connection.release(); // 釋放連接
+    }    
 });
 //GET /read/:deviceID/hum => 獲得'hum'資料
 app.get("/read/:deviceID/hum", async function(req, res) {
@@ -132,20 +132,20 @@ app.get("/read/:deviceID/hum", async function(req, res) {
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
 
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         var data=JSON.stringify(results);
         res.send(results);
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 });
 //GET /read/:deviceID/temp => 獲得'temp'資料
@@ -155,20 +155,20 @@ app.get("/read/:deviceID/temp", async function(req, res) {
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
 
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         var data=JSON.stringify(results);
         res.send(results);
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 });
 //GET /read/:deviceID/tvoc => 獲得'tvoc'資料
@@ -178,21 +178,21 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/tvoc`);
     
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
 
     /*run*/
     try { 
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         var data=JSON.stringify(results);
         res.send(results);
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 
 });
@@ -203,20 +203,20 @@ app.get("/read/:deviceID/co2",async function(req, res){
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
 
     /*run*/
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         console.log(`[${clock.consoleTime()}]  ${results}`);
         res.send(results);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 });
 
@@ -227,21 +227,21 @@ app.get("/read/:deviceID/co",async function(req, res){
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
     
     /*run*/
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         var data=JSON.stringify(results);
         res.send(results);
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 });
 
@@ -252,21 +252,21 @@ app.get("/read/:deviceID/o3",async function(req, res){
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/o3`);
   
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+    const connection = await cnDB.getConnection(); 
   
     /*run*/
     try {
-        const [results, fields] = await connection.execute(readSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(readSQL); 
         var data=JSON.stringify(results);
         res.send(results);
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
-        connection.release(); // 釋放連接
+        connection.release(); 
     }
 });
 
@@ -284,11 +284,11 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
         const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES ${Recdata}`;
   
         var cnDB=database.cnDB();
-        const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+        const connection = await cnDB.getConnection(); 
 
         /*Rec*/
         try{
-            const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
+            const [results, fields] = await connection.execute(RecSQL); 
         } catch (error){
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
@@ -296,13 +296,14 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
 
         /*Update*/
         try{
-            const [results, fields] = await connection.execute(updateSQL); // 執行 SQL 查詢
+            const [results, fields] = await connection.execute(updateSQL); 
         } catch (error) {
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
         } finally {
-            connection.release(); // 釋放連接
+            connection.release(); 
         }
+        
 
         /*status*/
         let response = {};
@@ -319,7 +320,8 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
         return;
     } catch (error) {
         console.log(error);
-        res.status(500).send("Internal Server Error");
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
     }
 });
 
@@ -338,24 +340,25 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
         const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES` + Recdata;
   
         var cnDB=database.cnDB();
-        const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+        const connection = await cnDB.getConnection(); 
 
         /*Rec*/
         try{
-            const [results, fields] = await connection.execute(RecSQL); // 執行 SQL 查詢
+            const [results, fields] = await connection.execute(RecSQL); 
         } catch (error){
+            console.log(error);
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
         }
 
         /*Update*/
         try{
-            const [results, fields] = await connection.execute(updateSQL); // 執行 SQL 查詢
-        } catch (error) {
+            const [results, fields] = await connection.execute(updateSQL); 
+        } catch(error) {    
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
         } finally {
-            connection.release(); // 釋放連接
+            connection.release(); 
         }
 
         /*status*/
@@ -373,7 +376,8 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
         return;
     } catch (error) {
         console.log(error);
-        res.status(500).send("Internal Server Error");
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
     }
 });
 
@@ -394,8 +398,8 @@ app.get("/statusRec/:deviceID/viewALL",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -420,8 +424,8 @@ app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -446,8 +450,8 @@ app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -472,8 +476,8 @@ app.get("/statusNow/:deviceID/viewALL",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -513,8 +517,8 @@ app.post("/CreateUser", async function(req, res) {
         }
     } catch (error) {  
         console.log(`[${clock.consoleTime()}] Error creating ${username}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
     } finally {
         connection.release();
     }
@@ -549,8 +553,8 @@ app.post("/UpdateUserData", async function(req, res) {
         }
     } catch (error) {  
         console.log(`[${clock.consoleTime()}] Error update ${username}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
     } finally {
         connection.release();
     }
@@ -593,8 +597,8 @@ app.post("/Login", async function(req, res) {
         }
     } catch (error) {
         console.log(`[${clock.consoleTime()}] Error Login`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
     } finally {
         connection.release();
     }
