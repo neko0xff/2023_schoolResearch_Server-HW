@@ -105,7 +105,7 @@ app.get("/StatusGet/:deviceID/powerStatus",async function(req,res){
 //GET /read/:deviceID/ALL
 app.get("/read/:deviceID/ALL", async function(req, res) {
     var device_ID = req.params.deviceID;
-    var readSQL = `SELECT * FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL = `SELECT hum,temp,tvoc,co2,co,pm25,o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/ALL`);
     
     var cnDB = database.cnDB();
@@ -245,6 +245,31 @@ app.get("/read/:deviceID/co",async function(req, res){
     }
 });
 
+//GET /read/:deviceID/pm25 => 獲得'pm25'資料
+app.get("/read/:deviceID/pm25",async function(req, res){
+    var device_ID=req.params.deviceID;
+    var readSQL=`SELECT pm25,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/pm25`);
+  
+    var cnDB=database.cnDB();
+    const connection = await cnDB.getConnection(); 
+  
+    /*run*/
+    try {
+        const [results, fields] = await connection.execute(readSQL); 
+        var data=JSON.stringify(results);
+        res.send(results);
+        console.log(`[${clock.consoleTime()}] ${data}`);
+    }catch (error){
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
+        throw error;
+    }finally{
+        connection.release(); 
+    }
+});
+
 //GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get("/read/:deviceID/o3",async function(req, res){
     var device_ID=req.params.deviceID;
@@ -304,7 +329,6 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
             connection.release(); 
         }
         
-
         /*status*/
         let response = {};
         if (status == 1) {
@@ -384,7 +408,7 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
 //GET /statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/statusRec/:deviceID/viewALL",async function(req,res){
     var device_ID=req.params.deviceID;
-    var viewSQL=`SELECT * FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
+    var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/view`);
     
     var cnDB=database.cnDB();
@@ -493,7 +517,7 @@ app.post("/CreateUser", async function(req, res) {
     const { username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
     var userData = `('${username}','${hashedPassword}','${LoginName}')`;
     var addUserSQL = `INSERT INTO Users (username, password, LoginName) VALUES ${userData}`;
   
@@ -530,7 +554,7 @@ app.post("/UpdateUserData", async function(req, res) {
     const { username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
     var UPDATEUserSQL = `UPDATE Users SET password='${hashedPassword}',LoginName='${LoginName}' WHERE username='${username}';`;
   
     const cnDB = database.cnDB(); 
@@ -564,7 +588,7 @@ app.post("/UpdateUserData", async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/Login", async function(req, res) {
     const { username, password } = req.body;
-    const searchSQL = `SELECT * FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
 
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
