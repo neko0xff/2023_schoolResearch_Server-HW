@@ -517,7 +517,7 @@ app.post("/CreateUser", async function(req, res) {
     const { username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
     var userData = `('${username}','${hashedPassword}','${LoginName}')`;
     var addUserSQL = `INSERT INTO Users (username, password, LoginName) VALUES ${userData}`;
   
@@ -554,7 +554,7 @@ app.post("/UpdateUserData", async function(req, res) {
     const { username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
     var UPDATEUserSQL = `UPDATE Users SET password='${hashedPassword}',LoginName='${LoginName}' WHERE username='${username}';`;
   
     const cnDB = database.cnDB(); 
@@ -588,7 +588,7 @@ app.post("/UpdateUserData", async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/Login", async function(req, res) {
     const { username, password } = req.body;
-    const searchSQL = `SELECT username FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
 
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
