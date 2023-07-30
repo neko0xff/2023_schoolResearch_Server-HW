@@ -6,13 +6,13 @@ var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
 var mqttPubRouter=require("../modules/mqtt/mqttPubRouter.js");
 var bcrypt = require("bcrypt");
+var xss = require('xss');
 
 /*時間*/
 var date= clock.SQLDate();
 var time= clock.SQLTime();
 
 /*資料庫*/
-// eslint-disable-next-line no-unused-vars
 var cnDB=null;
 var app=httpServer.app();
 
@@ -30,7 +30,6 @@ app.get("/testDB", async function(req, res) {
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
     try {  
-        // eslint-disable-next-line no-unused-vars
         const [results, fields] = await connection.execute(cnSql); // 執行 SQL 查詢
         const dbValue = results[0].solution;
         const str = `The solution is: ${dbValue.toString()}`;
@@ -51,8 +50,14 @@ app.get("/testDB", async function(req, res) {
 //POST /upload/:deviceID/data =>  開發版上傳
 app.post("/upload/:deviceID/data", async function(req, res){
     //Query: ?hum=(num)&temp=(num)
-    var device_ID=req.params.deviceID;
-    const { hum,temp,tvoc,co,co2,pm25,o3 } = req.query;
+    var device_ID=xss(req.params.deviceID);
+    const hum = xss(database.escape(req.query.hum));
+    const temp = xss(database.escape(req.query.temp));
+    const tvoc = xss(database.escape(req.query.tvoc));
+    const co = xss(database.escape(req.query.co));
+    const co2 = xss(database.escape(req.query.co2));
+    const pm25 = xss(database.escape(req.query.pm25));
+    const o3 = xss(database.escape(req.query.o3));
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
     var data=`(${hum},${temp},${tvoc},${co},${co2},${pm25},${o3},'${date}','${time}');`;
@@ -78,7 +83,7 @@ app.post("/upload/:deviceID/data", async function(req, res){
 });
 // GET /StatusGet/:deviceID/powerStatus => 獲得電源狀態
 app.get("/StatusGet/:deviceID/powerStatus",async function(req,res){
-    var device_ID = req.params.deviceID;
+    var device_ID = xss(req.params.deviceID);
     var statusSQL = `SELECT name,status FROM ${device_ID}_Status WHERE 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /StatusGet/${device_ID}/powerStatus`);
   
@@ -104,7 +109,7 @@ app.get("/StatusGet/:deviceID/powerStatus",async function(req,res){
 // 回傳格式: JSON
 //GET /read/:deviceID/ALL
 app.get("/read/:deviceID/ALL", async function(req, res) {
-    var device_ID = req.params.deviceID;
+    var device_ID = xss(req.params.deviceID);
     var readSQL = `SELECT hum,temp,tvoc,co2,co,pm25,o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/ALL`);
     
@@ -127,7 +132,7 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
 });
 //GET /read/:deviceID/hum => 獲得'hum'資料
 app.get("/read/:deviceID/hum", async function(req, res) {
-    var device_ID = req.params.deviceID;
+    var device_ID = xss(req.params.deviceID);
     var readSQL = `SELECT hum,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
@@ -150,7 +155,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
 });
 //GET /read/:deviceID/temp => 獲得'temp'資料
 app.get("/read/:deviceID/temp", async function(req, res) {
-    var device_ID = req.params.deviceID;
+    var device_ID = xss(req.params.deviceID);
     var readSQL = `SELECT temp,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
@@ -173,7 +178,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 });
 //GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 app.get("/read/:deviceID/tvoc",async function(req, res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var readSQL=`SELECT tvoc,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/tvoc`);
     
@@ -198,7 +203,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
 });
 //GET /read/:deviceID/co2 => 獲得'co2'資料
 app.get("/read/:deviceID/co2",async function(req, res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var readSQL=`SELECT co2,date,time FROM ${device_ID}_Table ORDER BY ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/co2`);
     
@@ -222,7 +227,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
 
 //GET /read/:deviceID/co => 獲得'co'資料
 app.get("/read/:deviceID/co",async function(req, res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
     
@@ -247,7 +252,7 @@ app.get("/read/:deviceID/co",async function(req, res){
 
 //GET /read/:deviceID/pm25 => 獲得'pm25'資料
 app.get("/read/:deviceID/pm25",async function(req, res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var readSQL=`SELECT pm25,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/pm25`);
   
@@ -272,7 +277,7 @@ app.get("/read/:deviceID/pm25",async function(req, res){
 
 //GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get("/read/:deviceID/o3",async function(req, res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var readSQL=`SELECT o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/o3`);
   
@@ -298,11 +303,11 @@ app.get("/read/:deviceID/o3",async function(req, res){
 /*開関控制*/
 app.get("/switchCtr/:deviceID/fan1", async function(req, res){
     try {
-        const device_ID = req.params.deviceID;
-        console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan1'`);
+        const device_ID = xss(req.params.deviceID);
+        console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan1`);
   
         // Query: ?
-        const status = req.query.status;
+        const status = xss(req.query.status);
         const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name = 'fan1'`;
         // UPDATE `Switch01_Status` SET `status`='0' WHERE `Switch01_Status`.`name`= 'fan1'
         var Recdata= `('fan1','${status}','${date}','${time}')`;
@@ -352,10 +357,9 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
 
 // GET /switchCtr/:deviceID/fan2 => 控制fan2
 app.get("/switchCtr/:deviceID/fan2", async function(req, res){
+    var device_ID=xss(req.params.deviceID);
+    console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan2`);
     try {
-        const device_ID = req.params.deviceID;
-        console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan2'`);
-  
         // Query: ?
         const status = req.query.status;
         const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name= 'fan2'`;
@@ -407,7 +411,7 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
 
 //GET /statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/statusRec/:deviceID/viewALL",async function(req,res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/view`);
     
@@ -433,7 +437,7 @@ app.get("/statusRec/:deviceID/viewALL",async function(req,res){
 
 //GET /statusNow/:deviceID/viewfan1 => 檢視fan1現在狀態
 app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT \`status\` FROM ${device_ID}_Status WHERE \`name\`= 'fan1';`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan1`);
   
@@ -459,7 +463,7 @@ app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
 
 //GET /statusNow/:deviceID/viewfan2 => 檢視fan2現在狀態
 app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
-    var device_ID=req.params.deviceID;
+    var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT \`status\` FROM ${device_ID}_Status WHERE \`name\`= 'fan2';`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan2`);
   
@@ -485,8 +489,8 @@ app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
 
 //GET /statusNow/:deviceID/viewALL => 檢視所有開関的現在狀態
 app.get("/statusNow/:deviceID/viewALL",async function(req,res){
-    var device_ID=req.params.deviceID;
-    var viewSQL=`SELECT \`name\`,\`status\` FROM ${device_ID}_Status ;`;
+    var device_ID=xss(req.params.deviceID);
+    var viewSQL=`SELECT name,status FROM ${device_ID}_Status;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewALL`);
   
     var cnDB=database.cnDB();
@@ -514,7 +518,7 @@ app.get("/statusNow/:deviceID/viewALL",async function(req,res){
 //POST /CreateUser => 建立使用者
 //接收格式：x-www-form-urlencoded
 app.post("/CreateUser", async function(req, res) {
-    const { username, password, LoginName } = req.body;
+    const {username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
     const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
@@ -551,7 +555,7 @@ app.post("/CreateUser", async function(req, res) {
 //POST /UpdateUserData => 改變使用者相關資料
 //接收格式：x-www-form-urlencoded
 app.post("/UpdateUserData", async function(req, res) {
-    const { username, password, LoginName } = req.body;
+    const {username, password, LoginName } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
     const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
@@ -587,7 +591,7 @@ app.post("/UpdateUserData", async function(req, res) {
 //POST /Login: 使用者登入
 //接收格式：x-www-form-urlencoded
 app.post("/Login", async function(req, res) {
-    const { username, password } = req.body;
+    const {username, password} = req.body;
     const searchSQL = `SELECT username,LoginName,password FROM Users WHERE username = '${username}'`;
 
     const cnDB = database.cnDB(); 

@@ -14,10 +14,16 @@ var setDB=mysql.createPool({
     database: configDB.get("MYSQL","cnDatabase")
 });
 
+function escape(VALUES){
+    var returnVar = mysql.escape(VALUES);
+    return returnVar; 
+}
+
 function cnDB(){
     return setDB;
 }
 
 module.exports={
     cnDB:cnDB,
+    escape:escape,
 };
