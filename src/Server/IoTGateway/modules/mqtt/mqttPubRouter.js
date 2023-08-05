@@ -30,6 +30,17 @@ async function pubSensor(device_ID,sensor){
     this.pubRouter(topicPub,readSQL);
 }
 
+async function pubSwitch(device_ID,switchname){
+    var readSQL = `SELECT name,status FROM ${device_ID}_Status WHERE name= '${switchname}';`;
+    var topicPub = `/${device_ID}/${switchname}`;
+    this.pubRouter(topicPub,readSQL);
+}
+
+function pubSwitchALL(device_ID){
+   this.pubSwitch(device_ID,"fan1");
+   this.pubSwitch(device_ID,"fan2"); 
+}
+
 function pubSensorALL(device_ID){
     this.pubSensor(device_ID,"hum");
     this.pubSensor(device_ID,"temp");
@@ -43,6 +54,8 @@ function pubSensorALL(device_ID){
 module.exports={
     pubRouter:pubRouter,
     pubSensor:pubSensor,
+    pubSwitch:pubSwitch,
     pubSensorALL:pubSensorALL,
+    pubSwitchALL:pubSwitchALL,
 };
 

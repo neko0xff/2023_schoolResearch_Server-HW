@@ -8,3 +8,5 @@ mqttClient.Sub("/Sensor01/co2");
 mqttClient.Sub("/Sensor01/co");
 mqttClient.Sub("/Sensor01/pm25");
 mqttClient.Sub("/Sensor01/o3");
+mqttClient.Sub("/Switch01/fan1");
+mqttClient.Sub("/Switch01/fan2");

@@ -1,5 +1,5 @@
 /*模組化啟用*/  
-var httpAPI=require("./rules/httpAPI.js"); //HTTP api
+var httpAPI=require("./rules/router.js"); //HTTP api
 var mqttBroker=require("./modules/mqtt/mqttBroker.js"); //MQTT Broker
 
 
