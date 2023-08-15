@@ -1,7 +1,7 @@
 Database Config
 ===
 ## Backup
-- File: `sensorDB.sql.gz`
+- File: `sensorDB_v1.sql.gz`
 ---
 ## Service
 ### Mysql 
