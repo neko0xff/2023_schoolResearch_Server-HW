@@ -4,11 +4,14 @@
 - 主題: IOT+空氣品質分析
 - 資料夾
   * '/src': 專題程式
-  * '/serverConfig': 環境設置
+  * '/src/serverConfig': 環境設置
   * '/doc': 功能文件
 ---
 ## 程式
-- IoT Gateway: '/src/Server'
+- 爬蟲: '/src/Server/crawlerData'
+  * 使用語言： nodejs(JavaScrpit)
+  * docker image: Alpine
+- IoT Gateway: '/src/Server/IoTGateway'
   * 使用語言： nodejs(JavaScrpit)
   * docker image: Alpine
   * 通信協定
@@ -28,4 +31,5 @@
   * 接收感測器數值
   * 查詢己入資料庫的各項數值
   * 控制開關
-
+- 爬蟲
+  * 抓取隔天的AQI數值
