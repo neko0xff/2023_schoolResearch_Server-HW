@@ -133,15 +133,22 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
+
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 });
@@ -155,17 +162,24 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
     const connection = await cnDB.getConnection(); 
 
     /*run*/
-    try { 
+    try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
+
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 
@@ -182,14 +196,22 @@ app.get("/read/:deviceID/co2",async function(req, res){
     /*run*/
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        console.log(`[${clock.consoleTime()}]  ${results}`);
-        res.send(results);
+
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 });
@@ -206,15 +228,20 @@ app.get("/read/:deviceID/co",async function(req, res){
     /*run*/
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
-        console.log(`[${clock.consoleTime()}] ${data}`);
-    }catch (error){
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}]  ${data}`);
+    } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 });
@@ -231,15 +258,20 @@ app.get("/read/:deviceID/pm25",async function(req, res){
     /*run*/
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
-        console.log(`[${clock.consoleTime()}] ${data}`);
-    }catch (error){
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}]  ${data}`);
+    } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 });
@@ -256,15 +288,22 @@ app.get("/read/:deviceID/o3",async function(req, res){
     /*run*/
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
-        console.log(`[${clock.consoleTime()}] ${data}`);
-    }catch (error){
+
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}]  ${data}`);
+    } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
         throw error;
-    }finally{
+    } finally {
         connection.release(); 
     }
 });

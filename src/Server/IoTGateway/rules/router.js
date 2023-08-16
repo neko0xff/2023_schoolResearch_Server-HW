@@ -4,3 +4,4 @@ require("./test.js");
 require("./users.js");
 require("./sensor.js");
 require("./switch.js");
+require("./crawler.js");
