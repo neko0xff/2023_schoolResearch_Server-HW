@@ -29,7 +29,7 @@ function SQLTime(){
     return Time;
 }
 
-// 將 ISO 8601 日期格式轉換為 "yyyy-mm-dd" 格式
+/* 將 ISO 8601 日期格式轉換為 "yyyy-mm-dd" 格式 */
 function formatDateToYYYYMMDD(isoDateString) {
     const date = new Date(isoDateString);
     const year = date.getFullYear();
