@@ -159,11 +159,12 @@ tags: 四技專題
 - 格式: 字串
 - 動作: 把需要建立的使用者資料送出
   * Body String Value
-    |  送出變數   |    功能    |
-    |:-----------:|:----------:|
-    | `username`  | 使用者名稱 |
-    | `password`  |    密碼    |
-    | `LoginName` |  顯示名稱  |
+    |  送出變數   |    功能     |
+    |:-----------:|:-----------:|
+    | `username`  | 使用者帳戶  |
+    | `password`  |    密碼     |
+    | `LoginName` |  顯示名稱   |
+    |   `email`   | 使用者email |
 
 ### 輸出
 - 功能: 檢查使用者是否存在資料庫，若無則直接建立
@@ -186,36 +187,12 @@ tags: 四技專題
   * Body String Value
     |  送出變數  |    功能    |
     |:----------:|:----------:|
-    | `username` | 使用者名稱 |
+    | `username` | 使用者帳戶 |
     | `password` |    密碼    |
 ### 輸出
 - 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
 - 格式: 字串 
 - 動作: 成功回傳時,則回應
-  | Respose | 表示方式 |
-  |:-------:|:--------:|
-  |   `1`   |   成功   |
-  |   `0`   |   失敗   |
-  |  `-1`   |   錯誤   |
----
-## 09 使用者資料更新
-### 方式 
-- HTTP Request: POST
-  * body
-  * MIME type: `application/x-www-form-urlencoded`
-- URL: `/Login`
-### 輸入
-- 動作: 把需要核對的使用者資料送出
-  * Body String Value
-    |  送出變數   |    功能    |
-    |:-----------:|:----------:|
-    | `username`  | 使用者名稱 |
-    | `password`  |    密碼    |
-    | `LoginName` |  顯示名稱  |
-### 輸出
-- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
-- 格式: JSON 
-- 回應狀態
   |   Respose    | 表示方式 |
   |:------------:|:--------:|
   | 回傳相關資料 |   成功   |
@@ -223,41 +200,88 @@ tags: 四技專題
   |     `-1`     |   錯誤   |
 - 成功回傳時，則回應對應的請求
   * API Request
-    |  Respose  |     表示     |
-    |:---------:|:------------:|
-    |   code    |    狀態碼    |
-    | username  | 使用者帳戶名 |
-    | LoginName | 使用者登入名 |
-
+    |  Respose  |    表示     |
+    |:---------:|:-----------:|
+    |   code    | 1(成功回傳) |
+    | username  | 使用者帳戶  |
+    | Loginname |  顯示名稱   |
+    |   email   | 使用者email |
+    
 ---
-## 10 查詢所有站點的AQI資料
+## 09 使用者資料更新
 ### 方式 
-- HTTP Request: GET
-- URL: `/crawler/AQI/ALL`
+- HTTP Request: POST
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/UpdateUserData`
 ### 輸入
-* 可查詢的部分
-    | Value |   功能   |
-    |:-----:|:--------:|
-    |  hum  |   溫度   |
+- 動作: 把需要核對的使用者資料送出
+  * Body String Value
+    |  送出變數   |    功能     |
+    |:-----------:|:-----------:|
+    | `username`  | 使用者名稱  |
+    | `password`  |    密碼     |
+    | `LoginName` |  顯示名稱   |
+    |   `email`   | 使用者email |
 ### 輸出
 - 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
 - 格式: JSON 
 - 回應狀態
-  |   Respose    | 表示方式 |
-  |:------------:|:--------:|
-  | 回傳相關資料 |   成功   |
-  |     `-1`     |   錯誤   |
-- 成功回傳時，則回應對應的請求
-  * API Request
-    |   Respose   |   表示   |
-    |:-----------:|:--------:|
-    |   siteid    | 測站編號 |
-    |  sitename   |  測站點  |
-    |     aqi     |   AQI    |
-    | monitordate |   Date   |
+  | Respose | 表示方式 |
+  |:-------:|:--------:|
+  |    1    |   成功   |
+  |   `0`   |   失敗   |
+  |  `-1`   |   錯誤   |
 
 ---
-## 11 查詢指定站點的AQI資料
+## 10 使用者忘記密碼 
+### 方式 
+- HTTP Request: POST
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/emailAuthCheck`
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想傳送的㯗位
+  * Body String Value
+    | 送出變數 |    功能     |
+    |:--------:|:-----------:|
+    | `email`  | 使用者email |
+### 輸出
+- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
+- 格式: JSON 
+- 回應狀態
+  | Respose | 表示方式 |
+  |:-------:|:--------:|
+  |   `1`   |   成功   |
+  |   `0`   |   失敗   |
+  |  `-1`   |   錯誤   |
+---
+## 11 記錄使用者的自訂值
+### 方式 
+- HTTP Request: POST
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/UserCustomValue01`
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想傳送的㯗位
+  * 可查詢的部分
+    |     Value     |     功能      |
+    |:-------------:|:-------------:|
+    |  `username`   |  使用者帳戶   |
+    | `customvar01` | 使用者自訂值1 |
+### 輸出
+- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
+- 格式: JSON 
+- 回應狀態
+  | Respose | 表示方式 |
+  |:-------:|:--------:|
+  |   `1`   |   成功   |
+  |   `0`   |   失敗   |
+  |  `-1`   |   錯誤   |
+---
+## 12 查詢指定站點的AQI資料
 ### 方式 
 - HTTP Request: GET
   * Params
