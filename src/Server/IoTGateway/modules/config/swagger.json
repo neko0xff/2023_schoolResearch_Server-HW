@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "1.1.0",
-    "title": "REST API Testsite",
-    "description": "該文件提供測試REST API功能是否正常"
+    "title": "REST API Test Docs",
+    "description": "該文件可提供在該專案中所需提供的功能"
   },
-  "host": "localhost:3095",
+  "host": "[Server_IP]:3095",
   "basePath": "/",
   "schemes": [
     "http"
@@ -49,39 +49,34 @@
             "type": "string"
           },
           {
-            "name": "hum",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "temp",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "tvoc",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "co",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "co2",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "pm25",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "o3",
-            "in": "query",
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hum": {
+                  "example": "any"
+                },
+                "temp": {
+                  "example": "any"
+                },
+                "tvoc": {
+                  "example": "any"
+                },
+                "co": {
+                  "example": "any"
+                },
+                "co2": {
+                  "example": "any"
+                },
+                "pm25": {
+                  "example": "any"
+                },
+                "o3": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -315,6 +310,9 @@
                 },
                 "LoginName": {
                   "example": "any"
+                },
+                "email": {
+                  "example": "any"
                 }
               }
             }
@@ -348,6 +346,9 @@
                 },
                 "LoginName": {
                   "example": "any"
+                },
+                "email": {
+                  "example": "any"
                 }
               }
             }
@@ -377,6 +378,63 @@
                   "example": "any"
                 },
                 "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/emailAuthCheck": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/UserCustomValue01": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "example": "any"
+                },
+                "customvar01": {
                   "example": "any"
                 }
               }

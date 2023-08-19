@@ -7,11 +7,24 @@ unsigned long timeDelay=5000; //5sec=5000ms
 
 /*伺服器路徑*/
 String serverSource = "http://[Server_IP]:3095";
-String serverName = serverSource + "/upload/Sensor01/data?";
+String serverName = serverSource + "/upload/Sensor01/data";
 
 /*WiFi 連網部分*/
 const char* ssid="";
 const char* password="";
+
+/*使板戴LED反覆亮*/
+void cnOnBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+  delay(500);
+  digitalWrite(LED_BUILTIN,HIGH); //暗
+  delay(500);
+}
+
+/*使板戴LED持續亮*/
+void cnOffBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+}
 
 /*連結WiFi*/
 void cnWiFi(){
@@ -38,8 +51,9 @@ void DataSend(){
   String co2UD = "co2="+String(55);
   String tvocUD = "tvoc="+String(40.11);
   String pm25UD = "pm25="+String(10);
-  String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
-  String cnServer = serverName + query;
+  String o3UD = "o3="+String(50);
+  String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD+"&"+o3UD;  
+  String cnServer = serverName;
   
   http.begin(client, cnServer);
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -47,13 +61,15 @@ void DataSend(){
   Serial.println(cnServer);
   
   /*HTTP Status*/   
-  int httpResponseCode = http.POST("");
+  int httpResponseCode = http.POST(query);
   if (httpResponseCode>0) {
+    cnOnBoardLED();
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
     String payload = http.getString();
     Serial.println(payload);
   }else {
+    cnOffBoardLED();
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
   }

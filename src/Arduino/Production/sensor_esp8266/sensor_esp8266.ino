@@ -39,6 +39,19 @@ String serverName = serverIP+"/upload/Sensor01/data";
 unsigned long lastTime = 0;
 unsigned long timerDelay = 10000;
 
+/*使板戴LED反覆亮*/
+void cnOnBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+  delay(500);
+  digitalWrite(LED_BUILTIN,HIGH); //暗
+  delay(500);
+}
+
+/*使板戴LED持續亮*/
+void cnOffBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+}
+
 /*WiFi連結*/
 void cnWiFi(){
    WiFi.begin(ssid, password);
@@ -114,8 +127,9 @@ void httpPost(){
       String co2UD = "co2="+String(SenSGP30.CO2);
       String tvocUD = "tvoc="+String(SenSGP30.TVOC);
       String pm25UD = "pm25="+String("10");
-      String updateData = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
-      String cnServer = serverName+updateData;         
+      String o3UD = "o3="+String(50);
+      String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD+"&"+o3UD;  
+      String cnServer = serverName;         
       
       // Your Domain name with URL path or IP address with path
       http.begin(client, cnServer);
@@ -123,13 +137,15 @@ void httpPost(){
       // Specify content-type header
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
        
-      int httpResponseCode = http.POST("");
+      int httpResponseCode = http.POST(query);
       if (httpResponseCode>0) {
+        cnOnBoardLED();
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
         String payload = http.getString();
         Serial.println(payload);
       }else {
+        cnOffBoardLED();
         Serial.print("Error code: ");
         Serial.println(httpResponseCode);
       }

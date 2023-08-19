@@ -34,6 +34,19 @@ unsigned long timeDelay=5000; //5sec=5000ms
 String serverIP = "http://[server_ip]:3095";
 String serverName = serverIP+"/upload/Sensor01";
 
+/*使板戴LED反覆亮*/
+void cnOnBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+  delay(500);
+  digitalWrite(LED_BUILTIN,HIGH); //暗
+  delay(500);
+}
+
+/*使板戴LED持續亮*/
+void cnOffBoardLED(){
+  digitalWrite(LED_BUILTIN,LOW); //亮
+}
+
 /*SGP30連結*/
 void cnSGP30(){
   if (SenSGP30.begin() == false) {
@@ -107,8 +120,9 @@ void DataSend(){
   String co2UD = "co2="+String(SenSGP30.CO2);
   String tvocUD = "tvoc="+String(SenSGP30.TVOC);
   String pm25UD = "pm25="+String("10");      
-  String updateData = "?"+humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD;  
-  String cnServer = serverName+updateData;
+  String o3UD = "o3="+String(50);
+  String query = humUD+"&"+tempUD+"&"+coUD+"&"+co2UD+"&"+tvocUD+"&"+pm25UD+"&"+o3UD;  
+  String cnServer = serverName;
   
   http.begin(client, cnServer);
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -116,13 +130,15 @@ void DataSend(){
   Serial.println(cnServer);
   
   /*HTTP Status*/   
-  int httpResponseCode = http.POST("");
+  int httpResponseCode = http.POST(query);
   if (httpResponseCode>0) {
+    cnOnBoardLED();
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
     String payload = http.getString();
     Serial.println(payload);
   }else {
+    cnOffBoardLED();
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
   }

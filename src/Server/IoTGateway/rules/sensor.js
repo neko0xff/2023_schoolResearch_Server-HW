@@ -20,13 +20,7 @@ var app=httpServer.app();
 app.post("/upload/:deviceID/data", async function(req, res){
     //Query: ?hum=(num)&temp=(num)
     var device_ID=xss(req.params.deviceID);
-    const hum = xss(database.escape(req.query.hum));
-    const temp = xss(database.escape(req.query.temp));
-    const tvoc = xss(database.escape(req.query.tvoc));
-    const co = xss(database.escape(req.query.co));
-    const co2 = xss(database.escape(req.query.co2));
-    const pm25 = xss(database.escape(req.query.pm25));
-    const o3 = xss(database.escape(req.query.o3));
+    const {hum,temp,tvoc,co,co2,pm25,o3} = req.body;
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
     var data=`(${hum},${temp},${tvoc},${co},${co2},${pm25},${o3},'${date}','${time}');`;
