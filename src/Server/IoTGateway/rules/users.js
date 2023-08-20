@@ -22,7 +22,7 @@ app.post("/CreateUser", async function(req, res) {
     const {username, password, LoginName,email } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT username,LoginName,password,mail FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,LoginName,password,email FROM Users WHERE username = '${username}'`;
     var userData = `('${username}','${hashedPassword}','${LoginName}','${email}')`;
     var addUserSQL = `INSERT INTO Users (username, password, LoginName,email) VALUES ${userData}`;
   
