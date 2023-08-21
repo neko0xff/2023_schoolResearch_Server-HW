@@ -151,12 +151,7 @@ app.post("/emailAuthCheck",async function(req, res) {
         const username = results[0].username;
         const LoginName = results[0].LoginName;
 
-        if (results.length == 0) {
-            connection.release();
-            console.log(`[${clock.consoleTime()}] ${email} is Not Found!`);
-            const responseMeta = {code: "-1"};
-            res.send(responseMeta); 
-        } else {
+        if (results.length !== 0) {
             if(email === results[0].email){
                 console.log(`[${clock.consoleTime()}] ${email} is Auth Successful!`);
                 const responseMeta = {
@@ -171,6 +166,12 @@ app.post("/emailAuthCheck",async function(req, res) {
                 const responseMeta = {code: "0"};
                 res.send(responseMeta);
             } 
+             
+        } else {
+            connection.release();
+            console.log(`[${clock.consoleTime()}] ${email} is Not Found!`);
+            const responseMeta = {code: "-1"};
+            res.send(responseMeta);
         }
     } catch (error) {
         console.log(`[${clock.consoleTime()}] Error Login`);
