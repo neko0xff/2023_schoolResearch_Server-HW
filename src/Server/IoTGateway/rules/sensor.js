@@ -81,8 +81,13 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
     
     try {
       const [results, fields] = await connection.execute(readSQL); 
-      var data = JSON.stringify(results);
-      res.send(results);
+      // 將日期格式化為 "yyyy-mm-dd"
+      const formattedResults = results.map(item => ({
+        ...item,
+        date: clock.formatDateToYYYYMMDD(item.date)
+      }));
+      var data = JSON.stringify(formattedResults);
+      res.send(data);
       console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
       console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
@@ -104,8 +109,13 @@ app.get("/read/:deviceID/hum", async function(req, res) {
 
     try {
         const [results, fields] = await connection.execute(readSQL); 
-        var data=JSON.stringify(results);
-        res.send(results);
+        // 將日期格式化為 "yyyy-mm-dd"
+        const formattedResults = results.map(item => ({
+            ...item,
+            date: clock.formatDateToYYYYMMDD(item.date)
+        }));
+        var data=JSON.stringify(formattedResults);
+        res.send(data);
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);

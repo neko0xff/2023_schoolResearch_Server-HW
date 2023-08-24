@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.1.0",
+    "version": "1.0.5",
     "title": "REST API Test Docs",
     "description": "該文件可提供在該專案中所需提供的功能"
   },

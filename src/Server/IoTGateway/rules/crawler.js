@@ -14,8 +14,7 @@ var app=httpServer.app();
 // GET /crawler/AQI/ALL => 全部測站的資料
 app.get("/crawler/AQI/ALL", async function(req, res) {
     var statusSQL = `SELECT siteid,sitename,aqi,monitordate FROM AQX_P_434 ORDER BY siteid ASC;`;
-    var currentTime = new Date().toLocaleString();
-    console.log(`[${currentTime}] HTTP GET /crawler/AQI/ALL`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /crawler/AQI/ALL`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -28,9 +27,9 @@ app.get("/crawler/AQI/ALL", async function(req, res) {
         }));
         var data = JSON.stringify(formattedResults);
         res.send(data);
-        console.log(`[${currentTime}] ${data}`);
+        console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
-        console.error(`[${currentTime}] Failed to execute query: ${error.message}`);
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1" };
         res.send(responseMeta);
         throw error;
@@ -43,8 +42,7 @@ app.get("/crawler/AQI/ALL", async function(req, res) {
 app.get("/crawler/AQI/site", async function(req, res) {
     const sitename = database.escape(req.query.sitename);
     var statusSQL = `SELECT siteid,sitename,aqi,monitordate FROM AQX_P_434 WHERE sitename = ${sitename} ORDER BY siteid ASC;`;
-    var currentTime = new Date().toLocaleString();
-    console.log(`[${currentTime}] HTTP GET /crawler/AQI/site`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /crawler/AQI/site`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -57,9 +55,9 @@ app.get("/crawler/AQI/site", async function(req, res) {
         }));
         var data = JSON.stringify(formattedResults);
         res.send(data);
-        console.log(`[${currentTime}] ${data}`);
+        console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
-        console.error(`[${currentTime}] Failed to execute query: ${error.message}`);
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         const responseMeta = { code: "-1" };
         res.send(responseMeta);
         throw error;
