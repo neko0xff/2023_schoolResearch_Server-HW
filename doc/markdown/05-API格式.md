@@ -8,13 +8,14 @@ tags: 四技專題
 ### 檢視方式
 - HTTP
   * 框架: Swagger
-  ![](https://hackmd.io/_uploads/HkwHbADdh.png)
 - URL: `/docs`
+  ![](https://hackmd.io/_uploads/HkwHbADdh.png)
 ---
 ## 01 開發版上傳
 ### 方式 
 - HTTP Request: POST
-  * Params
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
 - URL
   ```url
      /upload/:deviceID/data?[Quary String] 
@@ -22,7 +23,7 @@ tags: 四技專題
 ### 輸入
 - 格式: 字串 
 - 動作: 送出請求+欲想傳送的㯗位
-  * Quary String Value
+  * Body String Value
     | Value |   功能   |
     |:-----:|:--------:|
     |  hum  |   溫度   |
@@ -229,7 +230,7 @@ tags: 四技專題
 - 回應狀態
   | Respose | 表示方式 |
   |:-------:|:--------:|
-  |    1    |   成功   |
+  |   `1`   |   成功   |
   |   `0`   |   失敗   |
   |  `-1`   |   錯誤   |
 
@@ -247,15 +248,24 @@ tags: 四技專題
     | 送出變數 |    功能     |
     |:--------:|:-----------:|
     | `email`  | 使用者email |
+
 ### 輸出
 - 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
 - 格式: JSON 
-- 回應狀態
-  | Respose | 表示方式 |
-  |:-------:|:--------:|
-  |   `1`   |   成功   |
-  |   `0`   |   失敗   |
-  |  `-1`   |   錯誤   |
+- 動作: 成功回傳時,則回應
+  |   Respose    | 表示方式 |
+  |:------------:|:--------:|
+  | 回傳相關資料 |   成功   |
+  |     `0`      |   失敗   |
+  |     `-1`     |   錯誤   |
+- 成功回傳時，則回應對應的請求
+  * API Request
+    |  Respose  |    表示     |
+    |:---------:|:-----------:|
+    |   code    | 1(成功回傳) |
+    | username  | 使用者帳戶  |
+    | Loginname |  顯示名稱   |
+    |   email   | 使用者email |
 ---
 ## 11 記錄使用者的自訂值
 ### 方式 
