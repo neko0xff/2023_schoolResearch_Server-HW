@@ -421,7 +421,27 @@
         }
       }
     },
-    "/UserCustomValue01": {
+    "/Read/UserCustomValue01": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/Set/UserCustomValue01": {
       "post": {
         "description": "",
         "parameters": [

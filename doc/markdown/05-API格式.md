@@ -272,7 +272,7 @@ tags: 四技專題
 - HTTP Request: POST
   * body
   * MIME type: `application/x-www-form-urlencoded`
-- URL: `/UserCustomValue01`
+- URL: `/Set/UserCustomValue01`
 ### 輸入
 - 格式: 字串
 - 動作: 送出請求+欲想傳送的㯗位
@@ -319,3 +319,30 @@ tags: 四技專題
     |  sitename   |  測站點  |
     |     aqi     |   AQI    |
     | monitordate |   Date   |
+---
+## 13 查詢使用者的自訂值
+### 方式 
+- HTTP Request: GET
+  * Params
+- URL: `/Read/UserCustomValue01?[api request]`
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想查詢的部分  
+  * 可查詢的部分
+    * username
+### 輸出
+- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
+- 格式: JSON 
+- 動作: 成功回傳時,則回應
+  |   Respose    | 表示方式 |
+  |:------------:|:--------:|
+  | 回傳相關資料 |   成功   |
+  |     `0`      |   失敗   |
+  |     `-1`     |   錯誤   |
+- 成功回傳時，則回應對應的請求
+  * API Request
+    |   Respose   |      表示      |
+    |:-----------:|:--------------:|
+    |    code     |  1(成功回傳)   |
+    |  username   |   使用者帳戶   |
+    | customvar01 | 使用者的自訂值 |
