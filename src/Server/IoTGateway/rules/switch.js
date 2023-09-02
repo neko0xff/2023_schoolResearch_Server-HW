@@ -157,7 +157,7 @@ app.get("/statusRec/:deviceID/viewALL",async function(req,res){
 //GET /statusNow/:deviceID/viewfan1 => 檢視fan1現在狀態
 app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
     var device_ID=xss(req.params.deviceID);
-    var viewSQL=`SELECT \`status\` FROM ${device_ID}_Status WHERE \`name\`= 'fan1';`;
+    var viewSQL=`SELECT status FROM ${device_ID}_Status WHERE name='fan1';`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan1`);
   
     var cnDB=database.cnDB();
@@ -183,7 +183,7 @@ app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
 //GET /statusNow/:deviceID/viewfan2 => 檢視fan2現在狀態
 app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
     var device_ID=xss(req.params.deviceID);
-    var viewSQL=`SELECT \`status\` FROM ${device_ID}_Status WHERE \`name\`= 'fan2';`;
+    var viewSQL=`SELECT status FROM ${device_ID}_Status WHERE name='fan2';`;
     console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan2`);
   
     var cnDB=database.cnDB();
