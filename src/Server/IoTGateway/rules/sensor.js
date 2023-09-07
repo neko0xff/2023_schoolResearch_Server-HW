@@ -19,7 +19,7 @@ var app=httpServer.app();
 //POST /upload/:deviceID/data =>  開發版上傳
 app.post("/upload/:deviceID/data", async function(req, res){
     //Query: ?hum=(num)&temp=(num)
-    var device_ID=xss(req.params.deviceID);
+    var device_ID = xss(req.params.deviceID);
     const {hum,temp,tvoc,co,co2,pm25,o3} = req.body;
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
@@ -101,7 +101,7 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
 //GET /read/:deviceID/hum => 獲得'hum'資料
 app.get("/read/:deviceID/hum", async function(req, res) {
     var device_ID = xss(req.params.deviceID);
-    var readSQL = `SELECT hum,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL = `SELECT hum,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
@@ -129,7 +129,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
 //GET /read/:deviceID/temp => 獲得'temp'資料
 app.get("/read/:deviceID/temp", async function(req, res) {
     var device_ID = xss(req.params.deviceID);
-    var readSQL = `SELECT temp,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL = `SELECT temp,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/hum`);
     
     var cnDB=database.cnDB();
@@ -159,7 +159,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 //GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 app.get("/read/:deviceID/tvoc",async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    var readSQL=`SELECT tvoc,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL=`SELECT tvoc,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/tvoc`);
     
     var cnDB=database.cnDB();
@@ -191,7 +191,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
 //GET /read/:deviceID/co2 => 獲得'co2'資料
 app.get("/read/:deviceID/co2",async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    var readSQL=`SELECT co2,date,time FROM ${device_ID}_Table ORDER BY ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL=`SELECT co2,date,time FROM ${device_ID}_Table ORDER BY ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
@@ -223,7 +223,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
 //GET /read/:deviceID/co => 獲得'co'資料
 app.get("/read/:deviceID/co",async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL=`SELECT co,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/co2`);
     
     var cnDB=database.cnDB();
@@ -253,7 +253,7 @@ app.get("/read/:deviceID/co",async function(req, res){
 //GET /read/:deviceID/pm25 => 獲得'pm25'資料
 app.get("/read/:deviceID/pm25",async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    var readSQL=`SELECT pm25,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL=`SELECT pm25,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/pm25`);
   
     var cnDB=database.cnDB();
@@ -283,7 +283,7 @@ app.get("/read/:deviceID/pm25",async function(req, res){
 //GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get("/read/:deviceID/o3",async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    var readSQL=`SELECT o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL=`SELECT o3,date,time FROM ${device_ID}_Table ORDER BY date DESC, time DESC LIMIT 8;`;
     console.log(`[${clock.consoleTime()}]  HTTP GET /read/${device_ID}/o3`);
   
     var cnDB=database.cnDB();

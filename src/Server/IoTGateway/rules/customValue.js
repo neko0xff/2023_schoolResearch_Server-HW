@@ -18,7 +18,7 @@ var app=httpServer.app();
 // 接收格式：x-www-form-urlencoded
 app.get("/read/UserCustomValueStatus", async function (req, res) {
     console.log(`[${clock.consoleTime()}] HTTP GET /read/UserCustomValue`);
-    const { username, ValueName } = req.body; // 使用 req.body 來取得 POST 資料
+    const { username, ValueName } = req.query; // 使用 req.body 來取得 POST 資料
 
     // 檢查是否有缺少必要的資料
     if (!username || !ValueName) {
