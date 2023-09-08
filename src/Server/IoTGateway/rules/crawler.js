@@ -12,9 +12,9 @@ var app=httpServer.app();
 
 /*查詢己爬蟲爬到的資料*/
 // GET /crawler/AQI/ALL => 全部測站的資料
-app.get("/crawler/AQI/ALL", async function(req, res) {
+app.get("/read/crawler/AQI/ALL", async function(req, res) {
     var statusSQL = `SELECT siteid,sitename,aqi,monitordate FROM AQX_P_434 ORDER BY siteid ASC;`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /crawler/AQI/ALL`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/AQI/ALL`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -38,11 +38,11 @@ app.get("/crawler/AQI/ALL", async function(req, res) {
     }
 });
 
-// GET /crawler/AQI/site => 指定特定測站的資料
-app.get("/crawler/AQI/site", async function(req, res) {
+// GET /read/crawler/AQI/site => 指定特定測站的資料
+app.get("/read/crawler/AQI/site", async function(req, res) {
     const sitename = database.escape(req.query.sitename);
     var statusSQL = `SELECT siteid,sitename,aqi,monitordate FROM AQX_P_434 WHERE sitename = ${sitename} ORDER BY siteid ASC;`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /crawler/AQI/site`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/AQI/site`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接

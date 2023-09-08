@@ -16,10 +16,11 @@ var cnDB=null;
 var app=httpServer.app();
 
 /*開関控制*/
-app.get("/switchCtr/:deviceID/fan1", async function(req, res){
+// GET /set/switchCtr/:deviceID/fan1 => 控制fan1
+app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
     try {
         const device_ID = xss(req.params.deviceID);
-        console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan1`);
+        console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/fan1`);
   
         // Query: ?
         const status = xss(req.query.status);
@@ -72,10 +73,10 @@ app.get("/switchCtr/:deviceID/fan1", async function(req, res){
 });
 
 
-// GET /switchCtr/:deviceID/fan2 => 控制fan2
-app.get("/switchCtr/:deviceID/fan2", async function(req, res){
+// GET /set/switchCtr/:deviceID/fan2 => 控制fan2
+app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
     var device_ID=xss(req.params.deviceID);
-    console.log(`[${clock.consoleTime()}] HTTP GET /switchCtr/${device_ID}/fan2`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/fan2`);
     try {
         // Query: ?
         const status = req.query.status;
@@ -128,11 +129,11 @@ app.get("/switchCtr/:deviceID/fan2", async function(req, res){
     }
 });
 
-//GET /statusRec/:deviceID/viewALL => 檢視開関控制的記錄
-app.get("/statusRec/:deviceID/viewALL",async function(req,res){
+//GET /read/statusRec/:deviceID/viewALL => 檢視開関控制的記錄
+app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/view`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/view`);
     
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -154,11 +155,11 @@ app.get("/statusRec/:deviceID/viewALL",async function(req,res){
 
 });
 
-//GET /statusNow/:deviceID/viewfan1 => 檢視fan1現在狀態
-app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
+//GET /read/statusNow/:deviceID/viewfan1 => 檢視fan1現在狀態
+app.get("/read/statusNow/:deviceID/viewfan1",async function(req,res){
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT status FROM ${device_ID}_Status WHERE name='fan1';`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan1`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/viewfan1`);
   
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -180,11 +181,11 @@ app.get("/statusNow/:deviceID/viewfan1",async function(req,res){
 
 });
 
-//GET /statusNow/:deviceID/viewfan2 => 檢視fan2現在狀態
-app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
+//GET /read/statusNow/:deviceID/viewfan2 => 檢視fan2現在狀態
+app.get("/read/statusNow/:deviceID/viewfan2",async function(req,res){
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT status FROM ${device_ID}_Status WHERE name='fan2';`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewfan2`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/viewfan2`);
   
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
@@ -206,11 +207,11 @@ app.get("/statusNow/:deviceID/viewfan2",async function(req,res){
 
 });
 
-//GET /statusNow/:deviceID/viewALL => 檢視所有開関的現在狀態
-app.get("/statusNow/:deviceID/viewALL",async function(req,res){
+//GET /read/statusNow/:deviceID/viewALL => 檢視所有開関的現在狀態
+app.get("/read/statusNow/:deviceID/viewALL",async function(req,res){
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT name,status FROM ${device_ID}_Status;`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /statusRec/${device_ID}/viewALL`);
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/viewALL`);
   
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接

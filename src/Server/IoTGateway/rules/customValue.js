@@ -97,8 +97,8 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
 
 // POST /Set/UserCustomValue => 改變使用者相關資料
 // 接收格式：x-www-form-urlencoded
-app.post("/Set/UserCustomValue", async function (req, res) {
-    console.log(`[${clock.consoleTime()}] HTTP POST /Set/UserCustomValue`);
+app.post("/set/UserCustomValue", async function (req, res) {
+    console.log(`[${clock.consoleTime()}] HTTP POST /set/UserCustomValue`);
     const { username, ValueName, num } = req.body;
 
     if (!username || !ValueName || num === undefined) {

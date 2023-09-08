@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/crawler/AQI/ALL": {
+    "/read/crawler/AQI/ALL": {
       "get": {
         "description": "",
         "responses": {
@@ -21,7 +21,7 @@
         }
       }
     },
-    "/crawler/AQI/site": {
+    "/read/crawler/AQI/site": {
       "get": {
         "description": "",
         "parameters": [
@@ -86,7 +86,7 @@
         }
       }
     },
-    "/StatusGet/{deviceID}/powerStatus": {
+    "/read/StatusGet/{deviceID}/powerStatus": {
       "get": {
         "description": "",
         "parameters": [
@@ -292,7 +292,7 @@
         }
       }
     },
-    "/CreateUser": {
+    "/auth/CreateUser": {
       "post": {
         "description": "",
         "parameters": [
@@ -328,7 +328,7 @@
         }
       }
     },
-    "/UpdateUserData": {
+    "/auth/UpdateUserData": {
       "post": {
         "description": "",
         "parameters": [
@@ -364,7 +364,7 @@
         }
       }
     },
-    "/Login": {
+    "/auth/Login": {
       "post": {
         "description": "",
         "parameters": [
@@ -394,7 +394,7 @@
         }
       }
     },
-    "/emailAuthCheck": {
+    "/auth/emailAuthCheck": {
       "post": {
         "description": "",
         "parameters": [
@@ -421,7 +421,143 @@
         }
       }
     },
-    "/Read/UserCustomValue01": {
+    "/set/switchCtr/{deviceID}/fan1": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/set/switchCtr/{deviceID}/fan2": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/read/statusRec/{deviceID}/viewALL": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/read/statusNow/{deviceID}/viewfan1": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/read/statusNow/{deviceID}/viewfan2": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/read/statusNow/{deviceID}/viewALL": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/read/UserCustomValueStatus": {
       "get": {
         "description": "",
         "parameters": [
@@ -429,11 +565,22 @@
             "name": "username",
             "in": "query",
             "type": "string"
+          },
+          {
+            "name": "ValueName",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -441,7 +588,23 @@
         }
       }
     },
-    "/Set/UserCustomValue01": {
+    "/read/UserCustomValueRec": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/set/UserCustomValue": {
       "post": {
         "description": "",
         "parameters": [
@@ -454,7 +617,10 @@
                 "username": {
                   "example": "any"
                 },
-                "customvar01": {
+                "ValueName": {
+                  "example": "any"
+                },
+                "num": {
                   "example": "any"
                 }
               }
@@ -465,141 +631,8 @@
           "200": {
             "description": "OK"
           },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/switchCtr/{deviceID}/fan1": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/switchCtr/{deviceID}/fan2": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/statusRec/{deviceID}/viewALL": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/statusNow/{deviceID}/viewfan1": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/statusNow/{deviceID}/viewfan2": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/statusNow/{deviceID}/viewALL": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "deviceID",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
