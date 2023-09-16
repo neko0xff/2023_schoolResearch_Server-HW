@@ -5,6 +5,7 @@
 #include <MQUnifiedsensor.h>
 
 /*Sensor腳位定義*/
+#define LED_BUILTIN 2
 #define pinDHT11 2  //連結腳位: D4
 
 /*MQ7函式定義*/
