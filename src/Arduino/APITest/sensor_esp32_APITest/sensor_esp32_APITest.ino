@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+#define LED_BUILTIN 2
 
 /*計時部分*/
 unsigned long lastTime=0;
