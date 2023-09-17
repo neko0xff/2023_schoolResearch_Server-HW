@@ -7,7 +7,9 @@ unsigned long lastTime=0;
 unsigned long timeDelay=5000; //5sec=5000ms
 
 /*伺服器路徑*/
-String serverSource = "http://[Server_IP]:3095";
+String serverIP = "";
+String serverPort = "3095";
+String serverSource = "http://"+serverIP+":"+serverPort;
 String serverName = serverSource + "/upload/Sensor01/data";
 
 /*WiFi 連網部分*/
