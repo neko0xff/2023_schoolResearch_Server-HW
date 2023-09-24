@@ -5,7 +5,7 @@
     "title": "REST API Test Docs",
     "description": "該文件可提供在該專案中所需提供的功能"
   },
-  "host": "[Server_IP]:3095",
+  "host": "localhost:3095",
   "basePath": "/",
   "schemes": [
     "http"

@@ -6,18 +6,21 @@ var xss = require("xss");
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 
 /*時間*/
 var date= clock.SQLDate();
 var time= clock.SQLTime();
 
-/*資料庫*/
+/*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
 
 /*開發版上傳專用*/
 //POST /upload/:deviceID/data =>  開發版上傳
-app.post("/upload/:deviceID/data", async function(req, res){
+app.post("/upload/:deviceID/data",async function(req, res){
     //Query: ?hum=(num)&temp=(num)
     var device_ID = xss(req.params.deviceID);
     const {hum,temp,tvoc,co,co2,pm25,o3} = req.body;
@@ -43,7 +46,7 @@ app.post("/upload/:deviceID/data", async function(req, res){
     } finally{
         connection.release(); // 釋放連接
     }
-});
+},catchError(errorController));
 // GET /read/StatusGet/:deviceID/powerStatus => 獲得電源狀態
 app.get("/read/StatusGet/:deviceID/powerStatus",async function(req,res){
     var device_ID = xss(req.params.deviceID);
@@ -66,7 +69,7 @@ app.get("/read/StatusGet/:deviceID/powerStatus",async function(req,res){
     }finally{
         connection.release(); // 釋放連接
     }
-});
+},catchError(errorController));
 
 /*讀值*/
 // 回傳格式: JSON
@@ -125,7 +128,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
     }finally{
         connection.release(); 
     }
-});
+},catchError(errorController));
 //GET /read/:deviceID/temp => 獲得'temp'資料
 app.get("/read/:deviceID/temp", async function(req, res) {
     var device_ID = xss(req.params.deviceID);
@@ -155,7 +158,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
     } finally {
         connection.release(); 
     }
-});
+},catchError(errorController));
 //GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 app.get("/read/:deviceID/tvoc",async function(req, res){
     var device_ID=xss(req.params.deviceID);
@@ -187,7 +190,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
         connection.release(); 
     }
 
-});
+},catchError(errorController));
 //GET /read/:deviceID/co2 => 獲得'co2'資料
 app.get("/read/:deviceID/co2",async function(req, res){
     var device_ID=xss(req.params.deviceID);
@@ -218,7 +221,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
     } finally {
         connection.release(); 
     }
-});
+},catchError(errorController));
 
 //GET /read/:deviceID/co => 獲得'co'資料
 app.get("/read/:deviceID/co",async function(req, res){
@@ -248,7 +251,7 @@ app.get("/read/:deviceID/co",async function(req, res){
     } finally {
         connection.release(); 
     }
-});
+},catchError(errorController));
 
 //GET /read/:deviceID/pm25 => 獲得'pm25'資料
 app.get("/read/:deviceID/pm25",async function(req, res){
@@ -278,7 +281,7 @@ app.get("/read/:deviceID/pm25",async function(req, res){
     } finally {
         connection.release(); 
     }
-});
+},catchError(errorController));
 
 //GET /read/:deviceID/o3 => 獲得'o3'資料
 app.get("/read/:deviceID/o3",async function(req, res){
@@ -310,4 +313,4 @@ app.get("/read/:deviceID/o3",async function(req, res){
     } finally {
         connection.release(); 
     }
-});
+},catchError(errorController));

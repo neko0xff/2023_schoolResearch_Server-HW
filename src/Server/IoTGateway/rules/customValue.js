@@ -5,12 +5,15 @@
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 
 /*時間*/
 var date= clock.SQLDate();
 var time= clock.SQLTime();
 
-/*資料庫*/
+/*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
 
@@ -55,7 +58,7 @@ app.get("/read/UserCustomValueStatus", async function (req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));
 
 // GET /Read/UserCustomValueRec => 查詢使用者的自訂值的記錄
 // 接收格式：x-www-form-urlencoded
@@ -93,7 +96,7 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
     } finally {
       connection.release(); // 釋放連接
     }    
-});
+},catchError(errorController));
 
 // POST /Set/UserCustomValue => 改變使用者相關資料
 // 接收格式：x-www-form-urlencoded
@@ -146,5 +149,5 @@ app.post("/set/UserCustomValue", async function (req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));
 

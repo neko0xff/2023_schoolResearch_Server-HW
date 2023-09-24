@@ -4,6 +4,9 @@
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js"); 
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 var xss = require("xss");
 
 /*資料庫*/
@@ -12,7 +15,7 @@ var app=httpServer.app();
 
 /*查詢己爬蟲爬到的資料*/
 // GET /crawler/AQI/ALL => 全部測站的資料
-app.get("/read/crawler/AQI/ALL", async function(req, res) {
+app.get("/read/crawler/AQI/ALL",async function(req, res) {
     var statusSQL = `SELECT siteid,sitename,aqi,monitordate FROM AQX_P_434 ORDER BY siteid ASC;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/AQI/ALL`);
 
@@ -36,7 +39,7 @@ app.get("/read/crawler/AQI/ALL", async function(req, res) {
     } finally {
         connection.release(); // 釋放連接
     }
-});
+},catchError(errorController));
 
 // GET /read/crawler/AQI/site => 指定特定測站的資料
 app.get("/read/crawler/AQI/site", async function(req, res) {
@@ -64,6 +67,6 @@ app.get("/read/crawler/AQI/site", async function(req, res) {
     } finally {
         connection.release(); // 釋放連接
     }
-});
+},catchError(errorController));
 
 

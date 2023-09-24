@@ -5,12 +5,15 @@ var bcrypt=require("bcrypt");
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 const ExpressBrute = require('express-brute'); 
 const xss = require('xss');
 const store = new ExpressBrute.MemoryStore();
 const bruteforce = new ExpressBrute(store); 
 
-/*資料庫*/
+/*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
 
@@ -51,7 +54,7 @@ app.post("/auth/CreateUser", async function(req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));
 
 //POST /auth/UpdateUserData => 改變使用者相關資料
 //接收格式：x-www-form-urlencoded
@@ -87,7 +90,7 @@ app.post("/auth/UpdateUserData", async function(req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));
 
 //POST /auth/Login: 使用者登入
 //接收格式：x-www-form-urlencoded
@@ -133,7 +136,7 @@ app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));
 
 //POST /auth/emailAuthCheck: 使用者忘記密碼
 //接收格式：x-www-form-urlencoded
@@ -180,4 +183,4 @@ app.post("/auth/emailAuthCheck",async function(req, res) {
     } finally {
         connection.release();
     }
-});
+},catchError(errorController));

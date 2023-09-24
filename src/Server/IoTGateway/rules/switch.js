@@ -6,12 +6,15 @@ var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
 var xss = require("xss");
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 
 /*時間*/
 var date= clock.SQLDate();
 var time= clock.SQLTime();
 
-/*資料庫*/
+/*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
 
@@ -70,7 +73,7 @@ app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
     }
-});
+},catchError(errorController));
 
 
 // GET /set/switchCtr/:deviceID/fan2 => 控制fan2
@@ -127,7 +130,7 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
     }
-});
+},catchError(errorController));
 
 //GET /read/statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
@@ -153,7 +156,7 @@ app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
         connection.release(); // 釋放連接
     }
 
-});
+},catchError(errorController));
 
 //GET /read/statusNow/:deviceID/viewfan1 => 檢視fan1現在狀態
 app.get("/read/statusNow/:deviceID/viewfan1",async function(req,res){
@@ -179,7 +182,7 @@ app.get("/read/statusNow/:deviceID/viewfan1",async function(req,res){
         connection.release(); // 釋放連接
     }
 
-});
+},catchError(errorController));
 
 //GET /read/statusNow/:deviceID/viewfan2 => 檢視fan2現在狀態
 app.get("/read/statusNow/:deviceID/viewfan2",async function(req,res){
@@ -205,7 +208,7 @@ app.get("/read/statusNow/:deviceID/viewfan2",async function(req,res){
         connection.release(); // 釋放連接
     }
 
-});
+},catchError(errorController));
 
 //GET /read/statusNow/:deviceID/viewALL => 檢視所有開関的現在狀態
 app.get("/read/statusNow/:deviceID/viewALL",async function(req,res){
@@ -231,4 +234,4 @@ app.get("/read/statusNow/:deviceID/viewALL",async function(req,res){
         connection.release(); // 釋放連接
     }
 
-});
+},catchError(errorController));

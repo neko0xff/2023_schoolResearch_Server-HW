@@ -1,7 +1,8 @@
 CC1:=docker compose
+CC2:=pnpm
 IMAGE:=IoTGateway
 
-.PHONY: build up logs stop clean 
+.PHONY: build up logs stop clean pnpm-start
 
 all: build
 
@@ -19,3 +20,6 @@ stop:
 
 clean:
 	@$(CC1) down
+
+pnpm-start:
+	@$(CC2) start

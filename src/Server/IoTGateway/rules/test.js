@@ -5,8 +5,11 @@
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
+var error=require("../modules/error.js");
+var catchError = error.catchError;
+var errorController = error.errorController;
 
-/*資料庫*/
+/*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
 
@@ -15,7 +18,7 @@ var app=httpServer.app();
 app.get("/",async function(req,res){
     res.send("HTTP API Server is running!");
     console.log(`[${clock.consoleTime()}] HTTP GET /`);
-});
+},catchError(errorController));
 // GET /testDB => test DataBase Connect
 app.get("/testDB", async function(req, res) {
     var cnSql = "SELECT 1 + 1 AS solution";
@@ -38,4 +41,4 @@ app.get("/testDB", async function(req, res) {
     }finally{
         connection.release(); // 釋放連接
     }
-});
+},catchError(errorController));
