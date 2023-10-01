@@ -6,12 +6,14 @@
 #include <MQUnifiedsensor.h>
 
 /*Sensor腳位定義*/
-#define pinDHT11 2  //連結腳位: D4
+#define pinDHT11 D2  //連結腳位: D4
+#define pinMQ7 A0 //Analog input 0 of your arduino
+#define pinSPG30_sda A4
+#define pinSPG30_scl A5
 
 /*MQ7函式定義*/
 #define board "ESP8266"
 #define Voltage_Resolution 5
-#define pinMQ7 A0 //Analog input 0 of your arduino
 #define ADC_Bit_Resolution 10 
 #define type "MQ-7" //MQ7
 MQUnifiedsensor MQ7(board,Voltage_Resolution, ADC_Bit_Resolution, pinMQ7,type);
@@ -19,13 +21,14 @@ float calcR0 = 0;
 
 /*SGP30函式定義*/
 SGP30 SenSGP30; //連結腳位: SDA&SCL
-//SDA=A4
-//SCL=A5
 
 /*DHT函式定義*/
 SimpleDHT11 dht11;
 byte tempVar = 0;
 byte humVar = 0;
+
+/*GP2Y1010AU函式定義*/
+
 
 /*WIFI AP Set*/
 const char* ssid = "";
