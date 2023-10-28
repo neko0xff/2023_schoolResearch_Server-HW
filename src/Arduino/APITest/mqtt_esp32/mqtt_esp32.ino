@@ -15,7 +15,7 @@ const char *mqtt_username = "Sensor01";
 const char *mqtt_password = "oitmis";
 
 WiFiClient wifiClient;
-PubSubClient mqttclient(wifiClient);
+PubSubClient mqttClient(wifiClient);
 
 /*輸出訂閱內容*/
 void callback(char *topic, byte *payload, unsigned int length) {
@@ -53,7 +53,7 @@ void MQTT_test(){
 /*WiFi*/
 void cnWiFi(){
     WiFi.begin(ssid,password);
-    Serial.println("Now Connecting");
+    Serial.print("Now Connecting");
     while(WiFi.status() != WL_CONNECTED){
         delay(500);
         Serial.print(".");
@@ -64,17 +64,17 @@ void cnWiFi(){
 }
 /*MQTT*/
 void cnMQTT(){
-  mqttclient.setServer(mqtt_broker, mqtt_port);
-  mqttclient.setCallback(callback);
-  while (!mqttclient.connected()) {
+  mqttClient.setServer(mqtt_broker, mqtt_port);
+  mqttClient.setCallback(callback);
+  while (!mqttClient.connected()) {
     String client_id = "esp32-client-";
     client_id += String(WiFi.macAddress());
     Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
-    if (mqttclient.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+    if (mqttClient.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("local broker connected");
     } else {
       Serial.print("failed with state ");
-      Serial.print(client.state());
+      Serial.print(mqttClient.state());
       delay(2000);
     }
   }
@@ -93,5 +93,5 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  mqttclient.loop();
+  mqttClient.loop();
 }
