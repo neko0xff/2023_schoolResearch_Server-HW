@@ -44,7 +44,7 @@ void cnOffBoardLED(){
 
 /*MQTT傳送測試*/
 void MQTT_test(){
-  const char *str_topic = "Hi, I'm ESP8266 ^^";
+  const char *str_topic = "Hi, I'm ESP32 ^^";
   mqttClient.publish(topic,str_topic); // 推送
   mqttClient.subscribe(topic); //訂閱
 }

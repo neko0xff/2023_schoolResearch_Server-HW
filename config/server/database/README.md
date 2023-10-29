@@ -1,8 +1,10 @@
 Database Config
 ===
-## Backup
-- File: `sensorDB_v6.sql.gz`
+## Backup File
+- File: `sensorDB_v7.sql.gz`
 ---
 ## Service
 ### Mysql 
-- File: `/etc/my.cnf`
+- RHEL
+    - File: `/etc/my.cnf`
+
