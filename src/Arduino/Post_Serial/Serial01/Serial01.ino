@@ -51,8 +51,7 @@ void loop() {
   
   /*輸出至序列埠*/
   //Serial.println(String("outputV=") + outputV + "\tug/m3=" + ugm3 + "\tAQI=" + aqi );
-  delay(1000);
   MQ7.update();   
   Serial.println(String("device=")+deviceName+String(",pm25=")+ugm3+String(",co=")+COppm);
-  delay(500); //Sampling frequency
+  delay(3000); //Sampling frequency
 }

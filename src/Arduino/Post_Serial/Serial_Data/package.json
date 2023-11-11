@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "cnserver": "node server_test.js"
   },
   "keywords": [
     "serial"
@@ -18,6 +19,7 @@
     "axios": "^1.6.1",
     "configparser": "^0.3.10",
     "moment": "^2.29.4",
+    "querystring": "^0.2.1",
     "serialport": "^12.0.0"
   }
 }
