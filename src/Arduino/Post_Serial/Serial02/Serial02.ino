@@ -22,7 +22,7 @@ void loop() {
   sensorValue = analogRead(MQ2pin); // read analog input pin 0
   int err = SimpleDHTErrSuccess;
 
-  /**/
+  /*輸出至序列埠*/
   Serial.print("device=");
   Serial.print(deviceName);
   Serial.print(",hum=");   
@@ -30,7 +30,11 @@ void loop() {
   Serial.print(",temp=");   
   Serial.print((int)temperature);
   Serial.print(",o3=");
-  Serial.print(sensorValue); 
+  Serial.print(sensorValue);
+  Serial.print(",tvoc=");
+  Serial.print("0");
+  Serial.print(",co2=");
+  Serial.print("0");
   Serial.println("");   
   delay(3000);  
 }
