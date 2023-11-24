@@ -45,30 +45,18 @@ const serial02 = new SerialPort(
 );
 
 /*輸出Arduino回伝的結果*/
-function getData1() {
+function getData() {
     parser1.on('data', (data) => {
-        const keyValuePairs = data.split(',');
-        keyValuePairs.forEach(pair => {
-            const [key, value] = pair.split('=');
-            if (key && value) {
-                sensorData[key] = parseFloat(value);
-            }
-        });
-
-        if (Object.keys(sensorData).length > 0) {
-            pm25 = sensorData['pm25'];
-            co = sensorData['co'];
-            //console.log(`[${clock.consoleTime()}] Received= PM2.5: ${pm25}, CO: ${co}`);
-            // 如果你只想印出特定的數據，可以這樣做
-            console.log(`[${clock.consoleTime()}] Received= ${JSON.stringify({temp, hum, o3, tvoc, co2, pm25,co})}`);
-        } else {
-            console.log(`[${clock.consoleTime()}] Invalid data format`);
-        }
+        readstr(data);
+    });
+    parser2.on('data', (data) => {
+       readstr(data);
     });
 }
-function getData2() {
-    parser2.on('data', (data) => {
-        const keyValuePairs = data.split(',');
+
+/*把字串解析成所需的數值*/
+function readstr(data) {
+    const keyValuePairs = data.split(',');
         keyValuePairs.forEach(pair => {
             const [key, value] = pair.split('=');
             if (key && value) {
@@ -82,15 +70,13 @@ function getData2() {
             o3 = sensorData['o3'];
             tvoc = sensorData['tvoc'];
             co2 = sensorData['co2'];
-            //console.log(`[${clock.consoleTime()}] Received= temp: ${temp}, hum: ${hum}, o3: ${o3}, tvoc: ${tvoc}, co2: ${co2}`);
-            // 如果你只想印出特定的數據，可以這樣做
-            console.log(`[${clock.consoleTime()}] Received= ${JSON.stringify({temp, hum, o3, tvoc, co2, pm25,co})}`);
+            pm25 = sensorData['pm25'];
+            co = sensorData['co'];
+            console.log(`[${clock.consoleTime()}] Received Value: ${JSON.stringify({temp, hum, o3, tvoc, co2, pm25,co})}`);
         } else {
             console.log(`[${clock.consoleTime()}] Invalid data format`);
         }
-    });
 }
-
 
 /*發送至後端*/
 function sendDataToHTTP(sensorData) {
@@ -121,7 +107,7 @@ function openSerial(){
         } else {
           console.log(`[${clock.consoleTime()}] Serial01 is open.`);
           setTimeout(function() {
-            getData1();
+            getData();
           }, 3000);
         } 
     });
@@ -131,7 +117,7 @@ function openSerial(){
         } else {
           console.log(`[${clock.consoleTime()}] Serial02 is open.`);
           setTimeout(function() {
-            getData2();
+            getData();
           }, 3000);
         } 
     });
