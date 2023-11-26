@@ -10,10 +10,6 @@ var error=require("../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
-/*時間*/
-var date= clock.SQLDate();
-var time= clock.SQLTime();
-
 /*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
@@ -24,6 +20,9 @@ app.post("/upload/:deviceID/data",async function(req, res){
     //Query: ?hum=(num)&temp=(num)
     var device_ID = xss(req.params.deviceID);
     const {hum,temp,tvoc,co,co2,pm25,o3} = req.body;
+    //時間
+    var date= clock.SQLDate();
+    var time= clock.SQLTime();
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
     var data=`(${hum},${temp},${tvoc},${co},${co2},${pm25},${o3},'${date}','${time}');`;

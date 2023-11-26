@@ -9,10 +9,6 @@ var error=require("../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
-/*時間*/
-var date= clock.SQLDate();
-var time= clock.SQLTime();
-
 /*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
@@ -101,6 +97,9 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
 // POST /Set/UserCustomValue => 改變使用者相關資料
 // 接收格式：x-www-form-urlencoded
 app.post("/set/UserCustomValue", async function (req, res) {
+    //時間
+    var date= clock.SQLDate();
+    var time= clock.SQLTime();
     console.log(`[${clock.consoleTime()}] HTTP POST /set/UserCustomValue`);
     const { username, ValueName, num } = req.body;
 

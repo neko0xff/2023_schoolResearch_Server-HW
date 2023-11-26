@@ -10,9 +10,6 @@ var error=require("../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
-/*時間*/
-var date= clock.SQLDate();
-var time= clock.SQLTime();
 
 /*資料庫&後端*/
 var cnDB=null;
@@ -25,6 +22,9 @@ app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
         const device_ID = xss(req.params.deviceID);
         console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/fan1`);
   
+        //時間
+        var date= clock.SQLDate();
+        var time= clock.SQLTime();
         // Query: ?
         const status = xss(req.query.status);
         const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name = 'fan1'`;
@@ -81,6 +81,9 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
     var device_ID=xss(req.params.deviceID);
     console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/fan2`);
     try {
+        //時間
+        var date= clock.SQLDate();
+        var time= clock.SQLTime();
         // Query: ?
         const status = req.query.status;
         const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name= 'fan2'`;
@@ -134,6 +137,9 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
 
 //GET /read/statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
+    //時間
+    var date= clock.SQLDate();
+    var time= clock.SQLTime();
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/view`);
