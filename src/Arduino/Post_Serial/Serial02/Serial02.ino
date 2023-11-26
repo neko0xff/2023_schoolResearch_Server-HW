@@ -10,8 +10,8 @@
 
 /*相關變數*/
 SimpleDHT11 dht11;
-Adafruit_SGP30 sgp;
-float o3 = analogRead(MQ2pin);
+Adafruit_SGP30 sgp; //UNO I2C: SDA=A4, SCL=A5
+int o3 = 0;
 byte temperature = 0;
 byte humidity = 0;
 
@@ -19,15 +19,13 @@ byte humidity = 0;
 void setup(){
   Serial.begin(9600); // baud: 9600bps
   /*啟用SGP30*/
-  if (! sgp.begin()){
-    Serial.println("Sensor not found :(");
-    while (1);
-  }
+  sgp.begin();
   pinMode(rx,INPUT_PULLUP);
   pinMode(tx,INPUT_PULLUP);
 }
 
 void loop() {
+  o3=analogRead(MQ2pin);
   int err = SimpleDHTErrSuccess;
   
   /*偵測DHT11*/
@@ -40,23 +38,17 @@ void loop() {
   Serial.print("device=");
   Serial.print(deviceName);
   Serial.print(",hum=");   
-  Serial.print(float(humidity));     
+  Serial.print(int(humidity));     
   Serial.print(",temp=");   
-  Serial.print(float(temperature));
+  Serial.print(int(temperature));
   Serial.print(",o3=");
   Serial.print(o3);
-  if (! sgp.IAQmeasure()) {
-    Serial.println("Measurement failed");
-    return;
-  }
+  sgp.IAQmeasure();
   Serial.print(",tvoc=");
   Serial.print(sgp.TVOC);
   Serial.print(",co2=");
   Serial.print(sgp.eCO2);
-  if (! sgp.IAQmeasureRaw()) {
-    Serial.println("Raw Measurement failed");
-    return;
-  }
+  sgp.IAQmeasureRaw();
   Serial.println("");   
   delay(3000);  
 }
