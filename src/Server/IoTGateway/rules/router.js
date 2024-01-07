@@ -7,3 +7,4 @@ require("./switch.js");
 require("./crawler.js");
 require("./customValue.js");
 require("./devices.js");
+require("./auth.js");
