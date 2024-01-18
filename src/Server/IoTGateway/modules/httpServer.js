@@ -20,13 +20,14 @@ configSet.read("./modules/config/serviceSet.cfg");
 configSet.sections();
 var httpServer=express();
 var port=configSet.get("Service","HTTP"); 
+var mqtt=configSet.get("Service","MQTT");
 
 /*CORS設定*/
 const corsOptions ={
     "origin": [
         "*",
-        "http://localhost:3095",
-        "http://localhost:3094"
+        `http://localhost:${port}`,
+        `http://localhost:${mqtt}`
     ],
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
@@ -58,7 +59,7 @@ httpServer.use(cors(corsOptions));
 /*通訊埠*/
 httpServer.listen(port,function(){
     console.log(`[${clock.consoleTime()}] HTTP API Server Started!`);
-    console.log(`[${clock.consoleTime()}] HTTP API Server URL: http://[Server_IP]:%s`,port);
+    console.log(`[${clock.consoleTime()}] HTTP API Server URL: http://[Server_IP]:${port}`);
 });
 
 function app(){

@@ -1,11 +1,11 @@
-function start(){
-    const crawler = require('./module/crawler.js');
-    crawler.getData();
+function task_1(){
+    const crawler_1 = require('./module/crawler_1.js');
+    crawler_1.getData();
 }
 
 function scheduleTask(){
    require('./module/schedule.js'); 
 }
 
-start();
+task_1();
 scheduleTask();

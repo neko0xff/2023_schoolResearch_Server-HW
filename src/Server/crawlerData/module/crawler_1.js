@@ -5,7 +5,6 @@ const database = require('./database.js');
 
 /*抓取來源: 行政院環境保護部(署)資料開放平臺*/
 const key = 'e8dd42e6-9b8b-43f8-991e-b3dee723a52d';
-//const server = 'data.epa.gov.tw/api/v2/'; // 20230822 停用
 const server2 = 'data.moenv.gov.tw/api/v2/'; // 20230822 轉換
 const url = `https://${server2}/aqx_p_434?api_key=${key}&limit=1000&sort=ImportDate%20desc&format=JSON`;
 
