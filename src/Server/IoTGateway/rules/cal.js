@@ -61,7 +61,7 @@ app.post("/cal/Cfoot/other", async function(req, res){
 });
 
 /*CBAM*/
-//POST /cal/CBAM/emissions => 其它
+//POST /cal/CBAM/emissions => 排放量
 //接收格式：x-www-form-urlencoded
 app.post("/cal/CBAM/emissions", async function(req, res){
     const {use,GWP} = req.body;
@@ -70,7 +70,7 @@ app.post("/cal/CBAM/emissions", async function(req, res){
     
     /*進行計算*/
     try{
-        emissions=use*GWP; //公式= 使用量*排放因數
+        emissions=use*GWP; //排放量= 使用量*排放因數
         const responseMeta = {
             code: "0",
             output: `${emissions}`
@@ -86,19 +86,19 @@ app.post("/cal/CBAM/emissions", async function(req, res){
      
 });
 
-//POST /cal/CBAM/CC_simple => 其它
+//POST /cal/CBAM/CC_simple => 簡單與中間產品
 //接收格式：x-www-form-urlencoded
 app.post("/cal/CBAM/CC_simple", async function(req, res){
-    const {use,GWP} = req.body;
-    var emissions;
+    const {emissions,ton} = req.body;
+    var CC_simple;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/CC_simple`);
     
     /*進行計算*/
     try{
-        emissions=use*GWP; //公式= 使用量*排放因數
+        CC_simple=emissions/ton; //特定產品碳含量= 排放量*產品活動數據(生產量)
         const responseMeta = {
             code: "0",
-            output: `${emissions}`
+            output: `${CC_simple}`
         };
         res.send(responseMeta);
     }catch{
