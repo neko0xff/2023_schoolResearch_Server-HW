@@ -86,19 +86,45 @@ app.post("/cal/CBAM/emissions", async function(req, res){
      
 });
 
-//POST /cal/CBAM/CC_simple => 簡單與中間產品
+//POST /cal/CBAM/CC_simple => 碳含量_簡單與中間產品
 //接收格式：x-www-form-urlencoded
 app.post("/cal/CBAM/CC_simple", async function(req, res){
-    const {emissions,ton} = req.body;
+    const {emissions,production} = req.body;
     var CC_simple;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/CC_simple`);
     
     /*進行計算*/
     try{
-        CC_simple=emissions/ton; //特定產品碳含量= 排放量*產品活動數據(生產量)
+        CC_simple=emissions/production; //產品碳含量= 排放量/產品活動數據(生產量)
         const responseMeta = {
             code: "0",
             output: `${CC_simple}`
+        };
+        res.send(responseMeta);
+    }catch{
+        console.log(`[${clock.consoleTime()}] Error`);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
+    }finally{
+
+    }
+     
+});
+
+//POST /cal/CBAM/CC_CoPS => 碳含量_複雜產品
+//接收格式：x-www-form-urlencoded
+app.post("/cal/CBAM/CC_CoPS", async function(req, res){
+    const {emissions,production,Mid_production,CC} = req.body;
+    var CC_simple,CC_CoPS;
+    console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/CC_CoPS`);
+    
+    /*進行計算*/
+    try{
+        CC_simple=emissions/production; //特定產品碳含量= 排放量/產品活動數據(生產量)
+        CC_CoPS=CC_simple+((Mid_production/production)*CC); //複雜產品=特定產品碳含量+((中間產品活動數據/產品活動數據)*中間產品碳含量)
+        const responseMeta = {
+            code: "0",
+            output: `${CC_CoPS}`
         };
         res.send(responseMeta);
     }catch{
