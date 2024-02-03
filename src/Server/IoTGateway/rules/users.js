@@ -13,7 +13,7 @@ var errorController = error.errorController;
 var cnDB=null;
 var app=httpServer.app();
 
-//GET /users/userlist: 查詢資料庫上的使用者
+//GET /users/userlist: 查詢資料庫上的使用者列表
 //接收格式：x-www-form-urlencoded
 app.get("/users/userlist",async function(req, res){
     const listSQL="SELECT username,LoginName,email FROM Users;";
@@ -34,6 +34,83 @@ app.get("/users/userlist",async function(req, res){
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
     }finally{
+        connection.release();
+    }
+},catchError(errorController));
+
+//GET /users/usecustomValue: 查詢資料庫上的使用者的自訂值
+//接收格式：x-www-form-urlencoded
+app.get("/users/usecustomValue",async function(req, res){
+    const listSQL="SELECT LoginName,customvar01,customvar02,customvar03,customvar04,customvar05,customvar06,customvar07 FROM Users;";
+    const cnDB = database.cnDB(); 
+    const connection = await cnDB.getConnection();
+    console.log(`[${clock.consoleTime()}] HTTP GET /users/usecustomValue`);
+    
+    try{
+        const [results, fields] = await connection.execute(listSQL); 
+        const formattedResults = results.map(item => ({
+            ...item
+        }));
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}] ${data}`);
+    }catch(error){
+        console.log(`[${clock.consoleTime()}] Error `);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
+    }finally{
+        connection.release();
+    }
+},catchError(errorController));
+
+// POST /user/ModeChoose => 選項
+// 接收格式：x-www-form-urlencoded
+app.post("/user/ModeChoose", async function (req, res) {
+    //時間
+    console.log(`[${clock.consoleTime()}] HTTP POST /user/ModeChoose`);
+    const { username, Value } = req.body;
+
+    if (!username === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+
+    const searchSQL = `SELECT username, ${Value} FROM Users WHERE username = ?`;
+    const UPDATEUserSQL = `UPDATE Users SET ${Value} = ? WHERE username = ?`;
+
+    const cnDB = database.cnDB();
+    const connection = await cnDB.getConnection();
+
+    /*Rec*/
+    try{
+        const [results, fields] = await connection.execute(RecSQL); 
+    } catch (error){
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        throw error;
+    }
+
+    /*檢查使用者是否存在資料庫，若無則直接改變*/
+    try {
+        const [results] = await connection.execute(searchSQL, [username]);
+
+        if (results.length !== 0) {
+            await connection.execute(UPDATEUserSQL, [num, username]);
+            console.log(`[${clock.consoleTime()}] ${username}'s ${ValueName} updated successfully`);
+            const responseMeta = { code: "1" };
+            res.send(responseMeta);
+        } else {
+            connection.release();
+            console.log(`[${clock.consoleTime()}] ${username} is Not Found in Database!`);
+            const responseMeta = { code: "0" };
+            res.send(responseMeta);
+        }
+    } catch (error) {
+        console.log(`[${clock.consoleTime()}] ${username}'s ${ValueName} Error update: ${error.message}`);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
+    } finally {
         connection.release();
     }
 },catchError(errorController));
