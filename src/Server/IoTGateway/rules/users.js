@@ -76,6 +76,12 @@ app.post("/user/ModeChoose", async function (req, res) {
         const responseMeta = { code: "-1", error: "Missing data in request" };
         return res.status(400).send(responseMeta);
     }
+    if (Mode !== "A" && Mode !== "B" && Mode !== "C") {
+        // 確定值是否是指定方案值
+        console.log(`[${clock.consoleTime()}] Unauthorized access. ${Mode} is not True a value.`);
+        const responseMeta = { code: "-1", error: "Unauthorized access" };
+        return res.status(403).send(responseMeta);
+    }
 
     const searchSQL = `SELECT username FROM Users WHERE username = ?`;
     const UPDATEUserSQL = `UPDATE Users SET Mode = ? WHERE username = ?`;

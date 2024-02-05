@@ -138,6 +138,65 @@ app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     }
 },catchError(errorController));
 
+//POST /auth/MasterLogin: 使用者登入
+//接收格式：x-www-form-urlencoded
+app.post("/auth/MasterLogin",bruteforce.prevent, async function(req, res) {
+    const {username, password} = req.body;
+    
+    if (!username === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+    if (username !== "master") {
+        // 登入身份是否是`master`
+        console.log(`[${clock.consoleTime()}] Unauthorized access. Only 'master' is allowed.`);
+        const responseMeta = { code: "-1", error: "Unauthorized access" };
+        return res.status(403).send(responseMeta);
+    }
+
+    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = '${username}'`;
+    const cnDB = database.cnDB(); 
+    const connection = await cnDB.getConnection();
+  
+    /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
+    console.log(`[${clock.consoleTime()}] HTTP POST /auth/MasterLogin`);
+    try {  
+        const [results] = await connection.execute(searchSQL);
+        if (results.length == 0) {
+            connection.release();
+            console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
+            const responseMeta = {code: "-1"};
+            res.send(responseMeta); 
+        } else {
+            const hashedPassword = results[0].password;
+            const LoginName = results[0].LoginName;
+            const email = results[0].email;
+            if (await bcrypt.compare(password, hashedPassword)) {
+                console.log(`[${clock.consoleTime()}] ${username} is Login Successful!`);
+                const responseMeta = {
+                    code: "1",
+                    username: username,
+                    LoginName: LoginName,
+                    email: email
+                };
+                res.json(responseMeta);
+            }else{
+                console.log(`[${clock.consoleTime()}] ${username} is Password incorrect!!`);
+                const responseMeta = {code: "0"};
+                res.send(responseMeta);
+            } 
+        }
+    } catch (error) {
+        console.log(`[${clock.consoleTime()}] Error Login`);
+        const responseMeta = { code: "-1", error: error.message };
+        res.status(500).send(responseMeta);
+    } finally {
+        connection.release();
+    }
+},catchError(errorController));
+
 //POST /auth/emailAuthCheck: 使用者忘記密碼
 //接收格式：x-www-form-urlencoded
 app.post("/auth/emailAuthCheck",async function(req, res) {
