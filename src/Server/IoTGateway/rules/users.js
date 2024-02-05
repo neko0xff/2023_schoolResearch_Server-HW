@@ -1,7 +1,6 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable no-unused-vars */
 /*相関函式庫*/
-var bcrypt=require("bcrypt");
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
@@ -16,11 +15,12 @@ var app=httpServer.app();
 //GET /users/userlist: 查詢資料庫上的使用者列表
 //接收格式：x-www-form-urlencoded
 app.get("/users/userlist",async function(req, res){
-    const listSQL="SELECT username,LoginName,email FROM Users;";
+    
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
     console.log(`[${clock.consoleTime()}] HTTP GET /users/userlist`);
-    
+
+    const listSQL="SELECT username,LoginName,email FROM Users";
     try{
         const [results, fields] = await connection.execute(listSQL); 
         const formattedResults = results.map(item => ({
@@ -70,24 +70,25 @@ app.post("/user/ModeChoose", async function (req, res) {
     console.log(`[${clock.consoleTime()}] HTTP POST /user/ModeChoose`);
     const { username, Mode } = req.body;
 
-    if (!username === undefined) {
+    if (!username || !Mode === undefined) {
         // 檢查是否有缺少必要的資料
         console.log(`[${clock.consoleTime()}] Missing data in request.`);
         const responseMeta = { code: "-1", error: "Missing data in request" };
         return res.status(400).send(responseMeta);
     }
 
-    const UPDATEUserSQL = `UPDATE Users SET ${Mode} = ? WHERE username = ?`;
+    const searchSQL = `SELECT username FROM Users WHERE username = ?`;
+    const UPDATEUserSQL = `UPDATE Users SET Mode = ? WHERE username = ?`;
     const cnDB = database.cnDB();
     const connection = await cnDB.getConnection();
 
     /*檢查使用者是否存在資料庫，若無則直接改變*/
     try {
-        const [results] = await connection.execute(UPDATEUserSQL, [username]);
+        const [results] = await connection.execute(searchSQL, [username]);
 
         if (results.length !== 0) {
-            await connection.execute(UPDATEUserSQL, [Mode, username]);
-            console.log(`[${clock.consoleTime()}] ${username}'s ${Mode} updated successfully`);
+            await connection.execute(UPDATEUserSQL,[Mode,username]);
+            console.log(`[${clock.consoleTime()}] ${username}'s Plan ${Mode} updated successfully`);
             const responseMeta = { code: "1" };
             res.send(responseMeta);
         } else {
@@ -97,7 +98,7 @@ app.post("/user/ModeChoose", async function (req, res) {
             res.send(responseMeta);
         }
     } catch (error) {
-        console.log(`[${clock.consoleTime()}] ${username}'s ${Value} Error update: ${error.message}`);
+        console.log(`[${clock.consoleTime()}] ${username}'s Mode Error update: ${error.message}`);
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
     } finally {
@@ -108,7 +109,7 @@ app.post("/user/ModeChoose", async function (req, res) {
 //GET /users/Modeview: 查詢資料庫上的使用者的模式
 //接收格式：x-www-form-urlencoded
 app.get("/users/Modeview",async function(req, res){
-    const listSQL="SELECT LoginName,Mode FROM Users;";
+    const listSQL="SELECT username,Mode FROM Users;";
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
     console.log(`[${clock.consoleTime()}] HTTP GET /users/Modeview`);
