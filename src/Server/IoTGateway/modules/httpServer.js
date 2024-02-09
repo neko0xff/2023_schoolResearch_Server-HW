@@ -1,4 +1,5 @@
 var express = require("express");
+const bodyParser = require('body-parser');
 var RateLimit = require('express-rate-limit');
 var swaggerUi = require("swagger-ui-express");
 var helmet = require("helmet");
@@ -41,6 +42,7 @@ httpServer.use(compression()); //啟用gzip壓縮
 httpServer.use(express.urlencoded({ extended: false })); //傳送方式：x-www-form-urlencoded
 httpServer.use(express.json()); //傳送方式：json
 httpServer.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument)); //API Docs
+httpServer.use(bodyParser.json());
 
 /*允許部分header*/
 httpServer.use(function(req, res, next) {
