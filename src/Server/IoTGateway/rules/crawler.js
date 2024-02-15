@@ -69,9 +69,9 @@ app.get("/read/crawler/AQI/site", async function(req, res) {
     }
 },catchError(errorController));
 
-// GET /crawler/CFoot/ALL => 全部測站的資料
+// GET /read/crawler/CFoot/ALL => 全部測站的資料
 app.get("/read/crawler/CFoot/ALL",async function(req, res) {
-    var statusSQL = `SELECT name,coe,unit,departmentname,announcementyear FROM CFP_P_02 ORDER BY id ASC;`;
+    var statusSQL = `SELECT id,name,coe,unit,departmentname,announcementyear FROM CFP_P_02 ORDER BY id ASC;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/CFoot/ALL`);
 
     var cnDB = database.cnDB();
@@ -81,7 +81,6 @@ app.get("/read/crawler/CFoot/ALL",async function(req, res) {
         const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
             ...item,
-            monitordate: clock.formatDateToYYYYMMDD(item.monitordate) // 格式化日期
         }));
         var data = JSON.stringify(formattedResults);
         res.send(data);
