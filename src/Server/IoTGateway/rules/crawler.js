@@ -69,10 +69,37 @@ app.get("/read/crawler/AQI/site", async function(req, res) {
     }
 },catchError(errorController));
 
-// GET /read/crawler/CFoot/ALL => 全部測站的資料
+// GET /read/crawler/CFoot/ALL => 全部物品的資料
 app.get("/read/crawler/CFoot/ALL",async function(req, res) {
     var statusSQL = `SELECT id,name,coe,unit,departmentname,announcementyear FROM CFP_P_02 ORDER BY id ASC;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/CFoot/ALL`);
+
+    var cnDB = database.cnDB();
+    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
+    try {
+        const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
+        const formattedResults = results[0].map(item => ({
+            ...item,
+        }));
+        var data = JSON.stringify(formattedResults);
+        res.send(data);
+        console.log(`[${clock.consoleTime()}] ${data}`);
+    } catch (error) {
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        const responseMeta = { code: "-1" };
+        res.send(responseMeta);
+        throw error;
+    } finally {
+        connection.release(); // 釋放連接
+    }
+},catchError(errorController));
+
+// GET /read/crawler/Cfoot/name => 指定特定物品的資料
+app.get("/read/crawler/Cfoot/name", async function(req, res) {
+    const name = database.escape(req.query.name);
+    var statusSQL = `SELECT id, name, coe, unit, departmentname, announcementyear FROM CFP_P_02 WHERE name = ${name} ORDER BY id ASC;`;
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/Cfoot/name`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
