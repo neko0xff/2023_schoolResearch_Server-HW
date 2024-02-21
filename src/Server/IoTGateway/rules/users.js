@@ -66,9 +66,8 @@ app.get("/users/usecustomValue",async function(req, res){
 // POST /user/ModeChoose => 選項
 // 接收格式：x-www-form-urlencoded
 app.post("/user/ModeChoose", async function (req, res) {
-    //時間
-    console.log(`[${clock.consoleTime()}] HTTP POST /user/ModeChoose`);
     const { username, Mode } = req.body;
+    console.log(`[${clock.consoleTime()}] HTTP POST /user/ModeChoose`);
 
     if (!username || !Mode === undefined) {
         // 檢查是否有缺少必要的資料
@@ -115,11 +114,12 @@ app.post("/user/ModeChoose", async function (req, res) {
 //GET /users/Modeview: 查詢資料庫上的使用者的模式
 //接收格式：x-www-form-urlencoded
 app.get("/users/Modeview",async function(req, res){
-    const listSQL="SELECT username,Mode FROM Users;";
-    const cnDB = database.cnDB(); 
-    const connection = await cnDB.getConnection();
     console.log(`[${clock.consoleTime()}] HTTP GET /users/Modeview`);
-    
+
+    const listSQL="SELECT username,Mode FROM Users;";
+    const cnDB = database.cnDB();
+    const connection = await cnDB.getConnection();
+
     try{
         const [results, fields] = await connection.execute(listSQL); 
         const formattedResults = results.map(item => ({

@@ -18,6 +18,13 @@ app.post("/cal/Cfoot/traffic", async function(req, res){
     var traffic_other;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/Cfoot/traffic`);
     
+    if (!CPL || dist === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+
     /*進行計算*/
     try{
         traffic_other=CPL*dist; //公式= 排放因數 * 旅行的距離
@@ -83,6 +90,13 @@ app.post("/cal/Cfoot/other", async function(req, res){
     var other;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/Cfoot/other`);
     
+    if (!total || gwp === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+
     /*進行計算*/
     try{
         other=total*data1*gwp; //公式= 總數量 * 0.001102 * GWP 排放因數
@@ -96,7 +110,7 @@ app.post("/cal/Cfoot/other", async function(req, res){
         const responseMeta = { code: "-1", error: error.message };
         res.status(500).send(responseMeta);
     }finally{
-        connection.release(); // 釋放連接
+
     }
      
 });
@@ -123,7 +137,6 @@ app.post("/cal/Cfoot/other_db", async function(req, res){
     /*進行計算*/
     try {
         var results = await connection.query(searchSQL,[gwp], { cache: false }); // 執行 SQL 查詢
-        console.log(results);
         var coe = results[0][0]['Max(coe)'];
         other=total*data1*coe; //公式= 總數量 * 0.001102 * GWP 排放因數
         var responseMeta = {
@@ -149,6 +162,13 @@ app.post("/cal/CBAM/emissions", async function(req, res){
     var emissions;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/emissions`);
     
+    if (!gwp || use === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+
     /*進行計算*/
     try{
         emissions=use*GWP; //排放量= 使用量*排放因數
@@ -212,6 +232,13 @@ app.post("/cal/CBAM/CC_simple", async function(req, res){
     var CC_simple;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/CC_simple`);
     
+    if (!emissions || production === undefined) {
+        // 檢查是否有缺少必要的資料
+        console.log(`[${clock.consoleTime()}] Missing data in request.`);
+        const responseMeta = { code: "-1", error: "Missing data in request" };
+        return res.status(400).send(responseMeta);
+    }
+
     /*進行計算*/
     try{
         CC_simple=emissions/production; //產品碳含量= 排放量/產品活動數據(生產量)

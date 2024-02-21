@@ -10,8 +10,8 @@ var app=httpServer.app();
 
 // POST /webhook: webhook endpoint
 app.post('/webhook', (req, res) => {
-    var data = JSON.stringify(req.body)
     console.log(`[${clock.consoleTime()}] HTTP POST /webhook`);
+    var data = JSON.stringify(req.body);
     console.log(`[${clock.consoleTime()}] Received webhook: ${data}`);
     res.sendStatus(200);
 });
