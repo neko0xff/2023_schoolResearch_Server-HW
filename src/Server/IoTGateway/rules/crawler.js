@@ -97,14 +97,14 @@ app.get("/read/crawler/CFoot/ALL",async function(req, res) {
 // GET /read/crawler/Cfoot/name => 指定特定物品的資料
 app.get("/read/crawler/Cfoot/name", async function(req, res) {
     const name = database.escape(req.query.name);
-    var statusSQL = `SELECT id, name, coe, unit, departmentname, announcementyear FROM CFP_P_02 WHERE name = ${name} ORDER BY id ASC;`;
+    var statusSQL = `SELECT id, name, coe, unit, departmentname, announcementyear FROM CFP_P_02 WHERE name = ? ORDER BY id ASC;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/crawler/Cfoot/name`);
 
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
     try {
-        const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
+        const results = await connection.query(statusSQL,[name], { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
             ...item,
         }));

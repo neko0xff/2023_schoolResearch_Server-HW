@@ -25,14 +25,13 @@ app.post("/upload/:deviceID/data",async function(req, res){
     var time= clock.SQLTime();
     console.log(`[${clock.consoleTime()}] HTTP POST /upload/${device_ID}/data`);
 
-    var data=`(${hum},${temp},${tvoc},${co},${co2},${pm25},${o3},'${date}','${time}');`;
-    var uploadSQL=`INSERT INTO ${device_ID}_Table(hum,temp,tvoc,co,co2,pm25,o3,date,time) VALUES ${data}`;
+    var uploadSQL=`INSERT INTO ${device_ID}_Table(hum,temp,tvoc,co,co2,pm25,o3,date,time) VALUES (?,?,?,?,?,?,?,?,?)`;
     var cnDB=database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
     /*run*/
     try {
-        const [results, fields] = await connection.execute(uploadSQL); // 執行 SQL 查詢
+        const [results, fields] = await connection.execute(uploadSQL, [hum,temp,tvoc,co,co2,pm25,o3,date,time]); // 執行 SQL 查詢
         var data=JSON.stringify(results);
         res.send(results);
         mqttPubRouter.pubSensorALL(device_ID);

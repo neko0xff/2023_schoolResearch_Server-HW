@@ -27,17 +27,16 @@ app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
         var time= clock.SQLTime();
         // Query: ?
         const status = xss(req.query.status);
-        const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name = 'fan1'`;
+        const updateSQL =`UPDATE ${device_ID}_Status SET status = ? WHERE ${device_ID}_Status.name = 'fan1'`;
         // UPDATE `Switch01_Status` SET `status`='0' WHERE `Switch01_Status`.`name`= 'fan1'
-        var Recdata= `('fan1','${status}','${date}','${time}')`;
-        const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES ${Recdata}`;
+        const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES ('fan1',?,?,?)`;
   
         var cnDB=database.cnDB();
         const connection = await cnDB.getConnection(); 
 
         /*Rec*/
         try{
-            const [results, fields] = await connection.execute(RecSQL); 
+            const [results, fields] = await connection.query(RecSQL,[status,date,time],{ cache: false });
         } catch (error){
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
@@ -45,7 +44,7 @@ app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
 
         /*Update*/
         try{
-            const [results, fields] = await connection.execute(updateSQL); 
+            const [results, fields] = await connection.query(updateSQL,[status],{ cache: false });
         } catch (error) {
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;
@@ -86,17 +85,16 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
         var time= clock.SQLTime();
         // Query: ?
         const status = req.query.status;
-        const updateSQL =`UPDATE ${device_ID}_Status SET status = ${status} WHERE ${device_ID}_Status.name= 'fan2'`;
+        const updateSQL =`UPDATE ${device_ID}_Status SET status = ? WHERE ${device_ID}_Status.name= 'fan2'`;
         // UPDATE `Switch01_Status` SET `status`='0' WHERE `Switch01_Status`.`name`= 'fan2'
-        var Recdata= `('fan2','${status}','${date}','${time}')`;
-        const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES` + Recdata;
+        const RecSQL = `INSERT INTO ${device_ID}_StatusRec(switch,status,date,time) VALUES ('fan2',?,?,?)`;
   
         var cnDB=database.cnDB();
         const connection = await cnDB.getConnection(); 
 
         /*Rec*/
         try{
-            const [results, fields] = await connection.execute(RecSQL); 
+            const [results, fields] = await connection.query(RecSQL,[status,date,time],{ cache: false });
         } catch (error){
             console.log(error);
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
@@ -105,7 +103,7 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
 
         /*Update*/
         try{
-            const [results, fields] = await connection.execute(updateSQL); 
+            const [results, fields] = await connection.query(updateSQL,[status],{ cache: false });
         } catch(error) {    
             console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
             throw error;

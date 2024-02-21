@@ -16,7 +16,7 @@ var app=httpServer.app();
 //接收格式：x-www-form-urlencoded
 app.post("/devices/serialnumber", async function(req, res) {
     const {device} = req.body;
-    const searchSQL = `SELECT serialnumber FROM Devices WHERE device = '${device}'`;
+    const searchSQL = `SELECT serialnumber FROM Devices WHERE device = ? ;`;
   
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -24,7 +24,7 @@ app.post("/devices/serialnumber", async function(req, res) {
     /*檢查使用者是否存在資料庫，若無則直接建立*/
     console.log(`[${clock.consoleTime()}] HTTP POST /devices/serialnumber`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[device]);
         const serialnumber = await results[0].serialnumber;
         if (results.length !== 0) {
             connection.release();
@@ -49,7 +49,7 @@ app.post("/devices/serialnumber", async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/devices/device", async function(req, res) {
     const {serialnumber} = req.body;
-    const searchSQL = `SELECT device FROM Devices WHERE serialnumber = '${serialnumber}'`;
+    const searchSQL = `SELECT device FROM Devices WHERE serialnumber = ?;`;
   
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -57,7 +57,7 @@ app.post("/devices/device", async function(req, res) {
     /*檢查使用者是否存在資料庫，若無則直接建立*/
     console.log(`[${clock.consoleTime()}] HTTP POST /devices/device`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL, [serialnumber]);
         const device = await results[0].device;
         if (results.length !== 0) {
             connection.release();

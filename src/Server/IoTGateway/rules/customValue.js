@@ -31,7 +31,7 @@ app.get("/read/UserCustomValueStatus", async function (req, res) {
     const connection = await cnDB.getConnection();
 
     try {
-        const [results] = await connection.execute(ReadSQL, [username]);
+        const [results] = await connection.execute(ReadSQL, [username],{ cache: false });
         
         if (results.length === 0) {
             console.log(`[${clock.consoleTime()}] ${username} not found in the database.`);
@@ -69,13 +69,13 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
         return res.status(400).send(responseMeta);
     }
 
-    var readSQL = `SELECT username,ValueName,date,time FROM customVar_StatusRec WHERE username = '${username}' ORDER BY date DESC, time DESC LIMIT 1;`;
+    var readSQL = `SELECT username,ValueName,date,time FROM customVar_StatusRec WHERE username = ? ORDER BY date DESC, time DESC LIMIT 1;`;
     
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); 
     
     try {
-      const [results, fields] = await connection.execute(readSQL); 
+      const [results, fields] = await connection.query(readSQL,[username], { cache: false });
       // 將日期格式化為 "yyyy-mm-dd"
       const formattedResults = results.map(item => ({
         ...item,
@@ -112,15 +112,14 @@ app.post("/set/UserCustomValue", async function (req, res) {
 
     const searchSQL = `SELECT username, ${ValueName} FROM Users WHERE username = ?`;
     const UPDATEUserSQL = `UPDATE Users SET ${ValueName} = ? WHERE username = ?`;
-    var Recdata= `('${username}','${ValueName}','${num}','${date}','${time}')`;
-    const RecSQL = `INSERT INTO customVar_StatusRec(username,ValueName,num,date,time) VALUES` + Recdata;
+    const RecSQL = `INSERT INTO customVar_StatusRec(username,ValueName,num,date,time) VALUES (?,?,?,?,?);`;
 
     const cnDB = database.cnDB();
     const connection = await cnDB.getConnection();
 
     /*Rec*/
     try{
-        const [results, fields] = await connection.execute(RecSQL); 
+        const [results, fields] = await connection.query(RecSQL,[username,ValueName,num,date,time], { cache: false });;
     } catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         throw error;
