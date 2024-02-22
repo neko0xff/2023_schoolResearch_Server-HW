@@ -37,6 +37,19 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+    - 8087:8080
+    volumes:
+    - ~/jenkins:/var/jenkins_home
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /usr/local/bin/docker:/usr/local/bin/docker
+
+
 volumes:
   portainer_data:
     external: false

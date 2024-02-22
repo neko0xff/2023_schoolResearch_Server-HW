@@ -7,6 +7,7 @@ firewall-cmd --add-port=8082/tcp --permanent
 firewall-cmd --add-port=8083/tcp --permanent
 firewall-cmd --add-port=8084/tcp --permanent
 firewall-cmd --add-port=8086/tcp --permanent
+firewall-cmd --add-port=8087/tcp --permanent
 firewall-cmd --add-port=9000/tcp --permanent
 sleep $sleep_time
 echo "---------------------------------------------------------"
