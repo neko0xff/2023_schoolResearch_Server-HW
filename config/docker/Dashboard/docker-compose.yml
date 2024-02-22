@@ -53,7 +53,6 @@ services:
     image: jenkins/ssh-agent:latest
     privileged: true
     user: root
-    container_name: agent
     expose:
       - 2444
     environment:
