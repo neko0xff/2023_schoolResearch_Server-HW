@@ -15,7 +15,7 @@ var app=httpServer.app();
 //接收格式：x-www-form-urlencoded
 app.post("/cal/Cfoot/traffic", async function(req, res){
     const {CPL,dist} = req.body;
-    var traffic_other;
+    var traffic;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/Cfoot/traffic`);
     
     if (!CPL || dist === undefined) {
@@ -27,10 +27,10 @@ app.post("/cal/Cfoot/traffic", async function(req, res){
 
     /*進行計算*/
     try{
-        traffic_other=CPL*dist; //公式= 排放因數 * 旅行的距離
+        traffic=(CPL*dist).toFixed(2); //公式= 排放因數 * 旅行的距離
         const responseMeta = {
             code: "0",
-            output: `${traffic_other}`
+            output: `${traffic} Coe`,
         };
         res.send(responseMeta);
     }catch{
@@ -57,7 +57,7 @@ app.post("/cal/Cfoot/traffic_db", async function(req, res){
         return res.status(400).send(responseMeta);
     }
 
-    var searchSQL = `SELECT Max(coe) FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
+    var searchSQL = `SELECT Max(coe),unit FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
     
@@ -65,10 +65,12 @@ app.post("/cal/Cfoot/traffic_db", async function(req, res){
     try {
         var results = await connection.query(searchSQL,[CPL], { cache: false }); // 執行 SQL 查詢
         var coe = results[0][0]['Max(coe)'];
-        traffic = coe * dist; //公式= 排放因數 * 旅行的距離
+        var unit = results[0][0]['unit'];
+        traffic = (coe * dist).toFixed(2); //公式= 排放因數 * 旅行的距離
+        
         var responseMeta = {
             code: "0",
-            output: `${traffic}`
+            output: `${traffic} CO2e`,
         };
         res.send(responseMeta);
     } catch (error) {
@@ -99,10 +101,10 @@ app.post("/cal/Cfoot/other", async function(req, res){
 
     /*進行計算*/
     try{
-        other=total*data1*gwp; //公式= 總數量 * 0.001102 * GWP 排放因數
+        other=(total*data1*gwp).toFixed(2); //公式= 總數量 * 0.001102 * GWP 排放因數
         const responseMeta = {
             code: "0",
-            output: `${other}`
+            output: `${other} CO2e`,
         };
         res.send(responseMeta);
     }catch{
@@ -130,7 +132,7 @@ app.post("/cal/Cfoot/other_db", async function(req, res){
         return res.status(400).send(responseMeta);
     }
 
-    var searchSQL = `SELECT Max(coe) FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
+    var searchSQL = `SELECT Max(coe),unit FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
@@ -138,10 +140,11 @@ app.post("/cal/Cfoot/other_db", async function(req, res){
     try {
         var results = await connection.query(searchSQL,[gwp], { cache: false }); // 執行 SQL 查詢
         var coe = results[0][0]['Max(coe)'];
-        other=total*data1*coe; //公式= 總數量 * 0.001102 * GWP 排放因數
+        var unit = results[0][0]['unit'];
+        other=(total*data1*coe).toFixed(2); //公式= 總數量 * 0.001102 * GWP 排放因數
         var responseMeta = {
             code: "0",
-            output: `${other}`
+            output: `${other} CO2e`,
         };
         res.send(responseMeta);
     } catch (error) {
@@ -171,10 +174,10 @@ app.post("/cal/CBAM/emissions", async function(req, res){
 
     /*進行計算*/
     try{
-        emissions=use*GWP; //排放量= 使用量*排放因數
+        emissions=(use*GWP).toFixed(2); //排放量= 使用量*排放因數
         const responseMeta = {
             code: "0",
-            output: `${emissions}`
+            output: `${emissions} CO2e`,
         };
         res.send(responseMeta);
     }catch{
@@ -201,7 +204,7 @@ app.post("/cal/CBAM/emissions_db", async function(req, res){
         return res.status(400).send(responseMeta);
     }
 
-    var searchSQL = `SELECT Max(coe) FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
+    var searchSQL = `SELECT Max(coe),unit FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
@@ -209,10 +212,11 @@ app.post("/cal/CBAM/emissions_db", async function(req, res){
     try {
         var results = await connection.query(searchSQL,[gwp], { cache: false }); // 執行 SQL 查詢
         var coe = results[0][0]['Max(coe)'];
-        emissions=use*coe; //排放量= 使用量*排放因數
+        var unit = results[0][0]['unit'];
+        emissions=(use*coe).toFixed(2); //排放量= 使用量*排放因數
         const responseMeta = {
             code: "0",
-            output: `${emissions}`
+            output: `${emissions} CO2e`,
         };
         res.send(responseMeta);
     } catch (error) {
@@ -241,10 +245,10 @@ app.post("/cal/CBAM/CC_simple", async function(req, res){
 
     /*進行計算*/
     try{
-        CC_simple=emissions/production; //產品碳含量= 排放量/產品活動數據(生產量)
+        CC_simple=(emissions/production).toFixed(2); //產品碳含量= 排放量/產品活動數據(生產量)
         const responseMeta = {
             code: "0",
-            output: `${CC_simple}`
+            output: `${CC_simple} CO2e`,
         };
         res.send(responseMeta);
     }catch{
@@ -261,7 +265,7 @@ app.post("/cal/CBAM/CC_simple", async function(req, res){
 //接收格式：x-www-form-urlencoded
 app.post("/cal/CBAM/CC_simple_db", async function(req, res){
     const {use,gwp,production} = req.body;
-    var CC_simple,emissions,coe;
+    var CC_simple,emissions;
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/CBAM/CC_simple_db`);
     
     if (!gwp || use === undefined) {
@@ -271,19 +275,20 @@ app.post("/cal/CBAM/CC_simple_db", async function(req, res){
         return res.status(400).send(responseMeta);
     }
 
-    var searchSQL = `SELECT Max(coe) FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
+    var searchSQL = `SELECT Max(coe),unit FROM CFP_P_02 WHERE name = ? ORDER BY coe DESC LIMIT 1;`;
     var cnDB = database.cnDB();
     const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
 
     /*進行計算*/
     try{
         var results = await connection.query(searchSQL,[gwp], { cache: false }); // 執行 SQL 查詢
-        coe = results[0][0]['Max(coe)'];
+        var coe = results[0][0]['Max(coe)'];
+        var unit = results[0][0]['unit'];
         emissions=use*coe; //排放量= 使用量*排放因數
-        CC_simple=emissions/production; //產品碳含量= 排放量/產品活動數據(生產量)
+        CC_simple=(emissions/production).toFixed(2); //產品碳含量= 排放量/產品活動數據(生產量)
         const responseMeta = {
             code: "0",
-            output: `${CC_simple}`
+            output: `${CC_simple} CO2e`,
         };
         res.send(responseMeta);
     }catch{
@@ -306,10 +311,10 @@ app.post("/cal/CBAM/CC_CoPS", async function(req, res){
     /*進行計算*/
     try{
         CC_simple=emissions/production; //特定產品碳含量= 排放量/產品活動數據(生產量)
-        CC_CoPS=CC_simple+((Mid_production/production)*CC); //複雜產品=特定產品碳含量+((中間產品活動數據/產品活動數據)*中間產品碳含量)
+        CC_CoPS=(CC_simple+((Mid_production/production)*CC)).toFixed(2); //複雜產品=特定產品碳含量+((中間產品活動數據/產品活動數據)*中間產品碳含量)
         const responseMeta = {
             code: "0",
-            output: `${CC_CoPS}`
+            output: `${CC_CoPS} CO2e`,
         };
         res.send(responseMeta);
     }catch{
