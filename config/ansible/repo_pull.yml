@@ -1,16 +1,25 @@
----
 - hosts: all
   remote_user: user
   become: yes
   become_user: user
   tasks:
-    - name: "task1_app"
+    - name: "task1: check directory in fontend"
+      file:
+        path: /home/user/repo/2023_schoolResearch_ClientApp
+        state: directory
+      check_mode: no  # 設置為 yes 只進行檢查，而不進行任何更改
+    - name: "task2: git fetch/pull fontend source code"
       git:
         repo: https://github.com/neko0xff/2023_schoolResearch_ClientApp
         dest: /home/user/repo/2023_schoolResearch_ClientApp
         update: yes
         version: main
-    - name: "task2_server"
+    - name: "task3: check directory in backend"
+      file:
+        path: /home/user/repo/2023_schoolResearch_Server-HW
+        state: directory
+      check_mode: no  # 設置為 yes 只進行檢查，而不進行任何更改
+    - name: "task4: git fetch/pull backend source code"
       git:
         repo: https://github.com/neko0xff/2023_schoolResearch_Server-HW
         dest: /home/user/repo/2023_schoolResearch_Server-HW
