@@ -31,6 +31,8 @@ app.post("/cal/Cfoot/traffic", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${traffic} Coe`,
+            output_num: `${traffic}`,
+            use_unit: `(單位)/CO2e`
         };
         res.send(responseMeta);
     }catch{
@@ -71,6 +73,8 @@ app.post("/cal/Cfoot/traffic_db", async function(req, res){
         var responseMeta = {
             code: "0",
             output: `${traffic} CO2e`,
+            output_num: `${traffic}`,
+            use_unit: `${unit}/CO2e`
         };
         res.send(responseMeta);
     } catch (error) {
@@ -105,6 +109,8 @@ app.post("/cal/Cfoot/other", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${other} CO2e`,
+            output_num: `${other}`,
+            use_unit: `(單位)/CO2e`
         };
         res.send(responseMeta);
     }catch{
@@ -145,6 +151,8 @@ app.post("/cal/Cfoot/other_db", async function(req, res){
         var responseMeta = {
             code: "0",
             output: `${other} CO2e`,
+            output_num: `${other}`,
+            use_unit: `${unit}/CO2e`
         };
         res.send(responseMeta);
     } catch (error) {
@@ -178,6 +186,8 @@ app.post("/cal/CBAM/emissions", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${emissions} CO2e`,
+            output_num: `${emissions}`,
+            use_unit: `(單位)/CO2e`
         };
         res.send(responseMeta);
     }catch{
@@ -217,6 +227,8 @@ app.post("/cal/CBAM/emissions_db", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${emissions} CO2e`,
+            output_num: `${emissions}`,
+            use_unit: `${unit}/CO2e`
         };
         res.send(responseMeta);
     } catch (error) {
@@ -249,6 +261,8 @@ app.post("/cal/CBAM/CC_simple", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${CC_simple} CO2e`,
+            output_num: `${CC_simple}`,
+            use_unit: `(單位)/CO2e`
         };
         res.send(responseMeta);
     }catch{
@@ -289,6 +303,8 @@ app.post("/cal/CBAM/CC_simple_db", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${CC_simple} CO2e`,
+            output_num: `${CC_simple}`,
+            use_unit: `${unit}/CO2e`
         };
         res.send(responseMeta);
     }catch{
@@ -315,6 +331,8 @@ app.post("/cal/CBAM/CC_CoPS", async function(req, res){
         const responseMeta = {
             code: "0",
             output: `${CC_CoPS} CO2e`,
+            output_num: `${CC_CoPS}`,
+            use_unit: `(單位)/CO2e`
         };
         res.send(responseMeta);
     }catch{

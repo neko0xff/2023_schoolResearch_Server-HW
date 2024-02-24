@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: user
+  become: yes
+  become_user: user
+  tasks:
+    - name: "task1_app"
+      git:
+        repo: https://github.com/neko0xff/2023_schoolResearch_ClientApp
+        dest: /home/user/repo/2023_schoolResearch_ClientApp
+        update: yes
+        version: main
+    - name: "task2_server"
+      git:
+        repo: https://github.com/neko0xff/2023_schoolResearch_Server-HW
+        dest: /home/user/repo/2023_schoolResearch_Server-HW
+        update: yes
+        version: main

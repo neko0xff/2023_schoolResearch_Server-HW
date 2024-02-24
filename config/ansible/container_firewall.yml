@@ -1,0 +1,67 @@
+- hosts: all
+  become: true
+  tasks:
+    # task 1
+    - name: "Firewall Setup : 8081/tcp"
+      firewalld:
+        port: 8081/tcp
+        zone: public
+        permanent: true
+        state: enabled  
+    # task 2
+    - name: "Firewall Setup : 8082/tcp"
+      firewalld:
+        port: 8082/tcp
+        zone: public
+        permanent: true
+        state: enabled
+    # task 3
+    - name: "Firewall Setup : 8083/tcp"
+      firewalld:
+        port: 8083/tcp
+        zone: public
+        permanent: true
+        state: enabled
+    # task 4
+    - name: "Firewall Setup : 8084/tcp"
+      firewalld:
+        port: 8084/tcp
+        zone: public
+        permanent: true
+        state: enabled  
+    # task 5
+    - name: "Firewall Setup : 8085/tcp"
+      firewalld:
+        port: 8085/tcp
+        zone: public
+        permanent: true
+        state: enabled
+    # task 6
+    - name: "Firewall Setup : 8086/tcp"
+      firewalld:
+        port: 8086/tcp
+        zone: public
+        permanent: true
+        state: enabled  
+    # task 6
+    - name: "Firewall Setup : 9000/tcp"
+      firewalld:
+        port: 9000/tcp
+        zone: public
+        permanent: true
+        state: enabled
+    # task 7
+    - name: "Firewall Setup : 3095/tcp"
+      firewalld:
+        port: 3095/tcp
+        zone: public
+        permanent: true
+        state: enabled
+    # task 8
+    - name: "Firewall Setup : 3094/tcp"
+      firewalld:
+        port: 3094/tcp
+        zone: public
+        permanent: true
+        state: enabled
+  gather_facts: false

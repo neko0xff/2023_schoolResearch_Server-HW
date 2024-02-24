@@ -1,0 +1,32 @@
+- hosts: all
+  become: true
+  tasks:
+    # task 1
+    - name: "Firewall Setup : http"
+      firewalld:
+        service: http
+        zone: public
+        permanent: true
+        state: enabled  
+    # task 2
+    - name: "Firewall Setup : https"
+      firewalld:
+        service: https
+        zone: public
+        permanent: true
+        state: enabled
+    # task 3
+    - name: "Firewall Setup : mysql"
+      firewalld:
+        service: mysql
+        zone: public
+        permanent: true
+        state: enabled
+    # task 4
+    - name: "Firewall Setup : cockpit"
+      firewalld:
+        service: cockpit
+        zone: public
+        permanent: true
+        state: enabled  
+  gather_facts: false

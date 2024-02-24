@@ -1,0 +1,28 @@
+---
+- hosts: all
+  remote_user: user
+  become_user: user
+  become_method: sudo
+  tasks:
+    - name: "task1: Install Docker SDK for Python"
+      ansible.builtin.pip:
+        name: 
+          - "docker==6.1.3"
+          - "docker-compose"
+    - name: "task2: Delete previous containers and images"
+      community.docker.docker_container:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - IoTGateway-cont
+        - crawler-cont
+    - name: "task3: build a backend"
+      community.docker.docker_compose:
+        project_src: "/home/user/repo/2023_schoolResearch_Server-HW/src/Server"
+        project_name: app_backend
+        stopped: false
+        build: true
+        state: present
+      register: output
+
+    

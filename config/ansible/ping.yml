@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    # task 1
+    - name: "test Ping"
+      ping:
+      register: message
+    # task 2
+    - name: "Print Ping"
+      debug:
+        msg: "{{ message }}"
+          
+  gather_facts: false
