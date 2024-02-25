@@ -1,7 +1,8 @@
 /*相關函式庫*/
 const cron = require('node-cron');
 const clock = require("./clock.js");
-const crawler = require("./crawler_1.js");
+const crawler1 = require("./crawler_1.js");
+const crawler2 = require("./crawler_2.js");
 
 /*定義排程*/
 
@@ -9,9 +10,14 @@ const crawler = require("./crawler_1.js");
 function task1(){
   cron.schedule('0 8 * * *', () => {
     /*需排程的工作*/
-    console.log(`[${clock.consoleTime()}] task is running`);
-    crawler.getData();
+    console.log(`[${clock.consoleTime()}] task is running in backend`);
+    getALLdata();
   });
+}
+
+function getALLdata(){
+  crawler1.getData();
+  crawler2.getData();
 }
 
 /*管理部分*/
