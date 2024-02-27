@@ -24,6 +24,7 @@ app.get("/users/userlist",async function(req, res){
     try{
         const [results, fields] = await connection.execute(listSQL); 
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item
         }));
         var data = JSON.stringify(formattedResults);
@@ -49,6 +50,7 @@ app.get("/users/usecustomValue",async function(req, res){
     try{
         const [results, fields] = await connection.execute(listSQL); 
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item
         }));
         var data = JSON.stringify(formattedResults);
@@ -123,6 +125,7 @@ app.get("/users/Modeview",async function(req, res){
     try{
         const [results, fields] = await connection.execute(listSQL); 
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item
         }));
         var data = JSON.stringify(formattedResults);

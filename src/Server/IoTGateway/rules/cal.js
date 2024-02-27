@@ -29,7 +29,7 @@ app.post("/cal/Cfoot/traffic", async function(req, res){
     try{
         traffic=(CPL*dist).toFixed(2); //公式= 排放因數 * 旅行的距離
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${traffic} Coe`,
             output_num: `${traffic}`,
             use_unit: `(單位)/CO2e`
@@ -71,7 +71,7 @@ app.post("/cal/Cfoot/traffic_db", async function(req, res){
         traffic = (coe * dist).toFixed(2); //公式= 排放因數 * 旅行的距離
         
         var responseMeta = {
-            code: "0",
+            code: "1",
             output: `${traffic} CO2e`,
             output_num: `${traffic}`,
             use_unit: `${unit}/CO2e`
@@ -107,7 +107,7 @@ app.post("/cal/Cfoot/other", async function(req, res){
     try{
         other=(total*data1*gwp).toFixed(2); //公式= 總數量 * 0.001102 * GWP 排放因數
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${other} CO2e`,
             output_num: `${other}`,
             use_unit: `(單位)/CO2e`
@@ -149,7 +149,7 @@ app.post("/cal/Cfoot/other_db", async function(req, res){
         var unit = results[0][0]['unit'];
         other=(total*data1*coe).toFixed(2); //公式= 總數量 * 0.001102 * GWP 排放因數
         var responseMeta = {
-            code: "0",
+            code: "1",
             output: `${other} CO2e`,
             output_num: `${other}`,
             use_unit: `${unit}/CO2e`
@@ -184,7 +184,7 @@ app.post("/cal/CBAM/emissions", async function(req, res){
     try{
         emissions=(use*GWP).toFixed(2); //排放量= 使用量*排放因數
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${emissions} CO2e`,
             output_num: `${emissions}`,
             use_unit: `(單位)/CO2e`
@@ -225,7 +225,7 @@ app.post("/cal/CBAM/emissions_db", async function(req, res){
         var unit = results[0][0]['unit'];
         emissions=(use*coe).toFixed(2); //排放量= 使用量*排放因數
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${emissions} CO2e`,
             output_num: `${emissions}`,
             use_unit: `${unit}/CO2e`
@@ -259,7 +259,7 @@ app.post("/cal/CBAM/CC_simple", async function(req, res){
     try{
         CC_simple=(emissions/production).toFixed(2); //產品碳含量= 排放量/產品活動數據(生產量)
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${CC_simple} CO2e`,
             output_num: `${CC_simple}`,
             use_unit: `(單位)/CO2e`
@@ -301,7 +301,7 @@ app.post("/cal/CBAM/CC_simple_db", async function(req, res){
         emissions=use*coe; //排放量= 使用量*排放因數
         CC_simple=(emissions/production).toFixed(2); //產品碳含量= 排放量/產品活動數據(生產量)
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${CC_simple} CO2e`,
             output_num: `${CC_simple}`,
             use_unit: `${unit}/CO2e`
@@ -329,7 +329,7 @@ app.post("/cal/CBAM/CC_CoPS", async function(req, res){
         CC_simple=emissions/production; //特定產品碳含量= 排放量/產品活動數據(生產量)
         CC_CoPS=(CC_simple+((Mid_production/production)*CC)).toFixed(2); //複雜產品=特定產品碳含量+((中間產品活動數據/產品活動數據)*中間產品碳含量)
         const responseMeta = {
-            code: "0",
+            code: "1",
             output: `${CC_CoPS} CO2e`,
             output_num: `${CC_CoPS}`,
             use_unit: `(單位)/CO2e`
