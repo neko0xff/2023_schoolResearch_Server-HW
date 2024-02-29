@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: all # 指定伺服器部分: 所有伺服器
   tasks:
     # task 1
     - name: "test Ping"

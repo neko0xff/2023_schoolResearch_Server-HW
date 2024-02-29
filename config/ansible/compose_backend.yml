@@ -1,8 +1,8 @@
 ---
-- hosts: all
-  remote_user: user
-  become_user: user
-  become_method: sudo
+- hosts: all # 指定伺服器部分: 所有伺服器
+  remote_user: user # 遠端登入時的目前使用者
+  become_user: user # 需要提權時的目前使用者
+  become: true # 提高權限
   tasks:
     - name: "task1: Install Docker SDK for Python"
       ansible.builtin.pip:

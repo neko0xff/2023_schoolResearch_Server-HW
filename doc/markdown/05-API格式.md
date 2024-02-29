@@ -1,16 +1,13 @@
----
-title: 四技專題-API格式
-tags: 四技專題
----
-四技專題-API格式
+API格式
 ===
+
 ## 00 API 文件
 ### 檢視方式
 - HTTP
   * 框架: Swagger
 - URL: `/docs`
   ![](https://hackmd.io/_uploads/HkwHbADdh.png)
----
+
 ## 01 開發版上傳
 ### 方式
 - HTTP Request: POST
@@ -37,7 +34,7 @@ tags: 四技專題
 ### 輸出
 - 格式: JSON
 - 動作: 成功回傳時,則回應上傳的中繼資料
----
+
 ## 02 從資料庫讀值
 ### 方式
 - HTTP Request: GET
@@ -79,7 +76,6 @@ tags: 四技專題
     |  '/o3'  |   o3    |
     | '/ALL'  |  全部   |
 
----
 ## 03 開関控制
 ### 方式
 - HTTP Request: GET
@@ -101,7 +97,7 @@ tags: 四技專題
     |:-------:|:-------:|:--------------------:|
     |    1    |    1    | `[deviceID] is On `  |
     |    0    |    0    | `[deviceID] is Off ` |
----
+
 ## 04 檢視開関控制的記錄
 ### 方式
 - HTTP Request: GET
@@ -115,7 +111,7 @@ tags: 四技專題
 ### 輸出
 - 回傳格式: JSON
 - 動作: 成功回傳時，則回應對應的請求
----
+
 ## 05 開發版讀取開關數值
 ### 方式
 - HTTP Request: GET
@@ -134,7 +130,7 @@ tags: 四技專題
      |:-------:|:-------:|
      |  1(開)  |    1    |
      |  0(関)  |    0    |
----
+
 ## 06 資料庫連線測試
 ### 方式
 - HTTP Request: GET
@@ -149,7 +145,6 @@ tags: 四技專題
   |   `1`   |   成功   |
   |  `-1`   |   錯誤   |
 
----
 ## 07 使用者建立
 ### 方式
 - HTTP Request: POST
@@ -176,7 +171,7 @@ tags: 四技專題
   |   `1`   |   成功   |
   |   `0`   |   失敗   |
   |  `-1`   |   錯誤   |
----
+
 ## 08 使用者登入
 ### 方式
 - HTTP Request: POST
@@ -208,7 +203,6 @@ tags: 四技專題
     | Loginname |  顯示名稱   |
     |   email   | 使用者email |
 
----
 ## 09 使用者資料更新
 ### 方式
 - HTTP Request: POST
@@ -234,7 +228,6 @@ tags: 四技專題
   |   `0`   |   失敗   |
   |  `-1`   |   錯誤   |
 
----
 ## 10 使用者忘記密碼
 ### 方式
 - HTTP Request: POST
@@ -266,7 +259,7 @@ tags: 四技專題
     | username  | 使用者帳戶  |
     | Loginname |  顯示名稱   |
     |   email   | 使用者email |
----
+
 ## 11 記錄使用者的自訂值
 ### 方式
 - HTTP Request: POST
@@ -291,7 +284,7 @@ tags: 四技專題
   |   `1`   |   成功   |
   |   `0`   |   失敗   |
   |  `-1`   |   錯誤   |
----
+
 ## 12 查詢指定站點的AQI資料
 ### 方式
 - HTTP Request: GET
@@ -321,7 +314,7 @@ tags: 四技專題
     |  sitename   |  測站點  |
     |     aqi     |   AQI    |
     | monitordate |   Date   |
----
+
 ## 13 查詢使用者的自訂值
 ### 方式
 - HTTP Request: GET
@@ -351,7 +344,7 @@ tags: 四技專題
     |    code     |          1(成功回傳)           |
     |  username   |           使用者帳戶           |
     | [ValueName] | 輸出指定查詢後使用者的自訂數值 |
----
+
 ## 14 查詢當下使用者的自訂值的記錄&時間
 ### 方式
 - HTTP Request: GET

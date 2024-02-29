@@ -1,5 +1,5 @@
-- hosts: all
-  become: true
+- hosts: all # 指定伺服器部分: 所有伺服器
+  become: true # 提高權限
   tasks:
     # task 1
     - name: "Firewall Setup : 8081/tcp"
