@@ -20,8 +20,14 @@ void setup(){
   Serial.begin(9600); // baud: 9600bps
   /*啟用SGP30*/
   sgp.begin();
-  pinMode(rx,INPUT_PULLUP);
-  pinMode(tx,INPUT_PULLUP);
+  
+  if (!sgp.begin()){
+    Serial.println("SGP30 initialization failed");
+    while (1);
+  }
+
+  //pinMode(rx,INPUT_PULLUP);
+  //pinMode(tx,INPUT_PULLUP);
 }
 
 void loop() {
@@ -51,4 +57,5 @@ void loop() {
   sgp.IAQmeasureRaw();
   Serial.println("");   
   delay(3000);  
+
 }

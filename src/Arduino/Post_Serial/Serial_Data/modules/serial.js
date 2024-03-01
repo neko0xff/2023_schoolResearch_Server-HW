@@ -57,26 +57,32 @@ function getData() {
 /*把字串解析成所需的數值*/
 function readstr(data) {
     const keyValuePairs = data.split(',');
-        keyValuePairs.forEach(pair => {
-            const [key, value] = pair.split('=');
-            if (key && value) {
-                sensorData[key] = parseFloat(value);
-            }
-        });
-
-        if (Object.keys(sensorData).length > 0) {
-            temp = sensorData['temp'];
-            hum = sensorData['hum'];
-            o3 = sensorData['o3'];
-            tvoc = sensorData['tvoc'];
-            co2 = sensorData['co2'];
-            pm25 = sensorData['pm25'];
-            co = sensorData['co'];
-            console.log(`[${clock.consoleTime()}] Received Value: ${JSON.stringify({temp, hum, o3, tvoc, co2, pm25,co})}`);
-        } else {
-            console.log(`[${clock.consoleTime()}] Invalid data format`);
+    keyValuePairs.forEach(pair => {
+        const [key, value] = pair.split('=');
+        if (key && value) {
+            sensorData[key] = parseFloat(value);
         }
+    });
+
+    // 检查并填充未检测到的值为0
+    const keys = ['temp', 'hum', 'o3', 'tvoc', 'co2', 'pm25', 'co'];
+    keys.forEach(key => {
+        if (!(key in sensorData)) {
+            sensorData[key] = 0;
+        }
+    });
+
+    temp = sensorData['temp'];
+    hum = sensorData['hum'];
+    o3 = sensorData['o3'];
+    tvoc = sensorData['tvoc'];
+    co2 = sensorData['co2'];
+    pm25 = sensorData['pm25'];
+    co = sensorData['co'];
+
+    console.log(`[${clock.consoleTime()}] Received Value: ${JSON.stringify({temp, hum, o3, tvoc, co2, pm25, co})}`);
 }
+
 
 /*發送至後端*/
 function sendDataToHTTP(sensorData) {

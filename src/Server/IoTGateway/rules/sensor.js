@@ -19,7 +19,7 @@ var app=httpServer.app();
 app.post("/upload/:deviceID/data",async function(req, res){
     //Query: ?hum=(num)&temp=(num)
     var device_ID = xss(req.params.deviceID);
-    const {hum,temp,tvoc,co,co2,pm25,o3} = req.body;
+    const {hum=0,temp=0,tvoc=0,co=0,co2=0,pm25=0,o3=0} = req.body;
     //時間
     var date= clock.SQLDate();
     var time= clock.SQLTime();
@@ -84,6 +84,7 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
       const [results, fields] = await connection.execute(readSQL); 
       // 將日期格式化為 "yyyy-mm-dd"
       const formattedResults = results.map(item => ({
+        code: "1",
         ...item,
         date: clock.formatDateToYYYYMMDD(item.date)
       }));
@@ -112,6 +113,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
         const [results, fields] = await connection.execute(readSQL); 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -141,6 +143,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -172,6 +175,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -204,6 +208,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -235,6 +240,7 @@ app.get("/read/:deviceID/co",async function(req, res){
         const [results, fields] = await connection.execute(readSQL); 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -265,6 +271,7 @@ app.get("/read/:deviceID/pm25",async function(req, res){
         const [results, fields] = await connection.execute(readSQL); 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));
@@ -296,6 +303,7 @@ app.get("/read/:deviceID/o3",async function(req, res){
 
         // 將日期格式化為 "yyyy-mm-dd"
         const formattedResults = results.map(item => ({
+            code: "1",
             ...item,
             date: clock.formatDateToYYYYMMDD(item.date)
         }));

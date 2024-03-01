@@ -25,6 +25,7 @@ app.get("/read/crawler/AQI/ALL",async function(req, res) {
     try {
         const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
+            code: "1",
             ...item,
             monitordate: clock.formatDateToYYYYMMDD(item.monitordate) // 格式化日期
         }));
@@ -52,6 +53,7 @@ app.get("/read/crawler/AQI/site", async function(req, res) {
     try {
         const results = await connection.query(statusSQL,[sitename], { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
+            code: "1",
             ...item,
             monitordate: clock.formatDateToYYYYMMDD(item.monitordate) // 格式化日期
         }));
@@ -79,6 +81,7 @@ app.get("/read/crawler/CFoot/ALL",async function(req, res) {
     try {
         const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
+            code: "1",
             ...item,
         }));
         var data = JSON.stringify(formattedResults);
@@ -106,6 +109,7 @@ app.get("/read/crawler/Cfoot/name", async function(req, res) {
     try {
         var results = await connection.query(statusSQL,[name],{ cache: false }); // 執行 SQL 查詢
         var formattedResults = results[0].map(item => ({
+            code: "1",
             ...item,
         }));
         var data = JSON.stringify(formattedResults);
@@ -132,6 +136,7 @@ app.get("/read/crawler/CFoot/list",async function(req, res) {
     try {
         const results = await connection.query(statusSQL, { cache: false }); // 執行 SQL 查詢
         const formattedResults = results[0].map(item => ({
+            code: "1",
             ...item,
         }));
         var data = JSON.stringify(formattedResults);

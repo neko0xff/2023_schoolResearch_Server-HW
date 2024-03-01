@@ -20,8 +20,8 @@ float calcR0 = 0;
 /*程式初始化部分*/
 void setup(){
   Serial.begin(9600); //baud: 9600bps
-  pinMode(rx,INPUT_PULLUP);
-  pinMode(tx,INPUT_PULLUP);
+  //pinMode(rx,INPUT_PULLUP);
+  //pinMode(tx,INPUT_PULLUP);
   
   /*啟動MQ7*/ 
   MQ7.setRegressionMethod(1); //_PPM =  a*ratio^b
