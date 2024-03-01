@@ -138,7 +138,7 @@ app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     }
 },catchError(errorController));
 
-//POST /auth/MasterLogin: 使用者登入
+//POST /auth/MasterLogin: 管理者登入
 //接收格式：x-www-form-urlencoded
 app.post("/auth/MasterLogin",bruteforce.prevent, async function(req, res) {
     const {username, password} = req.body;

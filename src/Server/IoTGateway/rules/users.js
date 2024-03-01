@@ -65,7 +65,7 @@ app.get("/users/usecustomValue",async function(req, res){
     }
 },catchError(errorController));
 
-// POST /user/ModeChoose => 選項
+// POST /user/ModeChoose => 設置使用者方案
 // 接收格式：x-www-form-urlencoded
 app.post("/user/ModeChoose", async function (req, res) {
     const { username, Mode } = req.body;
@@ -113,7 +113,7 @@ app.post("/user/ModeChoose", async function (req, res) {
     }
 },catchError(errorController));
 
-//GET /users/Modeview: 查詢資料庫上的使用者的模式
+//GET /users/Modeview: 查詢資料庫上的使用者的方案
 //接收格式：x-www-form-urlencoded
 app.get("/users/Modeview",async function(req, res){
     console.log(`[${clock.consoleTime()}] HTTP GET /users/Modeview`);

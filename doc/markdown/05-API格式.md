@@ -15,7 +15,7 @@ API格式
   * MIME type: `application/x-www-form-urlencoded`
 - URL
   ```url
-     /upload/:deviceID/data?[Quary String]
+     /upload/:deviceID/data
   ```
 ### 輸入
 - 格式: 字串
@@ -318,7 +318,7 @@ API格式
 ## 13 查詢使用者的自訂值
 ### 方式
 - HTTP Request: GET
-   * Params
+  * Params
 - URL: `/read/UserCustomValueStatus`
 ### 輸入
 - 格式: 字串
@@ -376,3 +376,102 @@ API格式
     | [ValueName] | 輸出指定查詢後使用者的自訂數值 |
     |    date     |            記錄日期            |
     |    time     |            記錄時間            |
+
+## 15 使用者更改方案
+### 方式
+- HTTP Request: Post
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/user/ModeChoose`
+### 輸入
+- 格式: 字串
+- 動作: 送出請求+欲想更改的部分
+  * 可更改的部分
+     |   Value    |    功能    |
+     |:----------:|:----------:|
+     | `username` | 使用者帳戶 |
+     |   `Mode`   | 使用者方案 |
+### 輸出
+- 功能: 檢查是否成功修改
+- 格式: JSON
+- 動作: 成功回傳時,則回應
+  |   Respose    | 表示方式 |
+  |:------------:|:--------:|
+  | 回傳相關資料 |   成功   |
+  |     `0`      |   失敗   |
+  |     `-1`     |   錯誤   |
+- 成功回傳時，則回應對應的請求
+  * API Request
+    |   Respose   |              表示              |
+    |:-----------:|:------------------------------:|
+    |    code     |          1(成功回傳)           |
+
+## 16 查詢使用者的方案
+### 方式
+- HTTP Request: GET
+  * Params
+- URL: `/users/Modeview`
+### 輸入
+- 格式: 字串
+- 僅送出請求
+### 輸出
+- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
+- 格式: JSON
+- 動作:
+    * 成功回傳時,則回應
+      |   Respose    | 表示方式 |
+      |:------------:|:--------:|
+      | 回傳相關資料 |   成功   |
+      |     `0`      |   失敗   |
+      |     `-1`     |   錯誤   |
+    * 成功回傳時，則回應對應的請求
+      * API Request
+        | Respose  |    說明    |
+        |:--------:|:----------:|
+        | username | 使用者名稱 |
+        |   Mode   |  選定方案  |
+
+## 17 管理者登入
+### 方式
+- HTTP Request: POST
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/auth/MasterLogin`
+### 輸入
+- 動作: 把需要核對的使用者資料送出
+  * Body String Value
+    |  送出變數  |    功能    |
+    |:----------:|:----------:|
+    | `username` | 使用者帳戶 |
+    | `password` |    密碼    |
+### 輸出
+- 功能: 檢查使用者是否存在資料庫且比對傳送過來的資料是否一致
+  * 限定只有管理者進行登入
+- 格式: 字串
+- 動作: 成功回傳時,則回應
+  |   Respose    | 表示方式 |
+  |:------------:|:--------:|
+  | 回傳相關資料 |   成功   |
+  |     `0`      |   失敗   |
+  |     `-1`     |   錯誤   |
+- 成功回傳時，則回應對應的請求
+  * API Request
+    |  Respose  |    表示     |
+    |:---------:|:-----------:|
+    |   code    | 1(成功回傳) |
+    | username  | 使用者帳戶  |
+    | Loginname |  顯示名稱   |
+    |   email   | 使用者email |
+
+## 18 WebHook Endpoint
+### 方式
+- HTTP Request: POST
+  * body
+  * MIME type: `application/x-www-form-urlencoded`
+- URL: `/webhook`
+### 輸入
+- 動作: 把需要核對的使用者資料送出
+  * Body String Value
+### 輸出
+- 功能: 連線成功
+  * Http Status Code: 200
