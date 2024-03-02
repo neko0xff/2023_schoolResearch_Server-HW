@@ -1,0 +1,21 @@
+{
+  "name": "mqtt_bot_node",
+  "version": "1.0.0",
+  "description": "mqtt client telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mqtt"
+  ],
+  "author": "neko0xff",
+  "license": "ISC",
+  "dependencies": {
+    "configparser": "^0.3.10",
+    "moment": "^2.30.1",
+    "mqtt": "^5.3.6",
+    "telegraf": "^4.16.3"
+  }
+}
