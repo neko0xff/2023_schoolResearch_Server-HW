@@ -35,7 +35,7 @@ app.post("/upload/:deviceID/data",async function(req, res){
         var data=JSON.stringify(results);
         res.send(results);
         mqttPubRouter.pubSensorALL(device_ID);
-        mqttPubRouter.pubUsersALL();
+        mqttPubRouter.pubUsersComparisonResultALL();
         console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);

@@ -60,8 +60,14 @@ async function pubSwitch(device_ID,switchname){
     pubRouterSwitch(topicPub,readSQL);
 }
 
+async function pubCustomValue(username){
+    var readSQL = `SELECT customvar01,customvar02,customvar03,customvar04,customvar05,customvar06,customvar07 FROM Users WHERE username= '${username}'; `;
+    var topicPub = `/Users/${username}/CustomValue`;
+    pubRouterSwitch(topicPub,readSQL);
+}
+
 /*查詢使用者的自訂值且比對*/
-async function pubUsers(username){
+async function pubUsersComparisonResult(username){
     var readSQL = `
         SELECT
             CASE WHEN Sensor01_Table.hum > Users.customvar01 THEN 1 ELSE 0 END AS comparison_result_hum,
@@ -82,7 +88,7 @@ async function pubUsers(username){
             Sensor01_Table.time DESC
         LIMIT 1;
     `;
-    var topicPub = `/Users/${username}`;
+    var topicPub = `/Users/${username}/comparison_result`;
     this.pubRouter(topicPub,readSQL);
 }
 
@@ -101,7 +107,7 @@ function pubSensorALL(device_ID){
     this.pubSensor(device_ID,"o3");
 }
 
-async function pubUsersALL() {
+async function pubUsersComparisonResultALL() {
     const cnDB = database.cnDB(); 
 
     try {
@@ -112,7 +118,27 @@ async function pubUsersALL() {
 
         for (const item of results) {
             const username = item.username;
-            await this.pubUsers(username);
+            await this.pubUsersComparisonResult(username);
+        }
+
+        connection.release();
+    } catch(error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
+async function pubCustomValueALL() {
+    const cnDB = database.cnDB(); 
+
+    try {
+        /*讀取使用者列表*/
+        const connection = await cnDB.getConnection();
+        const listSQL = "SELECT username FROM Users";
+        const [results] = await connection.execute(listSQL); 
+
+        for (const item of results) {
+            const username = item.username;
+            await this.pubCustomValue(username);
         }
 
         connection.release();
@@ -126,9 +152,11 @@ module.exports={
     pubRouter:pubRouter,
     pubSensor:pubSensor,
     pubSwitch:pubSwitch,
-    pubUsers:pubUsers,
+    pubUsersComparisonResult:pubUsersComparisonResult,
+    pubCustomValue:pubCustomValue,
     pubSensorALL:pubSensorALL,
     pubSwitchALL:pubSwitchALL,
-    pubUsersALL:pubUsersALL
+    pubUsersComparisonResultALL:pubUsersComparisonResultALL,
+    pubCustomValueALL:pubCustomValueALL
 };
 
