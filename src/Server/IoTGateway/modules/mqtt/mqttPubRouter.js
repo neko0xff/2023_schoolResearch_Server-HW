@@ -60,6 +60,32 @@ async function pubSwitch(device_ID,switchname){
     pubRouterSwitch(topicPub,readSQL);
 }
 
+/*查詢使用者的自訂值且比對*/
+async function pubUsers(username){
+    var readSQL = `
+        SELECT
+            CASE WHEN Sensor01_Table.hum > Users.customvar01 THEN 1 ELSE 0 END AS comparison_result_hum,
+            CASE WHEN Sensor01_Table.temp > Users.customvar02 THEN 1 ELSE 0 END AS comparison_result_temp,
+            CASE WHEN Sensor01_Table.tvoc > Users.customvar03 THEN 1 ELSE 0 END AS comparison_result_tvoc,
+            CASE WHEN Sensor01_Table.co > Users.customvar04 THEN 1 ELSE 0 END AS comparison_result_co,
+            CASE WHEN Sensor01_Table.co2 > Users.customvar05 THEN 1 ELSE 0 END AS comparison_result_co2,
+            CASE WHEN Sensor01_Table.pm25 > Users.customvar06 THEN 1 ELSE 0 END AS comparison_result_pm25,
+            CASE WHEN Sensor01_Table.o3 > Users.customvar07 THEN 1 ELSE 0 END AS comparison_result_o3
+        FROM
+            Sensor01_Table
+        CROSS JOIN
+            Users
+        WHERE 
+            Users.username = '${username}'
+        ORDER BY
+            Sensor01_Table.date DESC,
+            Sensor01_Table.time DESC
+        LIMIT 1;
+    `;
+    var topicPub = `/Users/${username}`;
+    this.pubRouter(topicPub,readSQL);
+}
+
 function pubSwitchALL(device_ID){
    this.pubSwitch(device_ID,"fan1");
    this.pubSwitch(device_ID,"fan2"); 
@@ -75,11 +101,34 @@ function pubSensorALL(device_ID){
     this.pubSensor(device_ID,"o3");
 }
 
+async function pubUsersALL() {
+    const cnDB = database.cnDB(); 
+
+    try {
+        /*讀取使用者列表*/
+        const connection = await cnDB.getConnection();
+        const listSQL = "SELECT username FROM Users";
+        const [results] = await connection.execute(listSQL); 
+
+        for (const item of results) {
+            const username = item.username;
+            await this.pubUsers(username);
+        }
+
+        connection.release();
+    } catch(error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
+
 module.exports={
     pubRouter:pubRouter,
     pubSensor:pubSensor,
     pubSwitch:pubSwitch,
+    pubUsers:pubUsers,
     pubSensorALL:pubSensorALL,
     pubSwitchALL:pubSwitchALL,
+    pubUsersALL:pubUsersALL
 };
 

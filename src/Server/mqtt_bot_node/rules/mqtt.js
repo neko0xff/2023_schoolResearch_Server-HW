@@ -38,7 +38,7 @@ mqttClient.on('message', (topic, message) => {
     var messageText = `Received MQTT message on topic ${topic}: ${message}`;
     Object.keys(subscribedTopics).forEach(chatId => {
         if (subscribedTopics[chatId] && subscribedTopics[chatId].includes(topic)) {
-            bot.telegram.sendMessage(chatId, messageText);
+            //bot.telegram.sendMessage(chatId, messageText);
             console.log(`[${clock.consoleTime()}] ${messageText}`);
         }
     });
@@ -54,7 +54,7 @@ function subscribeTopic(chatId, topic) {
             subscribedTopics[chatId] = subscribedTopics[chatId] || [];
             subscribedTopics[chatId].push(topic);
             bot.telegram.sendMessage(chatId, messageText);
-            console.log(`[${clock.consoleTime()}] ${messageText}`);
+            //console.log(`[${clock.consoleTime()}] ${messageText}`);
             console.log(`[${clock.consoleTime()}] Subscribed to MQTT topic: ${topic}`);
         }
     });

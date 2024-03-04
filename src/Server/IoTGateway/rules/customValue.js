@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 
 /*相関函式庫*/
+var mqttPubRouter=require("../modules/mqtt/mqttPubRouter.js");
 var clock=require("../modules/clock.js");
 var httpServer=require("../modules/httpServer.js");
 var database=require("../modules/database.js");
@@ -134,6 +135,7 @@ app.post("/set/UserCustomValue", async function (req, res) {
             console.log(`[${clock.consoleTime()}] ${username}'s ${ValueName} updated successfully`);
             const responseMeta = { code: "1" };
             res.send(responseMeta);
+            mqttPubRouter.pubUsersALL();
         } else {
             connection.release();
             console.log(`[${clock.consoleTime()}] ${username} is Not Found in Database!`);
