@@ -3,6 +3,7 @@ const cron = require('node-cron');
 const clock = require("./clock.js");
 const crawler1 = require("./crawler_1.js");
 const crawler2 = require("./crawler_2.js");
+var mqttRouter= require("./mqtt/mqttPubRouter.js");
 
 /*定義排程*/
 
@@ -12,12 +13,17 @@ function task1(){
     /*需排程的工作*/
     console.log(`[${clock.consoleTime()}] task is running in backend`);
     getALLdata();
+    //MQTTPubUpdate();
   });
 }
 
 function getALLdata(){
   crawler1.getData();
   crawler2.getData();
+}
+
+function MQTTPubUpdate(){
+  mqttRouter.pubCrawlerAQIALL();
 }
 
 /*管理部分*/

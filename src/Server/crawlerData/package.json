@@ -16,6 +16,7 @@
     "axios": "^1.6.0",
     "configparser": "^0.3.10",
     "moment": "^2.29.4",
+    "mqtt": "^5.3.6",
     "mysql2": "^3.6.1",
     "node-cron": "^3.0.2"
   }

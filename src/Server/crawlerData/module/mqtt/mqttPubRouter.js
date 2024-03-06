@@ -7,8 +7,8 @@ var clock=require("../clock.js");
 async function pubRouter(Pubtopic,SQL){
     console.log(`[${clock.consoleTime()}] MQTT Pub= ${Pubtopic}`);
     var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); 
-    
+    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
     try{
         const [results, fields] = await connection.execute(SQL); // 執行 SQL 查詢
         // 將日期格式化為 "yyyy-mm-dd"

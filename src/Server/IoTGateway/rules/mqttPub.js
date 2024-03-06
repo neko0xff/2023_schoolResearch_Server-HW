@@ -7,5 +7,6 @@ mqttRouter.pubSensorALL("Sensor01");
 mqttRouter.pubSwitchALL("Switch01");
 mqttRouter.pubUsersComparisonResultALL();
 mqttRouter.pubCustomValueALL();
+mqttRouter.pubCrawlerAQIALL();
 
 

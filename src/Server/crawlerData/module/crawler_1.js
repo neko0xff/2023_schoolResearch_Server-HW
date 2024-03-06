@@ -54,7 +54,7 @@ function getData() {
       console.log(`[${clock.consoleTime()}] Now List data in Console...`);
       console.log(filteredData);
       console.log(`[${clock.consoleTime()}] web crawling aqx_p_434 END! `);
-      return filteredData; // 記得 return 處理後的資料
+      return filteredData; 
     })
     .catch(error => {
       console.error(error);
