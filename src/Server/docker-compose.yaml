@@ -14,7 +14,7 @@ services:
     build:
       context: ./IoTGateway
       dockerfile: Dockerfile.env
- app3:
+  app3:
     container_name: TelegramB0t-cont  # 自定義容器名稱
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
