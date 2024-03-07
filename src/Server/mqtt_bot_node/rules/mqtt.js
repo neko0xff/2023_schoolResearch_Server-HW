@@ -35,11 +35,11 @@ bot.command('unsubscribe', (ctx) => {
 
 // 处理 MQTT 消息
 mqttClient.on('message', (topic, message) => {
-    var messageText = `Received MQTT message on topic ${topic}: ${message}`;
+    var messageText = `Received MQTT message on topic ${topic}:\n ${message}`;
     Object.keys(subscribedTopics).forEach(chatId => {
         if (subscribedTopics[chatId] && subscribedTopics[chatId].includes(topic)) {
-            //bot.telegram.sendMessage(chatId, messageText);
-            console.log(`[${clock.consoleTime()}] ${messageText}`);
+            bot.telegram.sendMessage(chatId, messageText);
+            //console.log(`[${clock.consoleTime()}] ${messageText}`);
         }
     });
 });
@@ -54,7 +54,6 @@ function subscribeTopic(chatId, topic) {
             subscribedTopics[chatId] = subscribedTopics[chatId] || [];
             subscribedTopics[chatId].push(topic);
             bot.telegram.sendMessage(chatId, messageText);
-            //console.log(`[${clock.consoleTime()}] ${messageText}`);
             console.log(`[${clock.consoleTime()}] Subscribed to MQTT topic: ${topic}`);
         }
     });
@@ -69,7 +68,6 @@ async function unsubscribeTopic(chatId, topic) {
         } else {
             subscribedTopics[chatId] = subscribedTopics[chatId].filter(subscribedTopic => subscribedTopic !== topic);
             bot.telegram.sendMessage(chatId, messageText);
-            console.log(`[${clock.consoleTime()}] ${messageText}`);
             console.log(`[${clock.consoleTime()}] Unsubscribed from MQTT topic: ${topic}`);
         }
     });
