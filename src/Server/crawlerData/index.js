@@ -19,7 +19,7 @@ function scheduleTask(){
 
 function main(){
     task_1();
-    task_2();
+    //task_2();
     //task_3();
     scheduleTask();
 }

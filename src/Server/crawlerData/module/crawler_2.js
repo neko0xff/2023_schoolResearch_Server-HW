@@ -37,11 +37,21 @@ function getData() {
 
       /*把得到的資料上傳到資料庫*/
       for (const item of filteredData) {
-         const sql = `
+         const sql_old = `
               INSERT INTO CFP_P_02 (name, coe, unit, departmentname, announcementyear )
               VALUES (?, ?, ?, ?, ?)
               ON DUPLICATE KEY UPDATE
               name = VALUES(name), coe = VALUES(coe), unit = VALUES(unit), departmentname = VALUES(departmentname), announcementyear = VALUES(announcementyear)
+         `;
+         const sql=`
+              INSERT INTO CFP_P_02 (name, coe, unit, departmentname, announcementyear)
+              VALUES (?, ?, ?, ?, ?)
+              ON DUPLICATE KEY UPDATE
+              name = VALUES(name), 
+              coe = VALUES(coe),
+              unit = VALUES(unit),
+              departmentname = VALUES(departmentname),
+              announcementyear = VALUES(announcementyear);
          `;
          const values = [item.name, item.coe, item.unit, item.departmentname, item.announcementyear ];
          await connection.query(sql, values);
@@ -51,7 +61,7 @@ function getData() {
       console.log(`[${clock.consoleTime()}] Now List data in Console...`);
       console.log(filteredData);
       console.log(`[${clock.consoleTime()}] web crawling cfp_p_02 END! `);
-      return filteredData; // 記得 return 處理後的資料
+      return filteredData; 
     })
     .catch(error => {
       console.error(error);

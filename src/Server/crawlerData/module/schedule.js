@@ -2,7 +2,7 @@
 const cron = require('node-cron');
 const clock = require("./clock.js");
 const crawler1 = require("./crawler_1.js");
-const crawler2 = require("./crawler_2.js");
+//const crawler2 = require("./crawler_2.js");
 var mqttRouter= require("./mqtt/mqttPubRouter.js");
 
 /*定義排程*/
@@ -19,7 +19,7 @@ function task1(){
 
 function getALLdata(){
   crawler1.getData();
-  crawler2.getData();
+  //crawler2.getData();
 }
 
 function MQTTPubUpdate(){
