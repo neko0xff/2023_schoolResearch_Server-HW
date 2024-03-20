@@ -3,7 +3,7 @@ const clock = require("../modules/clock.js");
 const mqtt = require('mqtt');
 const ConfigParser = require("configparser");
 
-// 读取配置文件
+// 配置文件
 const configSet = new ConfigParser();
 configSet.read("./modules/config/cnSet.cfg");
 configSet.sections();
@@ -17,7 +17,7 @@ const mqttClient = mqtt.connect(MQTT_BROKER);
 
 const subscribedTopics = {};
 
-// 处理 /subscribe 命令
+// bot: /subscribe
 bot.command('subscribe', (ctx) => {
     const chatId = ctx.chat.id;
     const topic = ctx.message.text.split(' ')[1];
@@ -25,7 +25,15 @@ bot.command('subscribe', (ctx) => {
     subscribeTopic(chatId, topic);
 });
 
-// 处理 /unsubscribe 命令
+// bot: /subStatus
+bot.command('subStatus', (ctx) => {
+    const chatId = ctx.chat.id;
+    const topic = ctx.message.text.split(' ')[1];
+    console.log(`[${clock.consoleTime()}] command: /subStatus ${topic}`);
+    subscribeTopic(chatId, topic);
+});
+
+// bot: /unsubscribe
 bot.command('unsubscribe', (ctx) => {
     const chatId = ctx.chat.id;
     const topic = ctx.message.text.split(' ')[1];
@@ -35,6 +43,14 @@ bot.command('unsubscribe', (ctx) => {
 
 // 处理 MQTT 消息
 mqttClient.on('message', (topic, message) => {
+    var data=JSON.parse(message);
+    var hum_status = data.comparison_result_hum;
+    var temp_status = data.comparison_result_temp;
+    var tvoc_status = data.comparison_result_tvoc;
+    var co_status = data.comparison_result_co;
+    var co2_status = data.comparison_result_co2;
+    var pm25_status = data.comparison_result_pm25;
+    var o3_status = data.comparison_result_o3;
     var messageText = `Received MQTT message on topic ${topic}:\n ${message}`;
     Object.keys(subscribedTopics).forEach(chatId => {
         if (subscribedTopics[chatId] && subscribedTopics[chatId].includes(topic)) {
