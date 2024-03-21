@@ -136,8 +136,6 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
 //GET /read/statusRec/:deviceID/viewALL => 檢視開関控制的記錄
 app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
     //時間
-    var date= clock.SQLDate();
-    var time= clock.SQLTime();
     var device_ID=xss(req.params.deviceID);
     var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/view`);

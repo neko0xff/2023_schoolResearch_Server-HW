@@ -12,8 +12,9 @@
       git:
         repo: https://github.com/neko0xff/2023_schoolResearch_ClientApp
         dest: /home/user/repo/2023_schoolResearch_ClientApp
-        update: yes
         version: main
+        update: yes
+        force: yes  
     - name: "task3: check directory in backend"
       file:
         path: /home/user/repo/2023_schoolResearch_Server-HW
@@ -23,5 +24,7 @@
       git:
         repo: https://github.com/neko0xff/2023_schoolResearch_Server-HW
         dest: /home/user/repo/2023_schoolResearch_Server-HW
-        update: yes
         version: main
+        update: yes
+        force: yes 
+        

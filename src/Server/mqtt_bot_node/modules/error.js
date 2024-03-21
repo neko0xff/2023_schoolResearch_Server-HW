@@ -28,7 +28,6 @@ const catchError = (asyncFn) => {
     };
 };
 const errorController = async function (req, res, next) { // 錯誤
-  a; // 未定義
   res.send({
     message: '正常狀態',
   });

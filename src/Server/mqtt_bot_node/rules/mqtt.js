@@ -17,7 +17,8 @@ const mqttClient = mqtt.connect(MQTT_BROKER);
 
 const subscribedTopics = {};
 
-// 重构：处理命令的函数
+/*事件模組化*/
+// 管理訂閱主題
 function handleSubscriptionCommand(ctx, isSubscribe = true) {
     const chatId = ctx.chat.id;
     const topic = ctx.message.text.split(' ')[1];
@@ -26,30 +27,8 @@ function handleSubscriptionCommand(ctx, isSubscribe = true) {
     isSubscribe ? subscribeTopic(chatId, topic) : unsubscribeTopic(chatId, topic);
 }
 
-// bot: /subscribe
-// test cmd: /subscribe /Users/master/comparison_result
-bot.command('subscribe', (ctx) => handleSubscriptionCommand(ctx, true));
-
-// bot: /unsubscribe
-bot.command('unsubscribe', (ctx) => handleSubscriptionCommand(ctx, false));
-
-// Message Send
-mqttClient.on('message', (topic, message) => {
-    try {
-        const data = JSON.parse(message.toString());
-        if (data.length > 0) {
-            const messageText = formatMessageText(topic, data[0]);
-            notifySubscribers(topic, messageText);
-        }
-    } catch (error) {
-        console.error(`[${clock.consoleTime()}] Error processing message: `, error);
-    }
-});
-
-// format String
+// 自訂格式化字串
 function formatMessageText(topic, dataItem) {
-    //const statusMap = {1: "超標", 0: "未超標"};
-    //${Object.keys(dataItem).map(key => `\t${key}: ${statusMap[dataItem[key]] || dataItem[key]}`).join('\n')}
     var hum_status = dataItem.comparison_result_hum === 1 ? "超標" : "未超標";
     var temp_status = dataItem.comparison_result_temp === 1 ? "超標" : "未超標";
     var tvoc_status = dataItem.comparison_result_tvoc === 1 ? "超標" : "未超標";
@@ -70,7 +49,20 @@ function formatMessageText(topic, dataItem) {
     `;
 }
 
-// notify Send
+// 把通過MQTT傳送的訂閱主題的JSON內容轉換成變數值
+mqttClient.on('message', (topic, message) => {
+    try {
+        const data = JSON.parse(message.toString());
+        if (data.length > 0) {
+            const messageText = formatMessageText(topic, data[0]);
+            notifySubscribers(topic, messageText);
+        }
+    } catch (error) {
+        console.error(`[${clock.consoleTime()}] Error processing message: ${error}`);
+    }
+});
+
+// 寄出通知給使用者
 function notifySubscribers(topic, messageText) {
     Object.keys(subscribedTopics).forEach(chatId => {
         if (subscribedTopics[chatId] && subscribedTopics[chatId].includes(topic)) {
@@ -79,7 +71,7 @@ function notifySubscribers(topic, messageText) {
     });
 }
 
-// Sub Topic function
+// 訂閱主題是否成功
 function subscribeTopic(chatId, topic) {
     var messageText = `Subscribed to MQTT topic: ${topic}`;
     mqttClient.subscribe(topic, (err) => {
@@ -89,12 +81,12 @@ function subscribeTopic(chatId, topic) {
             subscribedTopics[chatId] = subscribedTopics[chatId] || [];
             subscribedTopics[chatId].push(topic);
             bot.telegram.sendMessage(chatId, messageText);
-            console.log(`[${clock.consoleTime()}] Subscribed to MQTT topic: ${topic}`);
+            console.log(`[${clock.consoleTime()}] ${messageText}`);
         }
     });
 }
 
-// unSub Topic function
+// 不訂閱主題是否成功
 async function unsubscribeTopic(chatId, topic) {
     var messageText = `Unsubscribed from MQTT topic: ${topic}`;
     mqttClient.unsubscribe(topic, (err) => {
@@ -103,7 +95,16 @@ async function unsubscribeTopic(chatId, topic) {
         } else {
             subscribedTopics[chatId] = subscribedTopics[chatId].filter(subscribedTopic => subscribedTopic !== topic);
             bot.telegram.sendMessage(chatId, messageText);
-            console.log(`[${clock.consoleTime()}] Unsubscribed from MQTT topic: ${topic}`);
+            console.log(`[${clock.consoleTime()}] ${messageText}`);
         }
     });
 }
+
+/*指令定義*/
+// bot: /subscribe
+// test cmd: /subscribe /Users/master/comparison_result_hour
+bot.command('subscribe', (ctx) => handleSubscriptionCommand(ctx, true));
+
+// bot: /unsubscribe
+// test cmd: /unsubscribe /Users/master/comparison_result_hour
+bot.command('unsubscribe', (ctx) => handleSubscriptionCommand(ctx, false));

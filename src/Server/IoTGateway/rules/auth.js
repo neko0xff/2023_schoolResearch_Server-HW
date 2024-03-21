@@ -25,9 +25,8 @@ app.post("/auth/CreateUser", async function(req, res) {
     const {username, password, LoginName,email } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT username,LoginName,password,email FROM Users WHERE username = '${username}'`;
-    var userData = `('${username}','${hashedPassword}','${LoginName}','${email}')`;
-    var addUserSQL = `INSERT INTO Users (username, password, LoginName,email) VALUES ${userData}`;
+    const searchSQL = `SELECT username,LoginName,password,email FROM Users WHERE username = ? ;`;
+    var addUserSQL = `INSERT INTO Users (username, password, LoginName,email) VALUES (?,?,?,?);`;
   
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -35,14 +34,14 @@ app.post("/auth/CreateUser", async function(req, res) {
     /*檢查使用者是否存在資料庫，若無則直接建立*/
     console.log(`[${clock.consoleTime()}] HTTP POST /auth/CreateUser`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[username]);
         if (results.length !== 0) {
             connection.release();
             console.log(`[${clock.consoleTime()}] ${username} already created!`);
             const responseMeta = {code: "0"};
             res.send(responseMeta);
         } else {
-            await connection.execute(addUserSQL);
+            await connection.execute(addUserSQL,[username,hashedPassword,LoginName,email]);
             console.log(`[${clock.consoleTime()}] ${username} created successfully`);
             const responseMeta = {code: "1"};
             res.send(responseMeta);
@@ -62,8 +61,8 @@ app.post("/auth/UpdateUserData", async function(req, res) {
     const {username, password, LoginName, email } = req.body;
     var salt = 10;
     const hashedPassword = bcrypt.hashSync(password, salt);
-    const searchSQL = `SELECT username,LoginName,password,email FROM Users WHERE username = '${username}'`;
-    var UPDATEUserSQL = `UPDATE Users SET password='${hashedPassword}',LoginName='${LoginName}',email='${email}' WHERE username='${username}';`;
+    const searchSQL = `SELECT username,LoginName,password,email FROM Users WHERE username = ? ;`;
+    var UPDATEUserSQL = `UPDATE Users SET password = ?,LoginName = ?,email = ? WHERE username = ? ;`;
   
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -71,9 +70,9 @@ app.post("/auth/UpdateUserData", async function(req, res) {
     /*檢查使用者是否存在資料庫，若無則直接改變*/
     console.log(`[${clock.consoleTime()}] HTTP POST /auth/UpdateUserData`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[username]);
         if (results.length !== 0) {
-            await connection.execute(UPDATEUserSQL);
+            await connection.execute(UPDATEUserSQL,[hashedPassword,LoginName,email,username]);
             console.log(`[${clock.consoleTime()}] ${username} update successfully`);
             const responseMeta = {code: "1"};
             res.send(responseMeta);
@@ -96,7 +95,7 @@ app.post("/auth/UpdateUserData", async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     const {username, password} = req.body;
-    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = ? ;'`;
 
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -104,7 +103,7 @@ app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
     console.log(`[${clock.consoleTime()}] HTTP POST /auth/Login`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[username]);
         if (results.length == 0) {
             connection.release();
             console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
@@ -142,6 +141,7 @@ app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/auth/MasterLogin",bruteforce.prevent, async function(req, res) {
     const {username, password} = req.body;
+    console.log(`[${clock.consoleTime()}] HTTP POST /auth/MasterLogin`);
     
     if (!username === undefined) {
         // 檢查是否有缺少必要的資料
@@ -156,14 +156,13 @@ app.post("/auth/MasterLogin",bruteforce.prevent, async function(req, res) {
         return res.status(403).send(responseMeta);
     }
 
-    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = '${username}'`;
+    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = ? ;`;
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
   
     /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
-    console.log(`[${clock.consoleTime()}] HTTP POST /auth/MasterLogin`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[username]);
         if (results.length == 0) {
             connection.release();
             console.log(`[${clock.consoleTime()}] ${username} is Not Found!`);
@@ -201,7 +200,7 @@ app.post("/auth/MasterLogin",bruteforce.prevent, async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/auth/emailAuthCheck",async function(req, res) {
     const {email} = req.body;
-    const searchSQL = `SELECT username,LoginName,email FROM Users WHERE email = '${email}'`;
+    const searchSQL = `SELECT username,LoginName,email FROM Users WHERE email = ? ;`;
 
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
@@ -209,7 +208,7 @@ app.post("/auth/emailAuthCheck",async function(req, res) {
     /*檢查使用者是否存在資料庫且比對傳送過來的資料是否一致*/
     console.log(`[${clock.consoleTime()}] HTTP POST /auth/emailAuthCheck`);
     try {  
-        const [results] = await connection.execute(searchSQL);
+        const [results] = await connection.execute(searchSQL,[email]);
         const username = results[0].username;
         const LoginName = results[0].LoginName;
 

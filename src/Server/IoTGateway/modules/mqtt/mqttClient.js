@@ -19,19 +19,26 @@ function Sub(topic){
         client.subscribe(topic, { qos: 1 }); 
     });
     client.on("message", function(top, message) {
-        console.log(`[${clock.consoleTime()}] Now topic= `, top);
-        console.log(`[${clock.consoleTime()}] Now Sub Data= `, message.toString());
+        console.log(`[${clock.consoleTime()}] Now topic= ${top}`);
+        console.log(`[${clock.consoleTime()}] Now Sub Data= ${message.toString()}`);
     });
 }
 
 function Pub(topic,value,timer){
-    //發布
     setInterval(function() {    
         client.publish(topic, value, { qos: 0, retain: true });
     }, timer);
 }
 
+function Pub_hour(topic,value,timer){
+    var setHour = timer * (60 * 60 * 1000);
+    setInterval(function() {    
+        client.publish(topic, value, { qos: 0, retain: true });
+    }, setHour);
+}
+
 module.exports={
     Pub:Pub,
+    Pub_hour:Pub_hour,
     Sub:Sub,
 };
