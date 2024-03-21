@@ -17,50 +17,69 @@ const mqttClient = mqtt.connect(MQTT_BROKER);
 
 const subscribedTopics = {};
 
-// bot: /subscribe
-bot.command('subscribe', (ctx) => {
+// 重构：处理命令的函数
+function handleSubscriptionCommand(ctx, isSubscribe = true) {
     const chatId = ctx.chat.id;
     const topic = ctx.message.text.split(' ')[1];
-    console.log(`[${clock.consoleTime()}] command: /subscribe ${topic}`);
-    subscribeTopic(chatId, topic);
-});
+    const commandText = isSubscribe ? 'subscribe' : 'unsubscribe';
+    console.log(`[${clock.consoleTime()}] command: /${commandText} ${topic}`);
+    isSubscribe ? subscribeTopic(chatId, topic) : unsubscribeTopic(chatId, topic);
+}
 
-// bot: /subStatus
-bot.command('subStatus', (ctx) => {
-    const chatId = ctx.chat.id;
-    const topic = ctx.message.text.split(' ')[1];
-    console.log(`[${clock.consoleTime()}] command: /subStatus ${topic}`);
-    subscribeTopic(chatId, topic);
-});
+// bot: /subscribe
+// test cmd: /subscribe /Users/master/comparison_result
+bot.command('subscribe', (ctx) => handleSubscriptionCommand(ctx, true));
 
 // bot: /unsubscribe
-bot.command('unsubscribe', (ctx) => {
-    const chatId = ctx.chat.id;
-    const topic = ctx.message.text.split(' ')[1];
-    console.log(`[${clock.consoleTime()}] command: /unsubscribe ${topic}`);
-    unsubscribeTopic(chatId, topic);
+bot.command('unsubscribe', (ctx) => handleSubscriptionCommand(ctx, false));
+
+// Message Send
+mqttClient.on('message', (topic, message) => {
+    try {
+        const data = JSON.parse(message.toString());
+        if (data.length > 0) {
+            const messageText = formatMessageText(topic, data[0]);
+            notifySubscribers(topic, messageText);
+        }
+    } catch (error) {
+        console.error(`[${clock.consoleTime()}] Error processing message: `, error);
+    }
 });
 
-// 处理 MQTT 消息
-mqttClient.on('message', (topic, message) => {
-    var data=JSON.parse(message);
-    var hum_status = data.comparison_result_hum;
-    var temp_status = data.comparison_result_temp;
-    var tvoc_status = data.comparison_result_tvoc;
-    var co_status = data.comparison_result_co;
-    var co2_status = data.comparison_result_co2;
-    var pm25_status = data.comparison_result_pm25;
-    var o3_status = data.comparison_result_o3;
-    var messageText = `Received MQTT message on topic ${topic}:\n ${message}`;
+// format String
+function formatMessageText(topic, dataItem) {
+    //const statusMap = {1: "超標", 0: "未超標"};
+    //${Object.keys(dataItem).map(key => `\t${key}: ${statusMap[dataItem[key]] || dataItem[key]}`).join('\n')}
+    var hum_status = dataItem.comparison_result_hum === 1 ? "超標" : "未超標";
+    var temp_status = dataItem.comparison_result_temp === 1 ? "超標" : "未超標";
+    var tvoc_status = dataItem.comparison_result_tvoc === 1 ? "超標" : "未超標";
+    var co_status = dataItem.comparison_result_co === 1 ? "超標" : "未超標";
+    var co2_status = dataItem.comparison_result_co2 === 1 ? "超標" : "未超標";
+    var pm25_status = dataItem.comparison_result_pm25 === 1 ? "超標" : "未超標";
+    var o3_status = dataItem.comparison_result_o3 === 1 ? "超標" : "未超標";
+    return `
+        訂閱主題: ${topic}   
+        \t查詢結果如下
+        \t溼度: ${hum_status}
+        \t溫度: ${temp_status}
+        \t工業廢氣: ${tvoc_status}
+        \tCo: ${co_status}
+        \tCo2: ${co2_status}
+        \tPM 2.5: ${pm25_status}
+        \t臭氧: ${o3_status}
+    `;
+}
+
+// notify Send
+function notifySubscribers(topic, messageText) {
     Object.keys(subscribedTopics).forEach(chatId => {
         if (subscribedTopics[chatId] && subscribedTopics[chatId].includes(topic)) {
             bot.telegram.sendMessage(chatId, messageText);
-            //console.log(`[${clock.consoleTime()}] ${messageText}`);
         }
     });
-});
+}
 
-// 订阅主题函数
+// Sub Topic function
 function subscribeTopic(chatId, topic) {
     var messageText = `Subscribed to MQTT topic: ${topic}`;
     mqttClient.subscribe(topic, (err) => {
@@ -75,7 +94,7 @@ function subscribeTopic(chatId, topic) {
     });
 }
 
-// 取消订阅主题函数
+// unSub Topic function
 async function unsubscribeTopic(chatId, topic) {
     var messageText = `Unsubscribed from MQTT topic: ${topic}`;
     mqttClient.unsubscribe(topic, (err) => {
