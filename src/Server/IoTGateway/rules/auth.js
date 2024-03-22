@@ -95,7 +95,7 @@ app.post("/auth/UpdateUserData", async function(req, res) {
 //接收格式：x-www-form-urlencoded
 app.post("/auth/Login",bruteforce.prevent, async function(req, res) {
     const {username, password} = req.body;
-    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = ? ;'`;
+    const searchSQL = `SELECT username,password,LoginName,email FROM Users WHERE username = ? ;`;
 
     const cnDB = database.cnDB(); 
     const connection = await cnDB.getConnection();
