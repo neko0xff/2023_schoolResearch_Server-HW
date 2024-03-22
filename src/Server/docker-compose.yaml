@@ -1,21 +1,21 @@
 version: '3'
 services:
   app1:
-    container_name: crawler-cont   # 自定義容器名稱
+    container_name: crawler-cont
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
       context: ./crawlerData
       dockerfile: Dockerfile.env
   app2: 
-    container_name: IoTGateway-cont   # 自定義容器名稱
+    container_name: IoTGateway-cont
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
       context: ./IoTGateway
       dockerfile: Dockerfile.env
   app3:
-    container_name: TelegramB0t-cont  # 自定義容器名稱
+    container_name: TelegramB0t-cont
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
