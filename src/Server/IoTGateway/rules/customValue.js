@@ -95,10 +95,10 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
     }    
 },catchError(errorController));
 
-// GET /read/UsersComparisonResult => 查詢使用者自訂值和Sensor的比對記錄
+// POST /read/UsersComparisonResult => 查詢使用者自訂值和Sensor的比對記錄
 // 接收格式：x-www-form-urlencoded
-app.get("/read/UsersComparisonResult", async function(req, res) {
-    console.log(`[${clock.consoleTime()}] HTTP GET /read/UsersComparisonResult`);
+app.post("/read/UsersComparisonResult", async function(req, res) {
+    console.log(`[${clock.consoleTime()}] HTTP POST /read/UsersComparisonResult`);
     const { username} = req.body; // 使用 req.body 來取得 POST 資料
 
     // 檢查是否有缺少必要的資料
