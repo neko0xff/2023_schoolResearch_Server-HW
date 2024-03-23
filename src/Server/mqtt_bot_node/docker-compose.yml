@@ -1,4 +1,3 @@
-version: '3'
 services:
   server:
     container_name: TelegramB0t-cont  # 自定義容器名稱

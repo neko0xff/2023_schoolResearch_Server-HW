@@ -1,4 +1,3 @@
-version: '3'
 services:
   crawler:
     container_name: crawlerData-cont  # 自定義容器名稱
