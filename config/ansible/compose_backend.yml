@@ -17,6 +17,7 @@
         - IoTGateway-cont
         - crawler-cont
         - TelegramB0t-cont
+      ignore_errors: true
     - name: "task3: build a backend"
       community.docker.docker_compose:
         project_src: "/home/user/repo/2023_schoolResearch_Server-HW/src/Server"
@@ -25,5 +26,8 @@
         build: true
         state: present
       register: output
+      failed_when: output.failed
+
+
 
     

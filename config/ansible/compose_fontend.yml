@@ -16,6 +16,7 @@
       loop:
         - master-cont
         - user-cont
+      ignore_errors: true
     - name: "task3: build a fontend"
       community.docker.docker_compose:
         project_src: "/home/user/repo/2023_schoolResearch_ClientApp/src/demo"
@@ -24,5 +25,6 @@
         build: true
         state: present
       register: output
+      failed_when: output.failed
 
     
