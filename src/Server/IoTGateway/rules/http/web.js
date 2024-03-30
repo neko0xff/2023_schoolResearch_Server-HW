@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 
 /*相関函式庫*/
-var clock=require("../modules/clock.js");
-var httpServer=require("../modules/httpServer.js");
+var clock=require("../../modules/clock.js");
+var httpServer=require("../../modules/httpServer.js");
 
 /*後端*/
 var app=httpServer.app();

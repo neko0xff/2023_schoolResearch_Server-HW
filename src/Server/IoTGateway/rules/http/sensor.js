@@ -1,12 +1,13 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable no-unused-vars */
 /*相関函式庫*/
-var mqttPubRouter=require("../modules/mqtt/mqttPubRouter.js");
+var mqttPubUser=require("../mqtt/Pubuser.js");
+var mqttPubsensor=require("../mqtt/Pubsensor.js");
 var xss = require("xss");
-var clock=require("../modules/clock.js");
-var httpServer=require("../modules/httpServer.js");
-var database=require("../modules/database.js");
-var error=require("../modules/error.js");
+var clock=require("../../modules/clock.js");
+var httpServer=require("../../modules/httpServer.js");
+var database=require("../../modules/database.js");
+var error=require("../../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
@@ -34,8 +35,8 @@ app.post("/upload/:deviceID/data",async function(req, res){
         const [results, fields] = await connection.execute(uploadSQL, [hum,temp,tvoc,co,co2,pm25,o3,date,time]); // 執行 SQL 查詢
         var data=JSON.stringify(results);
         res.send(results);
-        mqttPubRouter.pubSensorALL(device_ID);
-        mqttPubRouter.pubUsersComparisonResultALL();
+        mqttPubsensor.pubSensorALL(device_ID);
+        mqttPubUser.pubUsersComparisonResultALL();
         console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);

@@ -1,10 +1,10 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable no-unused-vars */
 /*相関函式庫*/
-var clock=require("../modules/clock.js");
-var httpServer=require("../modules/httpServer.js");
-var database=require("../modules/database.js"); 
-var error=require("../modules/error.js");
+var clock=require("../../modules/clock.js");
+var httpServer=require("../../modules/httpServer.js");
+var database=require("../../modules/database.js"); 
+var error=require("../../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 var xss = require("xss");

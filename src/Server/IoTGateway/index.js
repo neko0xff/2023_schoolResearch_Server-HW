@@ -1,6 +1,6 @@
 // 使用單線程部分
 var service=require("./service.js");
-var mqttPub=require("./rules/mqttPub.js");
+var mqttPub=require("./rules/mqtt/Pubtopic.js");
 
 function main(){
    service;

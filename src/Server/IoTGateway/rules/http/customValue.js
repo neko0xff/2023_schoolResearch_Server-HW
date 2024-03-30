@@ -2,11 +2,11 @@
 /* eslint-disable no-unused-vars */
 
 /*相関函式庫*/
-var mqttPubRouter=require("../modules/mqtt/mqttPubRouter.js");
-var clock=require("../modules/clock.js");
-var httpServer=require("../modules/httpServer.js");
-var database=require("../modules/database.js");
-var error=require("../modules/error.js");
+var mqttPubUser=require("../mqtt/Pubuser.js");
+var clock=require("../../modules/clock.js");
+var httpServer=require("../../modules/httpServer.js");
+var database=require("../../modules/database.js");
+var error=require("../../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
@@ -175,7 +175,7 @@ app.post("/set/UserCustomValue", async function (req, res) {
 
     /*Rec*/
     try{
-        const [results, fields] = await connection.query(RecSQL,[username,ValueName,num,date,time], { cache: false });;
+        const [results, fields] = await connection.query(RecSQL,[username,ValueName,num], { cache: false });;
     } catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         throw error;
@@ -190,8 +190,8 @@ app.post("/set/UserCustomValue", async function (req, res) {
             console.log(`[${clock.consoleTime()}] ${username}'s ${ValueName} updated successfully`);
             const responseMeta = { code: "1" };
             res.send(responseMeta);
-            mqttPubRouter.pubUsersComparisonResultALL();
-            mqttPubRouter.pubCustomValueALL();
+            mqttPubUser.pubUsersComparisonResultALL();
+            mqttPubUser.pubCustomValueALL();
         } else {
             connection.release();
             console.log(`[${clock.consoleTime()}] ${username} is Not Found in Database!`);

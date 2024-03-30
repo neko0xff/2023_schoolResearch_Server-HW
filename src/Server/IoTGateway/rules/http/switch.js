@@ -1,12 +1,12 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable no-unused-vars */
 /*相関函式庫*/
-var mqttPubRouter=require("../modules/mqtt/mqttPubRouter.js");
-var clock=require("../modules/clock.js");
-var httpServer=require("../modules/httpServer.js");
-var database=require("../modules/database.js");
+var mqttPubSwitch=require("../mqtt/Pubsensor.js");
+var clock=require("../../modules/clock.js");
+var httpServer=require("../../modules/httpServer.js");
+var database=require("../../modules/database.js");
 var xss = require("xss");
-var error=require("../modules/error.js");
+var error=require("../../modules/error.js");
 var catchError = error.catchError;
 var errorController = error.errorController;
 
@@ -55,12 +55,12 @@ app.get("/set/switchCtr/:deviceID/fan1", async function(req, res){
         /*status*/
         let response = {};
         if (status == 1) {
-            mqttPubRouter.pubSwitch(device_ID,"fan1");
+            mqttPubSwitch.pubSwitch(device_ID,"fan1");
             const statusStr = "Fan1 is On!";
             console.log(`[${clock.consoleTime()}] ${statusStr}`);
             response = { status: "On" };
         } else if (status == 0) {
-            mqttPubRouter.pubSwitch(device_ID,"fan1");
+            mqttPubSwitch.pubSwitch(device_ID,"fan1");
             const statusStr = "Fan1 is Off!";
             console.log(`[${clock.consoleTime()}] ${statusStr}`);
             response = { status: "Off" };
@@ -114,12 +114,12 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
         /*status*/
         let response = {};
         if (status == 1) {
-            mqttPubRouter.pubSwitch(device_ID,"fan2");
+            mqttPubSwitch.pubSwitch(device_ID,"fan2");
             const statusStr = "Fan2 is On!";
             console.log(`[${clock.consoleTime()}] ${statusStr}`);
             response = { status: "On" };
         } else if (status == 0) {
-            mqttPubRouter.pubSwitch(device_ID,"fan2");
+            mqttPubSwitch.pubSwitch(device_ID,"fan2");
             const statusStr = "Fan2 is Off!";
             console.log(`[${clock.consoleTime()}] ${statusStr}`);
             response = { status: "Off" };
