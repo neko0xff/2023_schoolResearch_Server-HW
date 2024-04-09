@@ -99,7 +99,7 @@ app.get("/read/UserCustomValueRec", async function(req, res) {
 // 接收格式：x-www-form-urlencoded
 app.post("/read/UsersComparisonResult", async function(req, res) {
     console.log(`[${clock.consoleTime()}] HTTP POST /read/UsersComparisonResult`);
-    const { username} = req.body; // 使用 req.body 來取得 POST 資料
+    const { username } = req.body; // 使用 req.body 來取得 POST 資料
 
     // 檢查是否有缺少必要的資料
     if (!username) {
@@ -175,7 +175,7 @@ app.post("/set/UserCustomValue", async function (req, res) {
 
     /*Rec*/
     try{
-        const [results, fields] = await connection.query(RecSQL,[username,ValueName,num], { cache: false });;
+        const [results, fields] = await connection.query(RecSQL,[username,ValueName,num,date,time], { cache: false });;
     } catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
         throw error;
