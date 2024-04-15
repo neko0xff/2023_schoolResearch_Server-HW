@@ -6,6 +6,7 @@
 */
 
 #include <Arduino.h>
+#define deviceName "Switch01" 
 
 /*腳位設置*/
 int fan_pin = 9;          // 風扇: D9
@@ -18,6 +19,11 @@ int fan_speed(int pot){
 }
 
 /*在序列監控視窗中輸出的值*/
+void serialOutput_devicename(){
+  Serial.print("device=");
+  Serial.print(deviceName);
+  Serial.print(",");
+}
 void serialOuput_task01(int num){
   //開關值
   Serial.print("Switch=");
@@ -29,8 +35,6 @@ void serialOuput_task02(int num){
   //風扇速度
   Serial.print("Speed=");
   Serial.print(num);
-  Serial.println("");
-  //Serial.println(","); 
   delay(1000); // delay 1 sec
 }
 
@@ -46,7 +50,9 @@ void loop() {
  int speed_cal = fan_speed(pot);
  
  /*輸出*/
+ serialOutput_devicename();
  analogWrite(fan_pin,speed_cal);           // pwm訊號
  serialOuput_task01(pot); 
- serialOuput_task02(speed_cal); 
+ serialOuput_task02(speed_cal);
+ Serial.println("");  
 }
