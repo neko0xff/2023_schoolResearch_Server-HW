@@ -1,0 +1,5 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "/home/user/文件/PlatformIO/Projects/pwmfan_esp8266/.pio/libdeps/d1_mini/ArduinoJson/src",
+    "C_Cpp.dimInactiveRegions": false
+}
