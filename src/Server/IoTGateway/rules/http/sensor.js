@@ -14,6 +14,7 @@ var errorController = error.errorController;
 /*資料庫&後端*/
 var cnDB=null;
 var app=httpServer.app();
+exports.app = app;
 
 /*開發版上傳專用*/
 //POST /upload/:deviceID/data =>  開發版上傳
@@ -40,37 +41,13 @@ app.post("/upload/:deviceID/data",async function(req, res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally{
         connection.release(); // 釋放連接
     }
 },catchError(errorController));
-// GET /read/StatusGet/:deviceID/powerStatus => 獲得電源狀態
-app.get("/read/StatusGet/:deviceID/powerStatus",async function(req,res){
-    var device_ID = xss(req.params.deviceID);
-    var statusSQL = `SELECT name,status FROM ${device_ID}_Status WHERE 1;`;
-    console.log(`[${clock.consoleTime()}] HTTP GET /read/StatusGet/${device_ID}/powerStatus`);
-  
-    var cnDB=database.cnDB();
-    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
-
-    try {
-        const [results, fields] = await connection.execute(statusSQL); // 執行 SQL 查詢
-        var data=JSON.stringify(results);
-        res.send(results);
-        console.log("["`${clock.consoleTime()}] ${data}`);
-    } catch (error) {
-        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = {code: "-1"};
-        res.send(responseMeta);
-        throw error;
-    }finally{
-        connection.release(); // 釋放連接
-    }
-},catchError(errorController));
-
 /*讀值*/
 // 回傳格式: JSON
 //GET /read/:deviceID/ALL
@@ -94,10 +71,10 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
       res.send(data);
       console.log(`[${clock.consoleTime()}] ${data}`);
     } catch (error) {
-      console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-      const responseMeta = { code: "-1", error: error.message };
-      res.status(500).send(responseMeta);
-      throw error;
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
+        throw error;
     } finally {
       connection.release(); // 釋放連接
     }    
@@ -124,8 +101,8 @@ app.get("/read/:deviceID/hum", async function(req, res) {
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch (error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     }finally{
         connection.release(); 
@@ -155,8 +132,8 @@ app.get("/read/:deviceID/temp", async function(req, res) {
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
@@ -187,8 +164,8 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
@@ -220,8 +197,8 @@ app.get("/read/:deviceID/co2",async function(req, res){
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
@@ -251,8 +228,8 @@ app.get("/read/:deviceID/co",async function(req, res){
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
@@ -282,8 +259,8 @@ app.get("/read/:deviceID/pm25",async function(req, res){
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
@@ -315,10 +292,34 @@ app.get("/read/:deviceID/o3",async function(req, res){
         console.log(`[${clock.consoleTime()}]  ${data}`);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     } finally {
         connection.release(); 
     }
 },catchError(errorController));
+
+// GET /read/StatusGet/:deviceID/powerStatus => 獲得電源狀態
+app.get("/read/StatusGet/:deviceID/powerStatus", async function (req, res) {
+    var device_ID = xss(req.params.deviceID);
+    var statusSQL = `SELECT name,status FROM ${device_ID}_Status WHERE 1;`;
+    console.log(`[${clock.consoleTime()}] HTTP GET /read/StatusGet/${device_ID}/powerStatus`);
+
+    var cnDB = database.cnDB();
+    const connection = await cnDB.getConnection(); // 從連接池中獲取一個連接
+
+    try {
+        const [results] = await connection.execute(statusSQL); // 執行 SQL 查詢
+        var data = JSON.stringify(results);
+        console.log(`[${clock.consoleTime()}] ${data}`); // 将日志输出移到这里
+        res.send(results);
+    } catch (error) {
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
+        throw error;
+    } finally {
+        connection.release(); // 釋放連接
+    }
+}, catchError(errorController));

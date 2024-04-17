@@ -127,9 +127,10 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
         res.send(response);
         return;
     } catch (error) {
-        console.log(error);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
+        throw error;
     }
 },catchError(errorController));
 
@@ -137,7 +138,18 @@ app.get("/set/switchCtr/:deviceID/fan2", async function(req, res){
 app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
     //時間
     var device_ID=xss(req.params.deviceID);
-    var viewSQL=`SELECT switch,status,date,time FROM ${device_ID}_StatusRec ORDER BY date DESC, time DESC LIMIT 1;`;
+    var viewSQL=`
+        SELECT rec01.switch, status01.status, rec01.date, rec01.time 
+        FROM (
+            SELECT switch, status, date, time,
+                   ROW_NUMBER() OVER(PARTITION BY switch ORDER BY date DESC, time DESC) AS rn
+            FROM ${device_ID}_StatusRec
+        ) AS latest
+        JOIN ${device_ID}_StatusRec rec01 
+        ON latest.switch = rec01.switch AND latest.date = rec01.date AND latest.time = rec01.time
+        JOIN ${device_ID}_Status status01 ON rec01.switch = status01.name
+        WHERE latest.rn = 1;
+    `;
     console.log(`[${clock.consoleTime()}] HTTP GET /read/statusRec/${device_ID}/view`);
     
     var cnDB=database.cnDB();
@@ -151,8 +163,8 @@ app.get("/read/statusRec/:deviceID/viewALL",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -177,8 +189,8 @@ app.get("/read/statusNow/:deviceID/viewfan1",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -203,8 +215,8 @@ app.get("/read/statusNow/:deviceID/viewfan2",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
@@ -229,8 +241,8 @@ app.get("/read/statusNow/:deviceID/viewALL",async function(req,res){
         console.log(`[${clock.consoleTime()}] ${data}`);
     }catch(error){
         console.error(`[${clock.consoleTime()}] Failed to execute query: ${error.message}`);
-        const responseMeta = { code: "-1", error: error.message };
-        res.status(500).send(responseMeta);
+        const responseMeta = { code: "-1" };
+        res.status(500).json(responseMeta);
         throw error;
     }finally{
         connection.release(); // 釋放連接
