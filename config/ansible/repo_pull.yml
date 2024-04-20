@@ -14,7 +14,7 @@
         dest: /home/user/repo/2023_schoolResearch_ClientApp
         version: main
         update: yes
-        force: yes  
+        force: yes
     - name: "task3: check directory in backend"
       file:
         path: /home/user/repo/2023_schoolResearch_Server-HW
@@ -26,5 +26,5 @@
         dest: /home/user/repo/2023_schoolResearch_Server-HW
         version: main
         update: yes
-        force: yes 
-        
+        force: yes
+
