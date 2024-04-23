@@ -32,7 +32,7 @@
     "helmet": "^7.0.0",
     "moment": "^2.29.4",
     "mqtt": "^4.3.7",
-    "mysql2": "^3.6.1",
+    "mysql2": "^3.9.7",
     "swagger-autogen": "^2.23.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
