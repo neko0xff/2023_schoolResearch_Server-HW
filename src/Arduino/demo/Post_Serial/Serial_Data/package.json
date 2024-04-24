@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "cnserver": "node server_test.js"
+    "cnserver": "node server_test.js",
+    "build_linux_amd64": "pkg index.js -t node18-linux-x64 -c package.json --compress GZip -o serial_data-linux_amd64",
+    "build_linux_arm64": "pkg index.js -t node18-linux-arm64 -c package.json --compress GZip -o serial_data-linux_arm64",
+    "build_win_amd64": "pkg index.js -t node18-win-x64 -c package.json --compress GZip -o serial_data-windows_windows_amd64",
+    "build_win_arm64": "pkg index.js -t node18-win-arm64 -c package.json --compress GZip -o serial_data-windows_arm64",
+    "build_sea": "node --experimental-sea-config sea-config.json"
   },
   "keywords": [
     "serial"
@@ -21,5 +26,10 @@
     "moment": "^2.29.4",
     "querystring": "^0.2.1",
     "serialport": "^12.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*"
+    ]
   }
 }

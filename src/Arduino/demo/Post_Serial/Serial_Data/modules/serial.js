@@ -18,7 +18,7 @@ let pm25 = 0;
 
 /*讀取設置檔*/
 const configdevice = new ConfigParser();
-configdevice.read("./modules/config/device.cfg");
+configdevice.read("./config/device.cfg");
 configdevice.sections();
 const url=configdevice.get("Server","url"); //伺服器: 位置
 const serverport=configdevice.get("Server","port"); //伺服器: 連結埠
@@ -64,7 +64,7 @@ function readstr(data) {
         }
     });
 
-    // 检查并填充未检测到的值为0
+    // 检查且把未偵測到的值为0
     const keys = ['temp', 'hum', 'o3', 'tvoc', 'co2', 'pm25', 'co'];
     keys.forEach(key => {
         if (!(key in sensorData)) {

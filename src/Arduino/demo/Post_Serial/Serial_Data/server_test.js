@@ -5,7 +5,7 @@ const clock = require("./modules/clock.js");
 
 /*設定來源*/
 const configdevice = new ConfigParser();
-configdevice.read("./modules/config/device.cfg");
+configdevice.read("./config/device.cfg");
 configdevice.sections();
 const url=configdevice.get("Server","url");
 const port=configdevice.get("Server","port");

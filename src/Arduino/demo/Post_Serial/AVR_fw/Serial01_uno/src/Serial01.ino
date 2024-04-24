@@ -1,6 +1,7 @@
 /*相關函式庫&定義*/
 #include <GP2Y1010AU0F.h>
 #include <MQUnifiedsensor.h>
+
 #define Board "Arduino UNO"
 #define deviceName "Serial01"
 #define PIN_LED 5       //GP2Y1010AU0F
