@@ -38,7 +38,6 @@ int fan_off = 0;
 /*腳位設置*/
 int fan1_pin = D4;          // 風扇1: D4
 int fan2_pin = D5;          // 風扇2: D5
-int reset_button_pin = D6;  // 重置按鈕: D6
 int DIN = D1; // MAX7219_DIN: D1
 int CS =  D2; // MAX7219_CS:  D2
 int CLK = D3; // MAX7219_CLK: D3
@@ -93,10 +92,8 @@ void WebProtalSetup(){
   // here  "AutoConnectAP"
   // and goes into a blocking loop awaiting configuration
   if (!wifiManager.autoConnect(deviceName_char)) {
-    // 清除已保存的 WiFi 设置
-    wifiManager.resetSettings();
-    // 再次启用 AP 模式
-    wifiManager.autoConnect(deviceName_char);
+    wifiManager.resetSettings(); 
+    wifiManager.autoConnect(deviceName_char); 
   }
   // or use this for auto generated name ESP + ChipID
   //wifiManager.autoConnect();
@@ -206,26 +203,15 @@ void timer_update() {
   }
 }
 
-void pirDetect_init() {
-  pirVal = digitalRead(reset_button_pin);
-}
-
 /*主程式*/
 void setup() {
   Serial.begin(9600);                         // 初始化傳輸速率: 9600 bps
   pinMode(fan1_pin, OUTPUT);                  // 指定風扇1腳位: 輸出
   pinMode(fan2_pin, OUTPUT);                  // 指定風扇2腳位: 輸出
-  pinMode(reset_button_pin, INPUT_PULLUP);    // 指定重置按鈕: 輸入+啟用上拉電阻
   MAX7219_ctr();
   WebProtalSetup();
 }
 
 void loop() {
   timer_update();
-  
-  // 檢查重置按鈕的狀態
-  /*pirVal = digitalRead(reset_button_pin);
-  if(pirVal == true ){
-    resetWiFiConnection();
-  }*/
 }
