@@ -11,21 +11,24 @@
 #include <ESP8266WebServer.h>
 #include <WiFiClient.h>
 #include <WiFiManager.h>         // https://github.com/tzapu/WiFiManager
-#include <LedControl.h> 
+#include <LedControl.h>
+#include "espCN.h"
 
 /*連線部分*/
-#include "espCN.h"
 espCN espcn;
 const char* deviceName_char = espcn.deviceName.c_str();
 WiFiServer server(80); // AP URL: http://192.168.4.1:80
 WiFiManager wifiManager;
-boolean pirVal = false;   //目前重置電位狀態
 
 /* LED OUT */
 byte smile[8] = {0x3C,0x42,0xA5,0x81,0xA5,0x99,0x42,0x3C};  // 微笑
 byte love[8]  = {0x00,0x66,0x99,0x81,0x42,0x24,0x18,0x00};   // 愛心
-byte m[8]=     {0xE7,0xFF,0xFF,0xDB,0xDB,0xDB,0xC3,0xC3};  //英文字母m
-byte i[8]=     {0x00,0x10,0x00,0x10,0x10,0x10,0x10,0x10};  //英文字母i
+byte m[8] = {0xE7,0xFF,0xFF,0xDB,0xDB,0xDB,0xC3,0xC3};  // m
+byte i[8] = {0x00,0x10,0x00,0x10,0x10,0x10,0x10,0x10};  // i
+byte F1_ON[8] = {0xae,0xea,0xae,0x71,0x21,0x27,0x31,0x27};  // Fan1 ON
+byte F2_ON[8] = {0xae,0xea,0xae,0xf1,0x11,0xf7,0x81,0xf7};  // Fan2 ON
+byte F1_OFF[8] = {0x2e,0xea,0xee,0x71,0x21,0x27,0x31,0x27}; // Fan1 OFF
+byte F2_OFF[8] = {0x2e,0xea,0xee,0xf1,0x11,0xf7,0x81,0xf7}; // Fan2 OFF
 
 /*timer*/
 unsigned long lastTime = 0;
@@ -42,43 +45,24 @@ int DIN = D1; // MAX7219_DIN: D1
 int CS =  D2; // MAX7219_CS:  D2
 int CLK = D3; // MAX7219_CLK: D3
 
-
-/*MAX7219 LED Ctr*/
+/*8x8 LED矩陣控制*/
 LedControl lc=LedControl(DIN,CLK,CS,0);
 void MAX7219_ctr(){
-  lc.shutdown(0,false);       //The MAX72XX is in power-saving mode on startup
-  lc.setIntensity(0,15);      // Set the brightness to maximum value
-  lc.clearDisplay(0);         // and clear the display
+    lc.shutdown(0, false);       // The MAX72XX is in power-saving mode on startup
+    lc.setIntensity(0, 15);      // Set the brightness to maximum value
+    lc.clearDisplay(0);          // Clear the display
 }
-void printByte(byte character []){
-  int i = 0;
-  for(i=0;i<8;i++){
-    lc.setRow(0,i,character[i]);
-  }
+void printByte(byte *character){
+    int i = 0;
+    for(i = 0; i < 8; i++){
+        lc.setRow(0, i, character[i]);
+    }
 }
-void LED_fan1ON(){
-  printByte(smile);
-  delay(1000);
-  lc.clearDisplay(0);
-  delay(1000);
-}
-void LED_fan1off(){
-  printByte(love);    
-  delay(1000);
-  lc.clearDisplay(0);
-  delay(1000);
-}
-void LED_fan2ON(){
-  printByte(i);
-  delay(1000);
-  lc.clearDisplay(0);
-  delay(1000);
-}
-void LED_fan2off(){
-  printByte(m);    
-  delay(1000);
-  lc.clearDisplay(0);
-  delay(1000);
+void OUTPUT_8x8(byte *character){
+    printByte(character);
+    delay(1000);  // Display for 1 second
+    lc.clearDisplay(0);
+    delay(1000);  // Delay for 1 second before clearing the display
 }
 
 /* WIFI AP 設定頁面 */
@@ -171,16 +155,16 @@ void httpGet(){
           if (name == "fan1") {
             analogWrite(fan1_pin, status ? fan_on : fan_off);
             if(status == true){
-              LED_fan1ON();
+              OUTPUT_8x8(F1_ON);
             }else if(status == false){
-              LED_fan1off();
+              OUTPUT_8x8(F1_OFF);
             }
           } else if (name == "fan2") {
             analogWrite(fan2_pin, status ? fan_on : fan_off);
             if(status == true){
-              LED_fan2ON();
+              OUTPUT_8x8(F2_ON);
             }else if(status == false){
-              LED_fan2off();
+              OUTPUT_8x8(F2_OFF);
             }
           }
           
