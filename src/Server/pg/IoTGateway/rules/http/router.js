@@ -1,0 +1,11 @@
+/*路由管理*/
+require("./test.js");
+require("./users.js");
+require("./sensor.js");
+require("./switch.js");
+require("./crawler.js");
+require("./customValue.js");
+require("./devices.js");
+require("./auth.js");
+require("./cal.js");
+require("./web.js");

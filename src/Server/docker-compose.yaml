@@ -4,19 +4,19 @@ services:
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
-      context: ./crawlerData
+      context: ./pg/crawlerData
       dockerfile: Dockerfile.env
   app2: 
     container_name: IoTGateway-cont
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
-      context: ./IoTGateway
+      context: ./pg/IoTGateway
       dockerfile: Dockerfile.env
   app3:
     container_name: TelegramB0t-cont
     restart: always # 跟系統服務一起重啟
     network_mode: host # 網路: 使用實體機
     build:
-      context: ./mqtt_bot_node
+      context: ./pg/mqtt_bot_node
       dockerfile: Dockerfile.env

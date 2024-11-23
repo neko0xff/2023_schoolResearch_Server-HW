@@ -1,10 +1,11 @@
 CC1:=docker compose
+IMAGE:=crawlerdata
 
-.PHONY: build up logs stop clean 
+.PHONY: build-img up logs stop clean
 
-all: stop build
+all: stop clean build-img
 
-build:
+build-img:
 	@$(CC1) up --build -d
 
 up:
