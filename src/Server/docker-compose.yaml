@@ -1,22 +1,25 @@
 services:
   app1:
     container_name: crawler-cont
-    restart: always # 跟系統服務一起重啟
-    network_mode: host # 網路: 使用實體機
+    restart: always               # 跟系統服務一起重啟
+    network_mode: host #  網路: 使用實體機
+    # 編譯時的設置
     build:
       context: ./pg/crawlerData
       dockerfile: Dockerfile.env
   app2: 
     container_name: IoTGateway-cont
-    restart: always # 跟系統服務一起重啟
-    network_mode: host # 網路: 使用實體機
+    restart: always               # 跟系統服務一起重啟
+    network_mode: host  # 網路: 使用實體機
+    # 編譯時的設置
     build:
       context: ./pg/IoTGateway
       dockerfile: Dockerfile.env
   app3:
     container_name: TelegramB0t-cont
-    restart: always # 跟系統服務一起重啟
-    network_mode: host # 網路: 使用實體機
+    restart: always                 # 跟系統服務一起重啟
+    network_mode: host    # 網路: 使用實體機
+    # 編譯時的設置
     build:
       context: ./pg/mqtt_bot_node
       dockerfile: Dockerfile.env

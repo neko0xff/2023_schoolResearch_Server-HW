@@ -1,12 +1,11 @@
 CC1:=docker compose
-CC2:=pnpm
 IMAGE:=Telegram_bot2
 
 .PHONY: build up logs stop clean pnpm-start
 
-all: build
+all: stop clean build-img
 
-build:
+build-img:
 	@$(CC1) up --build -d
 
 up:
@@ -20,6 +19,3 @@ stop:
 
 clean:
 	@$(CC1) down
-
-pnpm-start:
-	@$(CC2) start

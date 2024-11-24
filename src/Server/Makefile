@@ -2,9 +2,9 @@ CC1:=docker compose
 
 .PHONY: build up logs stop clean 
 
-all: build
+all: stop clean build-img
 
-build:
+build-img:
 	@$(CC1) up --build -d
 
 up:
