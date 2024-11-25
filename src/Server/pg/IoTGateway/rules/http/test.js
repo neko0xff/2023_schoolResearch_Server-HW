@@ -11,8 +11,10 @@ var app=httpServer.app();
 
 // GET / => test HTTP API
 app.get("/",async function(req,res){
+    const send_str = "HTTP API Server is running!";
+    
     console.log(`[${clock.consoleTime()}] HTTP GET /`);
-    res.send("HTTP API Server is running!");
+    res.send(send_str);
 },catchError(errorController));
 
 // GET /testDB => test DataBase Connect

@@ -20,10 +20,10 @@ app.get("/read/UserCustomValueStatus", async function (req, res) {
     const { username, ValueName } = req.query; 
     const cnDB = database.cnDB();
     let connection = await cnDB.connect();
-    const ReadSQL = `
-        SELECT ${ValueName} 
+    const ReadSQL =      `
+        SELECT ${ValueName}
         FROM sensordb.users 
-        WHERE username = $1
+        WHERE username = $2
     `;
 
     console.log(`[${clock.consoleTime()}] HTTP GET /read/UserCustomValueStatus`);
@@ -38,7 +38,7 @@ app.get("/read/UserCustomValueStatus", async function (req, res) {
     }
 
     try {
-        const result = await connection.query(ReadSQL, [username]);
+        const result = await connection.query(ReadSQL,[username]);
 
         if (result.rows.length === 0) {
             const responseMeta = { 

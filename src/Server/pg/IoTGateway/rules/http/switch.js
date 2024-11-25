@@ -24,19 +24,20 @@ app.get("/set/switchCtr/:deviceID/fan1", async function (req, res) {
     const updateSQL = `
         UPDATE sensordb.${deviceNamecv}_status 
         SET status = $1
-        WHERE name = '${switchName}';
+        WHERE name =  $2;
     `;
     const recSQL = `
         INSERT INTO sensordb.${deviceNamecv}_statusrec(switch, status, date, time) 
-        VALUES ('${switchName}', $1, $2, $3);
+        VALUES ($1, $2, $3, $4);
     `;
 
     console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/${switchName}`);
+
     try {
         const response = { status: status == 1 ? "On" : "Off" };
 
-        await database.executeQuery(recSQL, [status, date, time]);
-        await database.executeQuery(updateSQL, [status]);
+        await database.executeQuery(recSQL, [switchName,status, date, time]);
+        await database.executeQuery(updateSQL, [status,switchName]);
         mqttPubSwitch.pubSwitch(device_ID, switchName);
         console.log(`[${clock.consoleTime()}] ${switchName} is ${response.status}`);
         res.send(response);
@@ -62,18 +63,18 @@ app.get("/set/switchCtr/:deviceID/fan2", async function (req, res) {
     const updateSQL = `
         UPDATE sensordb.${deviceNamecv}_status 
         SET status = $1
-        WHERE name = '${switchName}'
+        WHERE name = $2
     `;
     const recSQL = `
         INSERT INTO sensordb.${deviceNamecv}_statusrec(switch, status, date, time) 
-        VALUES ('${switchName}', $1, $2, $3)
+        VALUES ($1, $2, $3, $4)
     `;
 
     console.log(`[${clock.consoleTime()}] HTTP GET /set/switchCtr/${device_ID}/${switchName}`);
     try {
         const response = { status: status == 1 ? "On" : "Off" };
-        await database.executeQuery(recSQL, [status, date, time]);
-        await database.executeQuery(updateSQL, [status]);
+        await database.executeQuery(recSQL, [switchName,status, date, time]);
+        await database.executeQuery(updateSQL, [status,switchName]);
         mqttPubSwitch.pubSwitch(device_ID, switchName);
         console.log(`[${clock.consoleTime()}] ${switchName} is ${response.status}`);
         res.send(response);

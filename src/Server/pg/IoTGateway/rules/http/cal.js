@@ -50,11 +50,11 @@ app.post("/cal/Cfoot/traffic_db", async function(req, res) {
     const cnDB = database.cnDB();
     const connection = await cnDB.connect();  
     const searchSQL = `
-    SELECT MAX(coe) as max_coe, unit 
-    FROM sensordb.cfp_p_02 
-    WHERE name = $1
-    GROUP BY unit;
-`;
+        SELECT MAX(coe) as max_coe, unit 
+        FROM sensordb.cfp_p_02 
+        WHERE name = $1
+        GROUP BY unit;
+    `;
 
     console.log(`[${clock.consoleTime()}] HTTP POST /cal/Cfoot/traffic_db`);
     if (!CPL || dist === undefined) {
