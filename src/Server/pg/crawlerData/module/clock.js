@@ -1,4 +1,3 @@
-/*相關函式庫*/
 const moment = require("moment");
 var ConfigParser = require("configparser");
 const configZone = new ConfigParser();
@@ -9,43 +8,53 @@ configZone.sections();
 var locaLang=configZone.get("timezone","locaLang");
 var localZone=configZone.get("timezone","localZone");
 
-/*outpuut console Time*/
+/*主程式 */
+
+// outpuut console Time
 function consoleTime(){
     var clock = new Date();
-    var nowTime = clock.toLocaleString(locaLang, {timeZone: localZone}); //時區
+    var nowTime = clock.toLocaleString(locaLang, {timeZone: localZone}); 
+
     return nowTime;
 }
 
-/*SQL date&time*/
+// SQL: date 
 function SQLDate(){
     var clock = new moment();
     var dateFormat=configZone.get("formatStyle","dateFormat");
     var Date=clock.format(dateFormat);
+
     return Date;
 }
+
+// SQL: time
 function SQLTime(){
     var clock = new moment();
     var timeFormat=configZone.get("formatStyle","timeFormat");
     var Time=clock.format(timeFormat);
+
     return Time;
 }
 
-/*Yasterday a Date*/
-function yasterDate(){
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    const formattedYesterday = yesterday.toISOString().slice(0, 10); // 格式為 YYYY-MM-DD
-    return formattedYesterday;
-}
-
-/* 將 ISO 8601 日期格式轉換為 "yyyy-mm-dd" 格式*/
+/* 時間: ISO 8601 => "yyyy-mm-dd" */
 function formatDateToYYYYMMDD(isoDateString) {
     const date = new Date(isoDateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-based
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const formatted = `${year}-${month}-${day}`;
+
+    return formatted;
+}
+
+/*Yasterday a Date: 格式= 'YYYY-MM-DD'*/
+function yasterDate(){
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1); 
+    const formattedYesterday = yesterday.toISOString().slice(0, 10);
+
+    return formattedYesterday;
 }
 
 module.exports={

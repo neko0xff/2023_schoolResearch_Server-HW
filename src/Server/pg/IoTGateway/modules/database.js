@@ -18,6 +18,8 @@ var setDB = new Pool({
     idleTimeoutMillis: 30000,                      // 閒置超時時間 =30sec
 });
 
+/*主程式*/
+
 function cnDB() {
     return setDB; 
 }
@@ -26,7 +28,7 @@ function escape(VALUES) {
     return VALUES; 
 }
 
-/*  執行查詢並回傳結果 */
+// 執行查詢並回傳結果
 async function executeQuery(query, params = []) {
     const connection = await cnDB().connect(); 
     //console.log(`[${clock.consoleTime()}] Executing query: ${query} with params: ${JSON.stringify(params)}`);
@@ -48,7 +50,7 @@ async function executeQuery(query, params = []) {
     }
 }
 
-/* 查詢資料庫並將結果發送回應 */
+// 查詢資料庫並將結果發送回應
 async function queryDatabaseAndSendResponse(res, sql, params = []) {
     try {
         const results = await executeQuery(sql, params);
@@ -71,7 +73,7 @@ async function queryDatabaseAndSendResponse(res, sql, params = []) {
     }
 }
 
-/* 處理資料庫查詢 */
+// 處理資料庫查詢
 async function handleDatabaseQuery(req, res, sql, params = []) {
     const results = await executeQuery(sql, params);
     //console.log(`[${clock.consoleTime()}] Executing query: ${sql} with params: ${JSON.stringify(params)}`);

@@ -59,12 +59,12 @@ async function pubCustomValueALL() {
 async function pubCustomValue(username) {
     const readSQL = `
         SELECT customvar01, customvar02, customvar03, customvar04, customvar05, customvar06, customvar07 
-        FROM sensordb.users WHERE username = '${username}';
+        FROM sensordb.users WHERE username = $1
     `;
     const topicPub = `/Users/${username}/CustomValue`;
 
     try {
-        await mqttPub.pubRouterSwitch(topicPub, readSQL);
+        await mqttPub.pubRouterSwitch(topicPub, readSQL,[username]);
     } catch (error) {
         console.error(`[${clock.consoleTime()}] Failed to publish custom values for ${topicPub}: ${error.message}`);
     }
@@ -86,16 +86,16 @@ async function pubUsersComparisonResult_hour(username) {
         CROSS JOIN
             sensordb.users
         WHERE 
-            sensordb.users.username = '${username}'
+            sensordb.users.username = $1
         ORDER BY
             sensordb.sensor01_table.date DESC,
             sensordb.sensor01_table.time DESC
-        LIMIT 1;
+        LIMIT 1
     `;
     const topicPub = `/Users/${username}/comparison_result_hour`;
 
     try {
-        await mqttPub.pubRouter_hour(topicPub, readSQL);
+        await mqttPub.pubRouter_hour(topicPub, readSQL,[username]);
     } catch (error) {
         console.error(`[${ clock.consoleTime()}] Failed to publish hourly comparison results for ${topicPub}: ${error.message}`);
     }
@@ -117,16 +117,16 @@ async function pubUsersComparisonResult(username) {
         CROSS JOIN
             sensordb.users
         WHERE 
-            sensordb.users.username = '${username}'
+            sensordb.users.username = $1
         ORDER BY
             sensordb.sensor01_table.date DESC,
             sensordb.sensor01_table.time DESC
-        LIMIT 1;
+        LIMIT 1
     `;
     const topicPub = `/Users/${username}/comparison_result`;
 
     try {
-        await mqttPub.pubRouter(topicPub, readSQL);
+        await mqttPub.pubRouter(topicPub, readSQL,[username]);
     } catch (error) {
         console.error(`[${ clock.consoleTime()}] Failed to publish comparison results for ${topicPub}: ${error.message}`);
     }

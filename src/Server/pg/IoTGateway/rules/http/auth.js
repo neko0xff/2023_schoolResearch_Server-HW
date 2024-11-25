@@ -1,6 +1,3 @@
-/* eslint-disable no-redeclare */
-/* eslint-disable no-unused-vars */
-
 /*相關函式庫*/
 var bcrypt = require("bcrypt");
 var clock = require("../../modules/clock.js");

@@ -31,7 +31,7 @@ async function pubSwitch(device_ID, switchname) {
     const readSQL = `
             SELECT name, status 
             FROM sensordb.${deviceNamecv}_status 
-            WHERE name = '${switchname}';
+            WHERE name = $1
     `;  
 
     try {

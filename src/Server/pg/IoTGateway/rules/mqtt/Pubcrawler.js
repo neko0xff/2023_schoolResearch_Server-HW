@@ -26,7 +26,7 @@ async function pubCrawlerAQI(sitename) {
     const readSQL = `
         SELECT siteid, sitename, aqi, monitordate 
         FROM sensordb.aqx_p_434 
-        WHERE sitename = '${sitename}'
+        WHERE sitename = $1
         ORDER BY siteid ASC;
     `;
     var topicPub = `/Crawler/AQI/${sitename}`;

@@ -11,6 +11,8 @@ configSet.sections();
 var port = configSet.get("Service","MQTT");
 
 /*主程式*/
+
+// 監聽通訊埠
 broker.listen(port, function () {
     console.log(`[${clock.consoleTime()}] MQTT Server Started!`);
     console.log(`[${clock.consoleTime()}] MQTT Server URL: http://[Server_IP]:${port}`);

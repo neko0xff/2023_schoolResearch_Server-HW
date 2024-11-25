@@ -25,48 +25,44 @@ async function getData() {
     const yesterday = clock.yasterDate(); 
     const responseData = response.data;
     const records = responseData.records;
+    const filteredData = records.filter(item => item.monitordate && item.monitordate.slice(0, 10) === yesterday) 
+        .map(item => ({
+          siteid: item.siteid, // 測站編號
+          sitename: item.sitename, // 測站位置
+          aqi: item.aqi, // AQI 值
+          monitordate: item.monitordate, // 日期
+        }))
+        .sort((a, b) => a.siteid - b.siteid); // 根據測站編號排序
+    const sql = `
+        INSERT INTO sensordb.aqx_p_434 (siteid, sitename, aqi, monitordate)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (siteid) 
+        DO UPDATE SET 
+            sitename = EXCLUDED.sitename,
+            aqi = EXCLUDED.aqi,
+            monitordate = EXCLUDED.monitordate
+      `;
 
     if (!records || records.length === 0) {
       console.log(`[${clock.consoleTime()}] No data found for ${yesterday}`);
       return [];  
     }
 
-    const filteredData = records
-      .filter(item => item.monitordate && item.monitordate.slice(0, 10) === yesterday) 
-      .map(item => ({
-        siteid: item.siteid, // 測站編號
-        sitename: item.sitename, // 測站位置
-        aqi: item.aqi, // AQI 值
-        monitordate: item.monitordate, // 日期
-      }))
-      .sort((a, b) => a.siteid - b.siteid); // 根據測站編號排序
-
-    // 資料庫插入操作
     for (const item of filteredData) {
-      const sql = `
-        INSERT INTO sensordb.aqx_p_434 (siteid, sitename, aqi, monitordate)
-        VALUES ($1, $2, $3, $4)
-        ON CONFLICT (siteid)  -- 假設 siteid 是唯一索引或主鍵
-        DO UPDATE SET 
-            sitename = EXCLUDED.sitename,
-            aqi = EXCLUDED.aqi,
-            monitordate = EXCLUDED.monitordate
-      `;
-      const values = [item.siteid, item.sitename, item.aqi, item.monitordate];
+        const values = [item.siteid, item.sitename, item.aqi, item.monitordate];
+        try {
+          await connection.query(sql, values); 
+        } catch (err) {
+          console.error(`[${clock.consoleTime()}] Failed to insert data for ${item.siteid}: ${err.message}`);
+        } finally {
 
-      try {
-        await connection.query(sql, values); 
-      } catch (err) {
-        console.error(`[${clock.consoleTime()}] Failed to insert data for ${item.siteid}: ${err.message}`);
-      }
+        }
     }
 
     connection.release();
-
     console.log(`[${clock.consoleTime()}] Now List data in Console...`);
     console.log(filteredData);
     console.log(`[${clock.consoleTime()}] web crawling aqx_p_434 END!`);
-    
     return filteredData;
   } catch (error) {
     console.error(`[${clock.consoleTime()}] Error during API request or database operation: ${error.message}`);
