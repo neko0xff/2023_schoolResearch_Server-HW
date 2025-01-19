@@ -1,8 +1,8 @@
 /* 相關函式庫 */
-const axios = require('axios');
-const clock = require('./clock.js');
-const database = require('./database.js');
-var ConfigParser = require("configparser");
+import axios from "axios";
+import ConfigParser from "configparser";
+import clock from"./clock.js";
+import database from"./database.js";
 
 /* 戴入配置檔 */
 const configKEY = new ConfigParser();
@@ -69,6 +69,8 @@ async function getData() {
   }
 }
 
-module.exports = {
-  getData: getData,
-};
+const crawler_1 = {
+  getData,
+}
+
+export default crawler_1;

@@ -1,5 +1,5 @@
 /*相關函式庫*/
-const swaggerAutogen = require("swagger-autogen")();
+import swaggerAutogen from 'swagger-autogen';
 
 /*規則*/
 const file1="./rules/http/crawler.js";

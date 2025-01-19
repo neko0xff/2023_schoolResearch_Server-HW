@@ -1,24 +1,24 @@
 /*相関函式庫*/
-var mqttClient = require("./mqttClient.js");
-var database = require("../database.js");
-var clock = require("../clock.js");
+import mqttClient from "./mqttClient.js";
+import database from "../database.js";
+import clock from "../clock.js";
 
 /* 主程式 */
 
 // 發布: 有變更或啟動時
 // 回傳格式: JSON
 async function pubRouter(Pubtopic, SQL,params) {
-    var cnDB = database.cnDB();
+    const cnDB = database.cnDB();
     const connection = await cnDB.connect(); 
     
     console.log(`[${clock.consoleTime()}] MQTT Pub ${Pubtopic}`);
     try {
-        const { rows, fields } = await connection.query(SQL, params);  
+        const { rows, _fields } = await connection.query(SQL, params);  
         const formattedResults = rows.map(item => ({
             ...item,
             date: item.date ? clock.formatDateToYYYYMMDD(item.date) : null
         }));
-        var data = JSON.stringify(formattedResults);
+        const data = JSON.stringify(formattedResults);
 
         mqttClient.Pub(Pubtopic, data, 5000);
         // console.log(`[${clock.consoleTime()}] Pub Data= ${data}`);
@@ -34,16 +34,16 @@ async function pubRouter(Pubtopic, SQL,params) {
 // 發布: 每小時一回
 // 回傳格式: JSON
 async function pubRouter_hour(Pubtopic, SQL,params) {
-    var cnDB = database.cnDB();
+    const cnDB = database.cnDB();
     const connection = await cnDB.connect(); 
     
     console.log(`[${clock.consoleTime()}] MQTT Pub ${Pubtopic}`);
     try {
-        const { rows, fields } = await connection.query(SQL, params);  
+        const { rows, _fields } = await connection.query(SQL, params);  
         const formattedResults = rows.map(item => ({
             ...item
         }));
-        var data = JSON.stringify(formattedResults);
+        const data = JSON.stringify(formattedResults);
 
         mqttClient.Pub_hour(Pubtopic, data, 1);
         // console.log(`[${clock.consoleTime()}] Pub Data= ${data}`);
@@ -59,13 +59,13 @@ async function pubRouter_hour(Pubtopic, SQL,params) {
 // 發布: 開關狀態
 // 回傳格式: JSON
 async function pubRouterSwitch(Pubtopic, SQL,params) {
-    var cnDB = database.cnDB();
+    const cnDB = database.cnDB();
     const connection = await cnDB.connect();  
 
     console.log(`[${clock.consoleTime()}] MQTT Pub ${Pubtopic}`);
     try {
-        const { rows, fields } = await connection.query(SQL, params);  
-        var data = JSON.stringify(rows); 
+        const { rows, _fields } = await connection.query(SQL, params);  
+        const data = JSON.stringify(rows); 
 
         mqttClient.Pub(Pubtopic, data, 10000);
         // console.log(`[${clock.consoleTime()}] Pub Data= ${data}`);
@@ -80,7 +80,7 @@ async function pubRouterSwitch(Pubtopic, SQL,params) {
 
 // 處理資料庫中的資料表內容
 async function processListFromDatabase(listSQL, processFunction) {
-    var cnDB = database.cnDB();
+    const cnDB = database.cnDB();
     const connection = await cnDB.connect();  
 
     try {
@@ -115,9 +115,11 @@ async function processListFromDatabase(listSQL, processFunction) {
     }
 }
 
-module.exports = {
-    pubRouter: pubRouter,
-    pubRouter_hour: pubRouter_hour,
-    pubRouterSwitch: pubRouterSwitch,
-    processListFromDatabase: processListFromDatabase,
-};
+const mqttPubSend = {
+    pubRouter,
+    pubRouter_hour,
+    pubRouterSwitch,
+    processListFromDatabase,
+}
+
+export default mqttPubSend;

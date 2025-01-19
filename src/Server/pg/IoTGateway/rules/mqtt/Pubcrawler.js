@@ -1,6 +1,7 @@
+// deno-lint-ignore-file
 /*相関函式庫*/
-var mqttPub = require("../../modules/mqtt/mqttPubSend.js");
-var clock = require("../../modules/clock.js");
+import mqttPub from "../../modules/mqtt/mqttPubSend.js";
+import clock from "../../modules/clock.js";
 
 /*主程式*/
 
@@ -29,7 +30,7 @@ async function pubCrawlerAQI(sitename) {
         WHERE sitename = $1
         ORDER BY siteid ASC;
     `;
-    var topicPub = `/Crawler/AQI/${sitename}`;
+    const topicPub = `/Crawler/AQI/${sitename}`;
 
     try {
         await mqttPub.pubRouterSwitch(topicPub, readSQL, [sitename]);
@@ -38,7 +39,9 @@ async function pubCrawlerAQI(sitename) {
     }
 }
 
-module.exports = {
-    pubCrawlerAQI: pubCrawlerAQI,
-    pubCrawlerAQIALL: pubCrawlerAQIALL
+const Pubcrawler = {
+    pubCrawlerAQI,
+    pubCrawlerAQIALL
 };
+
+export default Pubcrawler;

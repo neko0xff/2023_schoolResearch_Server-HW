@@ -1,16 +1,14 @@
-/* eslint-disable no-redeclare */
-/* eslint-disable no-unused-vars */
-
+// deno-lint-ignore-file
 /*相関函式庫*/
-var clock=require("../../modules/clock.js");
-var httpServer=require("../../modules/httpServer.js");
+import httpServer from "../../modules/httpServer.js";
+import clock from "../../modules/clock.js";
 
-/*後端*/
-var app=httpServer.app();
+/*資料庫&後端*/
+const app=httpServer.app();
 
 // POST /webhook =>  webhook endpoint
 app.post('/webhook', (req, res) => {
-    var data = JSON.stringify(req.body);
+    const data = JSON.stringify(req.body);
     
     console.log(`[${clock.consoleTime()}] HTTP POST /webhook`);
     console.log(`[${clock.consoleTime()}] Received webhook: ${data}`);

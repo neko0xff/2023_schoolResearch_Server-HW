@@ -1,19 +1,19 @@
-/* eslint-disable no-redeclare */
-/* eslint-disable no-unused-vars */
-
 /* 相關函式庫 */
-const clock = require("../../modules/clock.js");
-const httpServer = require("../../modules/httpServer.js");
-const database = require("../../modules/database.js");
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
 
 /* 資料庫 & 後端 */
-const cnDB = null;
 const app = httpServer.app();
 
-/* 幫助函數 - 用於處理錯誤回應 */
+/*錯誤處理*/
 function handleError(res, error, statusCode = 500) {
+    const responseMeta = { 
+        code: "-1",
+        error: error.message 
+    };
+
     console.error(`[${clock.consoleTime()}] Error: ${error.message}`);
-    const responseMeta = { code: "-1", error: error.message };
     res.status(statusCode).send(responseMeta);
 }
 

@@ -1,0 +1,31 @@
+{
+  "type": "commonjs",
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "dev": "deno run -A main.js",
+    "serve": "deno serve -A  main.js",
+    "outdated": "deno outdated --update --latest",
+    "install": "deno install --allow-scripts ",
+    "swagger-autogen": "deno run -A ./tools/swaggerAutoGen.js",
+    "mqttTest-Sub": "deno -A ./tools/mqttSubTest.js"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "aedes": "npm:aedes@^0.51.3",
+    "bcrypt": "npm:bcrypt@^5.1.1",
+    "body-parser": "npm:body-parser@^1.20.3",
+    "compression": "npm:compression@^1.7.5",
+    "configparser": "npm:configparser@^0.3.10",
+    "cors": "npm:cors@^2.8.5",
+    "express": "npm:express@^4.21.2",
+    "express-rate-limit": "npm:express-rate-limit@^7.5.0",
+    "helmet": "npm:helmet@^8.0.0",
+    "moment": "npm:moment@^2.30.1",
+    "mqtt": "npm:mqtt@^5.10.3",
+    "net": "npm:net@^1.0.2",
+    "pg": "npm:pg@^8.13.1",
+    "swagger-autogen": "npm:swagger-autogen@^2.23.7",
+    "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
+    "xss": "npm:xss@^1.0.15"
+  }
+}

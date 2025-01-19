@@ -1,21 +1,44 @@
 CC1:=docker compose
-IMAGE:=crawlerdata
+CC2:=deno
+IMAGE:=crawlerData
 
-.PHONY: build-img up logs stop clean
+.PHONY: img_build img_up img_logs img_stop img_clean  deno_install deno_build  deno_clean  deno_serve deno_debug
 
-all: stop clean build-img
+all: img_stop img_clean img_build 
 
-build-img:
+img_build:
 	@$(CC1) up --build -d
 
-up:
+img_up:
 	@$(CC1) up -d
 
-logs:
+img_logs:
 	@$(CC1) logs --tail=100 -f
 
-stop:
+img_stop:
 	@$(CC1) stop
 
-clean:
+img_clean:
 	@$(CC1) down
+
+deno_install:
+	@$(CC2) task install
+
+deno_build:
+	@$(CC2) task build
+
+deno_serve:
+	@$(CC2) task serve
+
+deno_debug:
+	@$(CC2) task start
+
+deno_preview:
+	# default port: 8085/tcp
+	@$(CC2) task preview
+
+deno_clean:
+	@echo "Start Clean Package"
+	@rm -rf node_modules
+	@rm -rf dist
+	@$(CC2) clean

@@ -1,6 +1,6 @@
 /* 相関函式庫 */
-var mqttPub = require("../../modules/mqtt/mqttPubSend.js");
-var clock = require("../../modules/clock.js");
+import mqttPub from "../../modules/mqtt/mqttPubSend.js";
+import clock from "../../modules/clock.js";
 
 /*主程式*/
 
@@ -132,11 +132,13 @@ async function pubUsersComparisonResult(username) {
     }
 }
 
-module.exports = {
-    pubUsersComparisonResult: pubUsersComparisonResult,
-    pubUsersComparisonResult_hour: pubUsersComparisonResult_hour,
-    pubCustomValue: pubCustomValue,
-    pubUsersComparisonResultALL: pubUsersComparisonResultALL,
-    pubUsersComparisonResultALL_hour: pubUsersComparisonResultALL_hour,
-    pubCustomValueALL: pubCustomValueALL,
+const Pubuser = {
+    pubUsersComparisonResult,
+    pubUsersComparisonResult_hour,
+    pubCustomValue,
+    pubUsersComparisonResultALL,
+    pubUsersComparisonResultALL_hour,
+    pubCustomValueALL,
 };
+
+export default Pubuser;

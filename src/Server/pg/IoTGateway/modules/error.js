@@ -1,7 +1,7 @@
 /*相関函式庫*/
-var clock=require("../modules/clock.js");
+import clock from "./clock.js";
 
-/*主程式*/
+/*當錯誤發生時*/
 const catchError = (asyncFn) => {
     return (req, res, next) => {
       asyncFn(req, res, next)
@@ -15,19 +15,20 @@ const catchError = (asyncFn) => {
     };
 };
 const errorController = async function (req, res, next) { 
-  a; 
   res.send({
-    message: 'It Work!',
+    message: '正常狀態',
   });
 };
 const someController = async function (req, res, next) { 
   res.send({
-    message: 'It Work!',
+    message: '正常狀態',
   });
 };
 
-module.exports={
-  catchError:catchError,
-  someController:someController,
-  errorController:errorController,
-};
+const error = {
+  errorController,
+  someController,
+  catchError
+}
+
+export default error;

@@ -1,15 +1,15 @@
 /*相關函式庫*/
-const mqtt = require("mqtt");
-const clock = require("../clock.js");
+import mqtt from "mqtt";
+import clock from "../clock.js";
+import ConfigParser from "configparser";
 
 /*MQTT Client*/
-var ConfigParser = require("configparser");
 const configSet = new ConfigParser();
 configSet.read("./modules/config/cnSet.cfg");
 configSet.sections();
-var ServerSource = configSet.get("MQTT","source");
-var port = configSet.get("MQTT","port");
-var client = mqtt.connect(`mqtt://${ServerSource}:${port}`);
+const ServerSource = configSet.get("MQTT","source");
+const port = configSet.get("MQTT","port");
+const client = mqtt.connect(`mqtt://${ServerSource}:${port}`);
 
 /* 主程式 */
 
@@ -34,14 +34,16 @@ function Pub(topic,value,timer){
 
 // 發佈主題(固定每一個小時一回) 
 function Pub_hour(topic,value,timer){
-    var setHour = timer * (60 * 60 * 1000);
+    const setHour = timer * (60 * 60 * 1000);
     setInterval(function() {    
         client.publish(topic, value, { qos: 0, retain: true });
     }, setHour);
 }
 
-module.exports={
-    Pub:Pub,
-    Pub_hour:Pub_hour,
-    Sub:Sub,
+const mqttClient ={
+    Pub,
+    Pub_hour,
+    Sub,
 };
+
+export default mqttClient;

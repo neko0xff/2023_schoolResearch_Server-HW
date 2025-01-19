@@ -4,6 +4,8 @@ function firstLetterToLower(str) {
     return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
-module.exports={
-    firstLetterToLower: firstLetterToLower,
+const str = {
+    firstLetterToLower
 };
+
+export default str;

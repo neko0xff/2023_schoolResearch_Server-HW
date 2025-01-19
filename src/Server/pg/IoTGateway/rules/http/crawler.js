@@ -1,13 +1,16 @@
+// deno-lint-ignore-file
 /*相関函式庫*/
-var clock=require("../../modules/clock.js");
-var httpServer=require("../../modules/httpServer.js");
-var database=require("../../modules/database.js"); 
-var error=require("../../modules/error.js");
-var catchError = error.catchError;
-var errorController = error.errorController;
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
+import error from "../../modules/error.js";
 
-/*伺服器部分*/
-var app=httpServer.app();
+/*錯誤處理*/
+const catchError = error.catchError;
+const errorController = error.errorController;
+
+/* 資料庫 & 後端 */
+const app=httpServer.app();
 
 /*查詢己爬蟲爬到的資料*/
 // GET /crawler/AQI/ALL => 全部測站的資料
@@ -38,7 +41,7 @@ app.get("/read/crawler/AQI/site", async function(req, res) {
 
 // GET /read/crawler/CFoot/ALL => 全部物品的資料
 app.get("/read/crawler/CFoot/ALL",async function(req, res) {
-    var sql = `
+    const sql = `
         SELECT id,name,coe,unit,departmentname,announcementyear 
         FROM sensordb.cfp_p_02 
         ORDER BY id ASC;
@@ -50,8 +53,8 @@ app.get("/read/crawler/CFoot/ALL",async function(req, res) {
 
 // GET /read/crawler/Cfoot/name => 指定特定物品的資料
 app.get("/read/crawler/Cfoot/name", async function(req, res) {
-    var {name} = req.query;
-    var sql = `
+    const {name} = req.query;
+    const sql = `
         SELECT id, name, coe, unit, departmentname, announcementyear 
         FROM sensordb.cfp_p_02 
         WHERE name = $1
@@ -65,7 +68,7 @@ app.get("/read/crawler/Cfoot/name", async function(req, res) {
 
 // GET /read/crawler/CFoot/list => 物品名
 app.get("/read/crawler/CFoot/list",async function(req, res) {
-    var sql = `
+    const sql = `
         SELECT id,name 
         FROM sensordb.cfp_p_02 
         ORDER BY id ASC;

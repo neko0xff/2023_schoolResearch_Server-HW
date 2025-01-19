@@ -1,18 +1,17 @@
-/* eslint-disable no-redeclare */
-/* eslint-disable no-unused-vars */
-
+// deno-lint-ignore-file
 /*相関函式庫*/
-var mqttPubUser=require("../mqtt/Pubuser.js");
-var clock=require("../../modules/clock.js");
-var httpServer=require("../../modules/httpServer.js");
-var database=require("../../modules/database.js");
-var error=require("../../modules/error.js");
-var catchError = error.catchError;
-var errorController = error.errorController;
+import mqttPubUser from "../mqtt/Pubuser.js";
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
+import error from "../../modules/error.js";
+
+/*錯誤處理*/
+const catchError = error.catchError;
+const errorController = error.errorController;
 
 /*資料庫&後端*/
-var cnDB=null;
-var app=httpServer.app();
+const app=httpServer.app();
 
 // GET /read/UserCustomValueStatus => 讀取使用者相關資料
 // 接收格式：x-www-form-urlencoded
@@ -78,7 +77,7 @@ app.get("/read/UserCustomValueStatus", async function (req, res) {
 // 接收格式：x-www-form-urlencoded
 app.get("/read/UserCustomValueRec", async function(req, res) {
     const { username} = req.body; 
-    var readSQL = `
+    const readSQL = `
         SELECT username,valuename AS "ValueName",date,time 
         FROM sensordb.customvar_statusrec 
         WHERE username = $1
@@ -150,7 +149,7 @@ app.post("/set/UserCustomValue", async function (req, res) {
     const date = clock.SQLDate();
     const time = clock.SQLTime();
     const RecSQL = `
-        INSERT INTO sensordb.customVar_StatusRec(username, valuename, num, date, time) 
+        INSERT INTO sensordb.customvar_StatusRec(username, valuename, num, date, time) 
         VALUES ($1, $2, $3, $4, $5)
     `;
     const searchSQL = `

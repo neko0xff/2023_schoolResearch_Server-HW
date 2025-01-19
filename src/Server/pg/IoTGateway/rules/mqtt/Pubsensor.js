@@ -1,7 +1,7 @@
 /* 相関函式庫 */
-var mqttPub = require("../../modules/mqtt/mqttPubSend.js");
-var strcvlib = require("../../modules/str.js");
-var clock = require("../../modules/clock.js");
+import mqttPub from "../../modules/mqtt/mqttPubSend.js";
+import clock from "../../modules/clock.js";
+import strcvlib from "../../modules/str.js";
 
 /*主程式*/
 
@@ -26,7 +26,7 @@ async function pubSensor(device_ID, sensor) {
 
 // 發布: 特定開關狀態
 async function pubSwitch(device_ID, switchname) {
-    var deviceNamecv = strcvlib.firstLetterToLower(device_ID); 
+    const deviceNamecv = strcvlib.firstLetterToLower(device_ID); 
     const topicPub = `/Device/${device_ID}/${switchname}`;
     const readSQL = `
             SELECT name, status 
@@ -70,9 +70,11 @@ async function pubSensorALL(device_ID) {
     }
 }
 
-module.exports = {
-    pubSensor: pubSensor,
-    pubSwitch: pubSwitch,
-    pubSensorALL: pubSensorALL,
-    pubSwitchALL: pubSwitchALL,
-};
+const Pubsensor = {
+    pubSensor,
+    pubSwitch,
+    pubSensorALL,
+    pubSwitchALL,
+}
+
+export default Pubsensor;

@@ -1,37 +1,40 @@
-const moment = require("moment");
-var ConfigParser = require("configparser");
+/*相関函式庫*/
+import moment from "moment";
+import ConfigParser from "configparser";
+
+/*戴入設定檔*/
 const configZone = new ConfigParser();
 
 /*時區設定*/
 configZone.read("./modules/config/clockSet.cfg");
 configZone.sections();
-var locaLang=configZone.get("timezone","locaLang");
-var localZone=configZone.get("timezone","localZone");
+const locaLang=configZone.get("timezone","locaLang");
+const localZone=configZone.get("timezone","localZone");
 
 /*主程式 */
 
 // outpuut console Time
 function consoleTime(){
-    var clock = new Date();
-    var nowTime = clock.toLocaleString(locaLang, {timeZone: localZone}); 
+    const clock = new Date();
+    const nowTime = clock.toLocaleString(locaLang, {timeZone: localZone});
 
     return nowTime;
 }
 
-// SQL: date 
+// SQL: date
 function SQLDate(){
-    var clock = new moment();
-    var dateFormat=configZone.get("formatStyle","dateFormat");
-    var Date=clock.format(dateFormat);
+    const clock = new moment();
+    const dateFormat=configZone.get("formatStyle","dateFormat");
+    const Date=clock.format(dateFormat);
 
     return Date;
 }
 
 // SQL: time
 function SQLTime(){
-    var clock = new moment();
-    var timeFormat=configZone.get("formatStyle","timeFormat");
-    var Time=clock.format(timeFormat);
+    const clock = new moment();
+    const timeFormat=configZone.get("formatStyle","timeFormat");
+    const Time=clock.format(timeFormat);
 
     return Time;
 }
@@ -51,16 +54,18 @@ function formatDateToYYYYMMDD(isoDateString) {
 function yasterDate(){
     const today = new Date();
     const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1); 
+    yesterday.setDate(today.getDate() - 1);
     const formattedYesterday = yesterday.toISOString().slice(0, 10);
 
     return formattedYesterday;
 }
 
-module.exports={
-    yasterDate:yasterDate,
-    formatDateToYYYYMMDD:formatDateToYYYYMMDD,
-    consoleTime:consoleTime,
-    SQLDate:SQLDate,
-    SQLTime:SQLTime
+const clock ={
+    yasterDate,
+    formatDateToYYYYMMDD,
+    consoleTime,
+    SQLDate,
+    SQLTime
 };
+
+export default clock;

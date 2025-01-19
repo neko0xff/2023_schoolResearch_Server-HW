@@ -1,13 +1,17 @@
+// deno-lint-ignore-file
 /*相関函式庫*/
-var clock=require("../../modules/clock.js");
-var httpServer=require("../../modules/httpServer.js");
-var database=require("../../modules/database.js");
-var error=require("../../modules/error.js");
-var catchError = error.catchError;
-var errorController = error.errorController;
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
+import error from "../../modules/error.js";
+
+/*錯誤處理*/
+const catchError = error.catchError;
+const errorController = error.errorController;
 
 /*資料庫&後端*/
-var app=httpServer.app();
+const cnDB = database.cnDB;
+const app=httpServer.app();
 
 // GET /users/userlist: 查詢資料庫上的使用者列表
 // 接收格式：x-www-form-urlencoded
@@ -18,7 +22,7 @@ app.get("/users/userlist",async function(req, res){
     `;
 
     console.log(`[${clock.consoleTime()}] HTTP GET /users/userlist`);
-    database.handleDatabaseQuery(req, res, sql);
+    cnDB.handleDatabaseQuery(req, res, sql);
 },catchError(errorController));
 
 // GET /users/usecustomValue: 查詢資料庫上的使用者的自訂值

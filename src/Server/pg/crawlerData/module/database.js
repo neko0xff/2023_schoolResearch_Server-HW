@@ -1,10 +1,12 @@
 /*資料庫連線設定*/
-var { Pool } = require("pg");
-var ConfigParser = require("configparser");
+import pg from "pg";
+import ConfigParser from "configparser";
+
+const Pool = pg.Pool;
 const configDB = new ConfigParser();
 configDB.read("./module/config/cnSet.cfg");
 
-var setDB = new Pool({
+const setDB = new Pool({
     host: configDB.get("POSTGRESQL", "DBsource"),
     user: configDB.get("POSTGRESQL", "DBuser"),
     password: configDB.get("POSTGRESQL", "DBpassword"),
@@ -23,7 +25,9 @@ function cnDB() {
     return setDB;
 }
 
-module.exports = {
-    cnDB: cnDB,
-    escape: escape,
-};
+const database = {
+    cnDB,
+    escape,
+}
+
+export default database;

@@ -1,9 +1,9 @@
 /*相關函式庫*/
-const clock = require("../clock.js");
-const mqtt = require("mqtt");
+import clock from "../clock.js";
+import mqtt from "mqtt";
+import ConfigParser from "configparser";
 
 /*MQTT Client*/
-var ConfigParser = require("configparser");
 const configSet = new ConfigParser();
 configSet.read("./module/config/cnSet.cfg");
 configSet.sections();
@@ -31,7 +31,9 @@ function Pub(topic,value,timer){
     }, timer);
 }
 
-module.exports={
-    Pub:Pub,
-    Sub:Sub,
+const mqttClient = {
+    Pub,
+    Sub
 };
+
+export default mqttClient;

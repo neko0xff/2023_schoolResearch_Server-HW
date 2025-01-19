@@ -1,13 +1,16 @@
+// deno-lint-ignore-file
 /*相関函式庫*/
-var clock=require("../../modules/clock.js");
-var httpServer=require("../../modules/httpServer.js");
-var database=require("../../modules/database.js");
-var error=require("../../modules/error.js");
-var catchError = error.catchError;
-var errorController = error.errorController;
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
+import error from "../../modules/error.js";
+
+/*錯誤處理*/
+const catchError = error.catchError;
+const errorController = error.errorController;
 
 /*資料庫&後端*/
-var app=httpServer.app();
+const app=httpServer.app();
 
 //POST /devices/serialnumber => 查詢序列號
 //接收格式：x-www-form-urlencoded

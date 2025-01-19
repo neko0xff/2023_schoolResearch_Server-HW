@@ -1,22 +1,25 @@
+// deno-lint-ignore-file
 /*相関函式庫*/
-var mqttPubSwitch = require("../mqtt/Pubsensor.js");
-var clock = require("../../modules/clock.js");
-var httpServer = require("../../modules/httpServer.js");
-var database = require("../../modules/database.js");
-var xss = require("xss");
-var error = require("../../modules/error.js");
-var catchError = error.catchError;
-var errorController = error.errorController;
-var strcvlib = require("../../modules/str.js");
+import mqttPubSwitch from "../mqtt/Pubsensor.js";
+import xss from "xss";
+import clock from "../../modules/clock.js";
+import httpServer from "../../modules/httpServer.js";
+import database from "../../modules/database.js";
+import error from "../../modules/error.js";
+import strcvlib from "../../modules/str.js";
+
+/*錯誤處理*/
+const catchError = error.catchError;
+const errorController = error.errorController;
 
 /*資料庫&後端*/
-var app = httpServer.app();
+const app = httpServer.app();
 
 /* 開關控制 */
 //  GET /set/switchCtr/:deviceID/fan1 => 控制 fan1 
 app.get("/set/switchCtr/:deviceID/fan1", async function (req, res) {
     const device_ID = xss(req.params.deviceID);
-    var deviceNamecv = strcvlib.firstLetterToLower(device_ID);
+    const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const status = xss(req.query.status);
     const date = clock.SQLDate();
     const time = clock.SQLTime();
@@ -55,7 +58,7 @@ app.get("/set/switchCtr/:deviceID/fan1", async function (req, res) {
 //  GET /set/switchCtr/:deviceID/fan2 =>  控制 fan2
 app.get("/set/switchCtr/:deviceID/fan2", async function (req, res) {
     const device_ID = xss(req.params.deviceID);
-    var deviceNamecv = strcvlib.firstLetterToLower(device_ID);
+    const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const status = xss(req.query.status);
     const date = clock.SQLDate();
     const time = clock.SQLTime();
@@ -87,7 +90,7 @@ app.get("/set/switchCtr/:deviceID/fan2", async function (req, res) {
 // GET /read/statusRec/:deviceID/viewALL =>   檢視開關控制紀錄
 app.get("/read/statusRec/:deviceID/viewALL", async function (req, res) {
     const device_ID = xss(req.params.deviceID);
-    var deviceNamecv = strcvlib.firstLetterToLower(device_ID);
+    const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const sql = `
         SELECT rec01.switch, status01.status, rec01.date, rec01.time
         FROM (
@@ -111,7 +114,7 @@ app.get("/read/statusRec/:deviceID/viewALL", async function (req, res) {
 // GET /read/statusNow/:deviceID/viewALL =>   檢視現在的開關控制狀態
 app.get("/read/statusNow/:deviceID/viewALL", async function (req, res) {
     const device_ID = xss(req.params.deviceID);
-    var deviceNamecv = strcvlib.firstLetterToLower(device_ID);
+    const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const sql = `
         SELECT name, status 
         FROM sensordb.${deviceNamecv}_status;

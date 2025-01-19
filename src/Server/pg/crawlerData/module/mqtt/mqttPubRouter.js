@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /*相関函式庫*/
-var mqttClient=require("./mqttClient.js");
-var database=require("../database.js");
-var clock=require("../clock.js");
-var strcvlib=require("../str.js");
+import mqttClient from "./mqttClient.js";
+import  database from"../database.js";
+import clock from "../clock.js";
+import strcvlib from "../str.js";
 
 async function pubRouter(Pubtopic,SQL){
     console.log(`[${clock.consoleTime()}] MQTT Pub= ${Pubtopic}`);
@@ -172,16 +172,19 @@ function pubSensorALL(device_ID){
     pubSensor(device_ID,"o3");
 }
 
-module.exports={
-    pubRouter:pubRouter,
-    pubSensor:pubSensor,
-    pubSwitch:pubSwitch,
-    pubUsersComparisonResult:pubUsersComparisonResult,
-    pubCustomValue:pubCustomValue,
-    pubCrawlerAQI:pubCrawlerAQI,
-    pubSensorALL:pubSensorALL,
-    pubSwitchALL:pubSwitchALL,
-    pubUsersComparisonResultALL:pubUsersComparisonResultALL,
-    pubCustomValueALL:pubCustomValueALL,
-    pubCrawlerAQIALL:pubCrawlerAQIALL
+const mqttPubRouter = {
+    pubRouter,
+    pubSensor,
+    pubSwitch,
+    pubUsersComparisonResult,
+    pubCustomValue,
+    pubCrawlerAQI,
+    pubSensorALL,
+    pubSwitchALL,
+    pubUsersComparisonResultALL,
+    pubCustomValueALL,
+    pubCrawlerAQIALL
 };
+
+
+export default mqttPubRouter;

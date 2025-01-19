@@ -1,13 +1,16 @@
-var clock = require("./clock.js");
-var { Pool } = require("pg");
-var ConfigParser = require("configparser");
+import clock from"./clock.js";
+import pg from "pg";
+
+ import ConfigParser from "configparser";
+
 
 /* 配置檔案讀取 */
 const configDB = new ConfigParser();
 configDB.read("./modules/config/cnSet.cfg");
 
 /* 資料庫連接設置 */
-var setDB = new Pool({
+const Pool = pg.Pool;
+const setDB = new Pool({
     host: configDB.get("POSTGRESQL", "DBsource"),
     user: configDB.get("POSTGRESQL", "DBuser"),
     password: configDB.get("POSTGRESQL", "DBpassword"),
@@ -74,7 +77,7 @@ async function queryDatabaseAndSendResponse(res, sql, params = []) {
 }
 
 // 處理資料庫查詢
-async function handleDatabaseQuery(req, res, sql, params = []) {
+async function handleDatabaseQuery(_req, res, sql, params = []) {
     const results = await executeQuery(sql, params);
     //console.log(`[${clock.consoleTime()}] Executing query: ${sql} with params: ${JSON.stringify(params)}`);
 
@@ -108,10 +111,12 @@ async function handleDatabaseQuery(req, res, sql, params = []) {
     }
 }
 
-module.exports = {
-    cnDB: cnDB,
-    escape: escape,
-    executeQuery: executeQuery,
-    queryDatabaseAndSendResponse: queryDatabaseAndSendResponse,
-    handleDatabaseQuery: handleDatabaseQuery
-};
+const database = {
+    cnDB,
+    escape,
+    executeQuery,
+    queryDatabaseAndSendResponse,
+    handleDatabaseQuery
+}
+
+export default database;

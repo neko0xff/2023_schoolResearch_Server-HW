@@ -1,5 +1,6 @@
-const moment = require("moment");
-var ConfigParser = require("configparser");
+import moment from "moment";
+import ConfigParser from "configparser";
+
 const configZone = new ConfigParser();
 
 /*時區設定*/
@@ -57,10 +58,12 @@ function yasterDate(){
     return formattedYesterday;
 }
 
-module.exports={
-    yasterDate:yasterDate,
-    formatDateToYYYYMMDD:formatDateToYYYYMMDD,
-    consoleTime:consoleTime,
-    SQLDate:SQLDate,
-    SQLTime:SQLTime
+const clock = {
+    consoleTime,
+    SQLDate,
+    SQLTime,
+    formatDateToYYYYMMDD,
+    yasterDate
 };
+
+export default clock;
