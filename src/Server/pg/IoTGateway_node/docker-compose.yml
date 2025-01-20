@@ -1,3 +1,4 @@
+name: IoTGateway_node
 services:
   server:
     container_name: IoTGateway-cont

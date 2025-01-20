@@ -9,10 +9,14 @@
 ---
 ## 程式
 - 爬蟲: '/src/Server/crawlerData'
-  * 使用語言： nodejs(JavaScrpit)
+  * 使用語言
+      * Old: nodejs(JavaScrpit)
+      * New: deno(JavaScrpit)
   * docker image: Alpine
 - IoT Gateway: '/src/Server/IoTGateway'
-  * 使用語言： nodejs(JavaScrpit)
+  * 使用語言
+      * Old: nodejs(JavaScrpit)
+      * New: deno(JavaScrpit)
   * docker image: Alpine
   * 通信協定
     1. HTTP API

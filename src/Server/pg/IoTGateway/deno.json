@@ -5,7 +5,7 @@
     "dev": "deno run -A main.js",
     "serve": "deno serve -A  main.js",
     "outdated": "deno outdated --update --latest",
-    "install": "deno install --allow-scripts ",
+    "install": "deno install --allow-scripts",
     "swagger-autogen": "deno run -A ./tools/swaggerAutoGen.js",
     "mqttTest-Sub": "deno -A ./tools/mqttSubTest.js"
   },

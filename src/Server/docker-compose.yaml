@@ -1,3 +1,4 @@
+name: server
 services:
   app1:
     container_name: crawler-cont

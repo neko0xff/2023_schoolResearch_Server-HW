@@ -1,3 +1,4 @@
+name: mqtt_bot_deno
 services:
   server:
     container_name: TelegramB0t-cont  

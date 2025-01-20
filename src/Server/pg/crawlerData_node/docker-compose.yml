@@ -1,3 +1,4 @@
+name: crawlerData_node
 services:
   crawler:
     container_name: crawlerData-cont  
