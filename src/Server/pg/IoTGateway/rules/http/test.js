@@ -10,24 +10,29 @@ const catchError = error.catchError;
 const errorController = error.errorController;
 
 /*資料庫&後端*/
-const cnDB = database.cnDB;
 const app=httpServer.app();
 
-// GET / => test HTTP API
-app.get("/",async function(req,res){
-    const send_str = "HTTP API Server is running!";
-    
-    console.log(`[${clock.consoleTime()}] HTTP GET /`);
-    res.send(send_str);
-},catchError(errorController));
+/*開發選項*/
+const isDev = Deno.env.get("DEV") === "true";
 
-// GET /testDB => test DataBase Connect
-app.get("/testDB", async function(req, res) {
-    const sql = `
-        SELECT 1 + 1 
-        AS solution
-    `;
+if(isDev){
+    // GET / => test HTTP API
+    app.get("/",async function(req,res){
+        const send_str = "HTTP API Server is running!";
+        
+        console.log(`[${clock.consoleTime()}] HTTP GET /`);
+        res.send(send_str);
+    },catchError(errorController));
 
-    console.log(`[${clock.consoleTime()}] HTTP GET /testDB`);
-    database.handleDatabaseQuery(req, res, sql);
-},catchError(errorController));
+    // GET /testDB => test DataBase Connect
+    app.get("/testDB", async function(req, res) {
+        const sql = `
+            SELECT 1 + 1 
+            AS solution
+        `;
+
+        console.log(`[${clock.consoleTime()}] HTTP GET /testDB`);
+        database.handleDatabaseQuery(req, res, sql);
+    },catchError(errorController));
+
+}

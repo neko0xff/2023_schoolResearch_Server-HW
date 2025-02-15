@@ -10,7 +10,6 @@ const catchError = error.catchError;
 const errorController = error.errorController;
 
 /*資料庫&後端*/
-const cnDB = database.cnDB;
 const app=httpServer.app();
 
 // GET /users/userlist: 查詢資料庫上的使用者列表
@@ -22,7 +21,7 @@ app.get("/users/userlist",async function(req, res){
     `;
 
     console.log(`[${clock.consoleTime()}] HTTP GET /users/userlist`);
-    cnDB.handleDatabaseQuery(req, res, sql);
+    database.handleDatabaseQuery(req, res, sql);
 },catchError(errorController));
 
 // GET /users/usecustomValue: 查詢資料庫上的使用者的自訂值

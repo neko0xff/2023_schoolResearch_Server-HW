@@ -1,3 +1,4 @@
+// deno-lint-ignore-file require-await
 /*相関函式庫*/
 import clock from "./clock.js";
 
@@ -14,21 +15,33 @@ const catchError = (asyncFn) => {
         }); 
     };
 };
-const errorController = async function (req, res, next) { 
+const errorController = async function (_req, res, _next) { 
   res.send({
     message: '正常狀態',
   });
 };
-const someController = async function (req, res, next) { 
+const someController = async function (_req, res, _next) { 
   res.send({
     message: '正常狀態',
   });
 };
 
+/*錯誤處理*/
+function handleError(res, error, statusCode = 500) {
+  const responseMeta = { 
+      code: "-1",
+      error: error.message 
+  };
+
+  console.error(`[${clock.consoleTime()}] Error: ${error.message}`);
+  res.status(statusCode).send(responseMeta);
+}
+
 const error = {
   errorController,
   someController,
-  catchError
+  catchError,
+  handleError
 }
 
 export default error;

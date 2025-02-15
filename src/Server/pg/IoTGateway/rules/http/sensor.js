@@ -63,7 +63,7 @@ app.post("/upload/:deviceID/data", async function(req, res) {
 
 
 // GET /read/StatusGet/:deviceID/powerStatus => 獲得電源狀態 
-app.get("/read/StatusGet/:deviceID/powerStatus", catchError(async function (req, res) {
+app.get("/read/StatusGet/:deviceID/powerStatus", catchError( function (req, res) {
     const device_ID = xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const sql = `
@@ -79,7 +79,7 @@ app.get("/read/StatusGet/:deviceID/powerStatus", catchError(async function (req,
 
 // GET /read/:deviceID/ALL => 獲得'hum,temp,tvoc,co2,co,pm25,o3'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/ALL", async function(req, res) {
+app.get("/read/:deviceID/ALL", function(req, res) {
     const device_ID = xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -95,7 +95,7 @@ app.get("/read/:deviceID/ALL", async function(req, res) {
 
 // GET /read/:deviceID/hum => 獲得'hum'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/hum", async function(req, res) {
+app.get("/read/:deviceID/hum",  function(req, res) {
     const device_ID = xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -111,7 +111,7 @@ app.get("/read/:deviceID/hum", async function(req, res) {
 
 // GET /read/:deviceID/temp => 獲得'temp'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/temp", async function(req, res) {
+app.get("/read/:deviceID/temp",  function(req, res) {
     const device_ID = xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -127,7 +127,7 @@ app.get("/read/:deviceID/temp", async function(req, res) {
 
 // GET /read/:deviceID/tvoc => 獲得'tvoc'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/tvoc",async function(req, res){
+app.get("/read/:deviceID/tvoc", function(req, res){
     const device_ID=xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -143,7 +143,7 @@ app.get("/read/:deviceID/tvoc",async function(req, res){
 
 // GET /read/:deviceID/co2 => 獲得'co2'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/co2",async function(req, res){
+app.get("/read/:deviceID/co2", function(req, res){
       const device_ID=xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -159,7 +159,7 @@ app.get("/read/:deviceID/co2",async function(req, res){
 
 // GET /read/:deviceID/co => 獲得'co'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/co",async function(req, res){
+app.get("/read/:deviceID/co", function(req, res){
     const device_ID=xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -175,7 +175,7 @@ app.get("/read/:deviceID/co",async function(req, res){
 
 // GET /read/:deviceID/pm25 => 獲得'pm25'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/pm25",async function(req, res){
+app.get("/read/:deviceID/pm25", function(req, res){
     const device_ID=xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
@@ -191,7 +191,7 @@ app.get("/read/:deviceID/pm25",async function(req, res){
 
 // GET /read/:deviceID/o3 => 獲得'o3'資料
 // 回傳格式: JSON
-app.get("/read/:deviceID/o3",async function(req, res){
+app.get("/read/:deviceID/o3", function(req, res){
     const device_ID=xss(req.params.deviceID);
     const deviceNamecv = strcvlib.firstLetterToLower(device_ID);
     const readSQL = `
