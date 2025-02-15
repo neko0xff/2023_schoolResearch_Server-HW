@@ -61,15 +61,18 @@ httpservice.use(function(_req, res, next) {
 });
 httpservice.use(cors(corsOptions));
 httpservice.disable("x-powered-by"); //關閉 "X-Powered-By" header
-
 if(isDev){
     httpservice.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument)); //API Docs
 }
 
 /*通訊埠監聽*/
 httpservice.listen(port,function(){
+    console.log(`[${clock.consoleTime()}] Development Mode =  ${isDev}`); 
     console.log(`[${clock.consoleTime()}] HTTP API Server Started!`);
     console.log(`[${clock.consoleTime()}] HTTP API Server URL: http://[Server_IP]:${port}`);
+    if(isDev){
+        console.log(`[${clock.consoleTime()}] API Docs URL: http://[Server_IP]:${port}/docs`);
+    }
 });
 
 function app(){
