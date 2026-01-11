@@ -25,7 +25,7 @@
     "compression": "^1.7.4",
     "configparser": "^0.3.10",
     "cors": "^2.8.5",
-    "cros": "^1.0.1",
+    "cros": "^1.1.0",
     "express": "^4.21.2",
     "express-brute": "^1.0.1",
     "express-rate-limit": "^6.11.2",
